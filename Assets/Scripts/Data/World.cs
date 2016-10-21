@@ -13,19 +13,17 @@ public class World {
 	private Action<WorldObject> OnWorldObjectCreated;
 	private Action<WorldObject> OnWorldObjectChanged;
 
-	public World(int width, int height, Action<WorldObject> onWorldObjectCreated) {
+	public World(int width, int height) {
 		this.Width = width;
 		this.Height = height;
-		RegisterOnWorldObjectCreatedCallback(onWorldObjectCreated);
-		SetupInitalTiles();
 	}
 
-	private void SetupInitalTiles() {
+	public void InitialiseWorld() {
 		Tiles = new Tile[Width, Height];
 
 		for(int x = 0; x < Width; x++) {
 			for(int y = 0; y < Height; y++) {
-				Tiles[x, y] = new Tile(x, y, "null", this);
+				Tiles[x, y] = new Tile(x, y, "grass", this);
 				Tiles[x, y].RegisterOnCreatedCallback(OnWorldObjectCreated);
 				Tiles[x, y].RegisterOnChangedCallback(OnWorldObjectChanged);
 				OnWorldObjectCreated(Tiles[x, y]);
@@ -34,10 +32,10 @@ public class World {
 	}
 
 	public Tile GetTile(int x, int y) {
-		if(x < 0 || x > Width)
+		if(x < 0 || x >= Width)
 			return null;
 
-		if(y < 0 || y > Height)
+		if(y < 0 || y >= Height)
 			return null;
 
 		return Tiles[x, y];

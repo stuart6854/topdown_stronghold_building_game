@@ -38,6 +38,7 @@ public class Tile : WorldObject {
 			return; //We are already this type
 
 		this.ObjectType = type;
+
 		if(OnChanged != null)
 			OnChanged(this);
 	}

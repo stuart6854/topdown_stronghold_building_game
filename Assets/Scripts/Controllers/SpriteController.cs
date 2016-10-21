@@ -54,10 +54,25 @@ public class SpriteController : MonoBehaviour {
 			obj.transform.SetParent(InstalledObjectParent);
 		else if(worldObject.GetWorldObjectType() == WorldObjectType.LooseItem)
 			obj.transform.SetParent(LooseItemParent);
+
+		WorldObjectGameObjects.Add(worldObject, obj);
 	}
 
-	public void OnWorldObjectChanged(WorldObject oldObject) {
-		
+	public void OnWorldObjectChanged(WorldObject worldObject) {
+		if(!WorldObjectGameObjects.ContainsKey(worldObject)) {
+			Debug.Log("SpriteController::OnWorldObjectChanged -> This worldobject doesn't have an associated gameobject!");
+			return;
+		}
+
+		GameObject wo_go = WorldObjectGameObjects[worldObject];
+
+		if(wo_go == null) {
+			Debug.Log("SpriteController::OnWorldObjectChanged -> This worldobjects ssociated gameobject is NULL!");
+			return;
+		}
+
+		SpriteRenderer sr = wo_go.GetComponent<SpriteRenderer>();
+		sr.sprite = GetSprite(worldObject.GetObjectType());
 	}
 
 	private Sprite GetSprite(string objectType) {
