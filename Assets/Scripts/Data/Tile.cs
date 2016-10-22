@@ -81,7 +81,6 @@ public class Tile : WorldObject {
 
     public bool SetPendingJob(Job job) {
         if(this.PendingJob != null) {
-            Debug.Log("Tile::SetPendingJob -> This Tile already has a Pending Job!");
             return false;
         }
 

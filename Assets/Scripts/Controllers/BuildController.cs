@@ -43,13 +43,11 @@ public class BuildController : MonoBehaviour {
 				Tile t = WorldController.Instance.GetTileAt(x, y);
 				if(t != null) {
 					if(BuildMode == WorldObjectType.Tile) {
-					    Job job = new Job(t, j => t.ChangeType(ObjectType), 0f, 0);
-					    if(JobController.Instance.AddJob(job))
-					        t.SetPendingJob(job);
+					    Job job = new Job(t, j => t.ChangeType(ObjectType), 1f, 0);
+					    JobController.Instance.AddJob(job, t);
 					} else if(BuildMode == WorldObjectType.InstalledObject) {
-					    Job job = new Job(t, j => WorldController.Instance.GetWorld().PlaceInstalledObject(ObjectType, t), 0f, 0);
-					    if(JobController.Instance.AddJob(job))
-					        t.SetPendingJob(job);
+					    Job job = new Job(t, j => WorldController.Instance.GetWorld().PlaceInstalledObject(ObjectType, t), 1f, 0);
+					    JobController.Instance.AddJob(job, t);
 					}
 				}
 			}
@@ -73,7 +71,9 @@ public class BuildController : MonoBehaviour {
 					DragPreviewObjects.Add(go);
 
 					SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
-					if(BuildMode == WorldObjectType.Tile) {
+				    if(t.GetPendingJob() != null) {
+				        sr.color = Color.red;
+				    }else if(BuildMode == WorldObjectType.Tile) {
 						sr.color = t.GetObjectType() != ObjectType ? Color.green : Color.red;
 					} else {
 						if(t.GetObjectType() == "null")
