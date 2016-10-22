@@ -8,11 +8,10 @@ public class Door : WorldObjectMethod {
 
 	public override void OnCreated(WorldObject worldObject) {
 		//TODO: Orientate dependent on neighbouring walls
-		throw new System.NotImplementedException();
 	}
 
 	public override void OnUpdate(WorldObject worldObject) {
-		throw new System.NotImplementedException();
+
 	}
 
 	public override void OnDestroyed(WorldObject worldObject) {

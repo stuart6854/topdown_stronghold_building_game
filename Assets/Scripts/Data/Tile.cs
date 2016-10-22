@@ -10,6 +10,8 @@ public class Tile : WorldObject {
 	private InstalledObject InstalledObject;
 	private LooseItem LooseItem;
 
+    private Job PendingJob;
+
 	//Data
 
 	
@@ -77,6 +79,23 @@ public class Tile : WorldObject {
 		return LooseItem;
 	}
 
+    public bool SetPendingJob(Job job) {
+        if(this.PendingJob != null) {
+            Debug.Log("Tile::SetPendingJob -> This Tile already has a Pending Job!");
+            return false;
+        }
+
+        this.PendingJob = job;
+        this.PendingJob.RegisterOnCompleteCallback(OnJobComplete);
+        this.PendingJob.RegisterOnAbortedCallback(OnJobAborted);
+
+        return true;
+    }
+
+    public Job GetPendingJob() {
+        return PendingJob;
+    }
+
 	public Tile[] GetNeighbourTiles() {
 		List<Tile> neighbours = new List<Tile>();
 		for(int x = X - 1; x <= X + 1; x++) {
@@ -99,7 +118,19 @@ public class Tile : WorldObject {
 		if(MovementCost == 0)
 			return Enterabilty.Never;
 
-		return InstalledObject.GetEnterability();
+		if(InstalledObject != null) {
+			return InstalledObject.GetEnterability();
+		}
+
+		return Enterabilty.Enterable;
 	}
+
+    void OnJobComplete(Job job) {
+        this.PendingJob = null;
+    }
+
+    void OnJobAborted(Job job) {
+        this.PendingJob = null;
+    }
 
 }

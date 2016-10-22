@@ -43,9 +43,13 @@ public class BuildController : MonoBehaviour {
 				Tile t = WorldController.Instance.GetTileAt(x, y);
 				if(t != null) {
 					if(BuildMode == WorldObjectType.Tile) {
-						t.ChangeType(ObjectType);
+					    Job job = new Job(t, j => t.ChangeType(ObjectType), 0f, 0);
+					    if(JobController.Instance.AddJob(job))
+					        t.SetPendingJob(job);
 					} else if(BuildMode == WorldObjectType.InstalledObject) {
-						WorldController.Instance.GetWorld().PlaceInstalledObject(ObjectType, t);
+					    Job job = new Job(t, j => WorldController.Instance.GetWorld().PlaceInstalledObject(ObjectType, t), 0f, 0);
+					    if(JobController.Instance.AddJob(job))
+					        t.SetPendingJob(job);
 					}
 				}
 			}
