@@ -8,6 +8,7 @@ public class World {
 	//Data
 	private int Width, Height;
 	private Tile[,] Tiles;
+    private List<Character> Characters;
 
 	private Dictionary<string, InstalledObject> InstalledObjectPrototypes;
 
@@ -19,6 +20,7 @@ public class World {
 		this.Width = width;
 		this.Height = height;
 		this.InstalledObjectPrototypes = new Dictionary<string, InstalledObject>();
+	    this.Characters = new List<Character>();
 	}
 
 	private void LoadInstalledObjectPrototypes() {
@@ -56,9 +58,24 @@ public class World {
 				Tiles[x, y].OnUpdate();
 			}
 		}
+
+	    foreach(Character character in Characters) {
+	        character.OnUpdate();
+	    }
 	}
 
-	public Tile GetTile(int x, int y) {
+    public void PlaceInstalledObject(string type, Tile tile) {
+        InstalledObject prototype = InstalledObjectPrototypes[type];
+        tile.PlaceInstalledObject(prototype);
+    }
+
+    public void PlaceCharacter(Tile tile) {
+        Character character = new Character(tile);
+        Characters.Add(character);
+        CharacterSpriteController.Instance.OnCharacterCreated(character);
+    }
+
+    public Tile GetTile(int x, int y) {
 		if(x < 0 || x >= Width)
 			return null;
 
@@ -68,12 +85,7 @@ public class World {
 		return Tiles[x, y];
 	}
 
-	public void PlaceInstalledObject(string type, Tile tile) {
-		InstalledObject prototype = InstalledObjectPrototypes[type];
-		tile.PlaceInstalledObject(prototype);
-	}
-
-	public void RegisterOnWorldObjectCreatedCallback(Action<WorldObject> callback) {
+    public void RegisterOnWorldObjectCreatedCallback(Action<WorldObject> callback) {
 		OnWorldObjectCreated -= callback;
 		OnWorldObjectCreated += callback;
 	}

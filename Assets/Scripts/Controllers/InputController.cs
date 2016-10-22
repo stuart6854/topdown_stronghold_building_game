@@ -17,8 +17,8 @@ public class InputController : MonoBehaviour {
 	
 	void Update () {
 		if(Input.GetKeyUp(KeyCode.Escape)) {
-			if(BuildController.Instance.IsInBuildMode()) {
-				BuildController.Instance.SetInBuildMode(false);
+			if(BuildController.Instance.GetBuildMode() != BuildMode.None) {
+				BuildController.Instance.SetBuildMode(BuildMode.None);
 			} else {
 				//Show Escape Menu - Resume, Save, Load, Settings, Exit, etc.
 			}
@@ -30,24 +30,34 @@ public class InputController : MonoBehaviour {
 	}
 
 	private void HandleDrag() {
+	    if(BuildController.Instance.GetBuildMode() == BuildMode.None)
+	        return;
+
 		if(EventSystem.current.IsPointerOverGameObject())
 			return;
 
-		if(Input.GetMouseButtonDown(0)) {
-			//Drag has started
-			isDragging = true;
-			DragStart = cam.ScreenToWorldPoint(Input.mousePosition);
-		}
+	    if(BuildController.Instance.GetBuildMode() == BuildMode.Character) {
+	        Vector2 pos = cam.ScreenToWorldPoint(Input.mousePosition);
+	        if(Input.GetMouseButtonUp(0)) {
+	            BuildController.Instance.DoAction(pos, Vector2.zero);
+	        }
+	    } else {
+	        if(Input.GetMouseButtonDown(0)) {
+	            //Drag has started
+	            isDragging = true;
+	            DragStart = cam.ScreenToWorldPoint(Input.mousePosition);
+	        }
 
-		if(isDragging) {
-			BuildController.Instance.OnDragging(DragStart, cam.ScreenToWorldPoint(Input.mousePosition));
-		}
+	        if(isDragging) {
+	            BuildController.Instance.OnDragging(DragStart, cam.ScreenToWorldPoint(Input.mousePosition));
+	        }
 
-		if(Input.GetMouseButtonUp(0) && isDragging) {
-			//Drag has ended
-			isDragging = false;
-			BuildController.Instance.DoAction(DragStart, cam.ScreenToWorldPoint(Input.mousePosition));
-		}
+	        if(Input.GetMouseButtonUp(0) && isDragging) {
+	            //Drag has ended
+	            isDragging = false;
+	            BuildController.Instance.DoAction(DragStart, cam.ScreenToWorldPoint(Input.mousePosition));
+	        }
+	    }
 	}
 
 	private void HandleCameraZoom() {
