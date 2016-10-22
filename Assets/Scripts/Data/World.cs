@@ -22,12 +22,17 @@ public class World {
 	}
 
 	private void LoadInstalledObjectPrototypes() {
-		foreach(KeyValuePair<string, WorldObjectMethod> pair in WorldObjectMethods.WorldObject_Methods) {
-			InstalledObject io = InstalledObject.CreatePrototype(pair.Key, pair.Value);
-			io.RegisterOnCreatedCallback(OnWorldObjectCreated);
-			io.RegisterOnChangedCallback(OnWorldObjectChanged);
-			InstalledObjectPrototypes.Add(io.GetObjectType(), io);
-		}
+		InstalledObject io;
+
+		io = InstalledObject.CreatePrototype("wall", new Wall(), 0, true);
+		io.RegisterOnCreatedCallback(OnWorldObjectCreated);
+		io.RegisterOnChangedCallback(OnWorldObjectChanged);
+		InstalledObjectPrototypes.Add(io.GetObjectType(), io);
+
+		io = InstalledObject.CreatePrototype("door", new Door(), 1, false);
+		io.RegisterOnCreatedCallback(OnWorldObjectCreated);
+		io.RegisterOnChangedCallback(OnWorldObjectChanged);
+		InstalledObjectPrototypes.Add(io.GetObjectType(), io);
 	}
 
 	public void InitialiseWorld() {

@@ -40,7 +40,18 @@ public class Tile : WorldObject {
 		
 		this.InstalledObject = prototype.PlaceInstance(this);
 
-		//TODO: Update neighbours if installed object connects to them
+		if(this.InstalledObject.GetConnectToNeighbours()) {
+			foreach(Tile tile in GetNeighbourTiles()) {
+				if(tile.InstalledObject == null)
+					continue;
+
+				if(tile.InstalledObject.GetObjectType() != this.InstalledObject.GetObjectType())
+					continue;
+
+				if(tile.InstalledObject.GetOnChanged() != null)
+					tile.InstalledObject.GetOnChanged()(tile.InstalledObject);
+			}
+		}
 
 		if(this.InstalledObject.GetOnCreated() != null)
 			this.InstalledObject.GetOnCreated()(this.InstalledObject);
@@ -68,8 +79,11 @@ public class Tile : WorldObject {
 
 	public Tile[] GetNeighbourTiles() {
 		List<Tile> neighbours = new List<Tile>();
-		for(int x = X - 1; x < X + 1; x++) {
-			for(int y = Y - 1; y < Y + 1; y++) {
+		for(int x = X - 1; x <= X + 1; x++) {
+			for(int y = Y - 1; y <= Y + 1; y++) {
+				if(x == this.X && y == this.Y)
+					continue;
+
 				Tile tile = world.GetTile(x, y);
 				if(tile == null)
 					continue;

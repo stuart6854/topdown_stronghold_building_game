@@ -70,7 +70,7 @@ public class BuildController : MonoBehaviour {
 
 					SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
 					if(BuildMode == WorldObjectType.Tile) {
-						sr.color = t.GetObjectType() == "null" ? Color.green : Color.red;
+						sr.color = t.GetObjectType() != ObjectType ? Color.green : Color.red;
 					} else {
 						if(t.GetObjectType() == "null")
 							sr.color = Color.red;

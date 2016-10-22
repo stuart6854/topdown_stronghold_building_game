@@ -46,7 +46,7 @@ public class SpriteController : MonoBehaviour {
 
 		SpriteRenderer sr = obj.AddComponent<SpriteRenderer>();
 		sr.material = SpriteMaterial;
-		sr.sprite = GetSprite(worldObject.GetObjectType());
+		sr.sprite = GetSprite(worldObject);
 
 		if(worldObject.GetWorldObjectType() == WorldObjectType.Tile)
 			obj.transform.SetParent(TileParent);
@@ -72,14 +72,61 @@ public class SpriteController : MonoBehaviour {
 		}
 
 		SpriteRenderer sr = wo_go.GetComponent<SpriteRenderer>();
-		sr.sprite = GetSprite(worldObject.GetObjectType());
+		sr.sprite = GetSprite(worldObject);
 	}
 
-	private Sprite GetSprite(string objectType) {
-		if(ObjectSprites.ContainsKey(objectType + "_0"))
-			return ObjectSprites[objectType + "_0"];
+	private Sprite GetSprite(WorldObject obj) {
+		InstalledObject installedObject = obj as InstalledObject;
+		if(installedObject != null) {
+			if(installedObject.GetConnectToNeighbours()) {
+				int Bitmask = GetInstalledObjectBitmask(installedObject);
+
+				if(ObjectSprites.ContainsKey(installedObject.GetObjectType() + "_" + Bitmask))
+					return ObjectSprites[installedObject.GetObjectType() + "_" + Bitmask];
+			}
+		}
+
+
+		if(ObjectSprites.ContainsKey(obj.GetObjectType() + "_0"))
+			return ObjectSprites[obj.GetObjectType() + "_0"];
 
 		return null;
+	}
+
+	private int GetInstalledObjectBitmask(InstalledObject io) {
+		int x = io.GetTile().GetX();
+		int y = io.GetTile().GetY();
+		int bitmask = 0;
+
+		Tile tile = WorldController.Instance.GetTileAt(x, y + 1); //North
+		if(tile != null) {
+			InstalledObject tileIO = tile.GetInstalledObject();
+			if(tileIO != null && tileIO.GetObjectType() == io.GetObjectType())
+				bitmask += 1;
+		}
+
+		tile = WorldController.Instance.GetTileAt(x + 1, y); //East
+		if(tile != null) {
+			InstalledObject tileIO = tile.GetInstalledObject();
+			if(tileIO != null && tileIO.GetObjectType() == io.GetObjectType())
+				bitmask += 2;
+		}
+
+		tile = WorldController.Instance.GetTileAt(x, y - 1); //South
+		if(tile != null) {
+			InstalledObject tileIO = tile.GetInstalledObject();
+			if(tileIO != null && tileIO.GetObjectType() == io.GetObjectType())
+				bitmask += 4;
+		}
+
+		tile = WorldController.Instance.GetTileAt(x - 1, y); //West
+		if(tile != null) {
+			InstalledObject tileIO = tile.GetInstalledObject();
+			if(tileIO != null && tileIO.GetObjectType() == io.GetObjectType())
+				bitmask += 8;
+		}
+
+		return bitmask;
 	}
 
 }

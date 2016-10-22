@@ -15,7 +15,7 @@ public abstract class WorldObject {
 	protected int X, Y;
 	protected float Z;
 
-	protected float MovementCost;
+	protected float MovementCost; //Multiplier - 2 = Double Speed, 0.5 = Half Speed
 
 	protected WorldObjectMethod methods;
 

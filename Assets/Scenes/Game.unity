@@ -1789,7 +1789,7 @@ Prefab:
     - target: {fileID: 11492746, guid: 55f259d5b573dd14395cb4cb46b51ac8, type: 2}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300008, guid: 83a82a8f075578e49ae44a6d93a50ff5,
+      objectReference: {fileID: 21300016, guid: 83a82a8f075578e49ae44a6d93a50ff5,
         type: 3}
     - target: {fileID: 192744, guid: 55f259d5b573dd14395cb4cb46b51ac8, type: 2}
       propertyPath: m_Name
