@@ -7,7 +7,7 @@ public enum WorldObjectType {
 	Tile, InstalledObject, LooseItem
 }
 
-public class WorldObject {
+public abstract class WorldObject {
 
 	protected WorldObjectType WorldObjectType;
 	protected string ObjectType;
@@ -15,8 +15,14 @@ public class WorldObject {
 	protected int X, Y;
 	protected float Z;
 
+	protected float MovementCost;
+
+	protected WorldObjectMethod methods;
+
 	protected Action<WorldObject> OnCreated;
 	protected Action<WorldObject> OnChanged;
+
+	public abstract void OnUpdate();
 
 	public WorldObjectType GetWorldObjectType() {
 		return WorldObjectType;
@@ -36,6 +42,14 @@ public class WorldObject {
 
 	public float GetZ() {
 		return Z;
+	}
+
+	public float GetMovementCost() {
+		return MovementCost;
+	}
+
+	public WorldObjectMethod GetMethods() {
+		return methods;
 	}
 
 	public Action<WorldObject> GetOnCreated() {

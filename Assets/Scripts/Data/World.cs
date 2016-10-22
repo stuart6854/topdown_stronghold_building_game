@@ -45,6 +45,14 @@ public class World {
 		}
 	}
 
+	public void OnUpdate() {
+		for(int x = 0; x < Width; x++) {
+			for(int y = 0; y < Height; y++) {
+				Tiles[x, y].OnUpdate();
+			}
+		}
+	}
+
 	public Tile GetTile(int x, int y) {
 		if(x < 0 || x >= Width)
 			return null;

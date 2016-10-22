@@ -11,4 +11,9 @@ public class LooseItem : WorldObject {
 		base.ObjectType = objectType;
 	}
 
+	public override void OnUpdate() {
+		if(methods != null)
+			methods.OnUpdate(this);
+	}
+
 }

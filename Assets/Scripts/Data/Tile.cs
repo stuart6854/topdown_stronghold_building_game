@@ -25,6 +25,14 @@ public class Tile : WorldObject {
 			OnCreated(this);
 	}
 
+	public override void OnUpdate() {
+		if(methods != null)
+			methods.OnUpdate(this);
+
+		if(InstalledObject != null)
+			InstalledObject.OnUpdate();
+	}
+
 	public bool PlaceInstalledObject(InstalledObject prototype) {
 		if(this.InstalledObject != null) {
 			return false;
@@ -40,14 +48,6 @@ public class Tile : WorldObject {
 		return true;
 	}
 
-	public InstalledObject GetInstalledObject() {
-		return InstalledObject;
-	}
-
-	public LooseItem GetLooseItem() {
-		return LooseItem;
-	}
-
 	public void ChangeType(string type) {
 		if(type == ObjectType)
 			return; //We are already this type
@@ -56,6 +56,36 @@ public class Tile : WorldObject {
 
 		if(OnChanged != null)
 			OnChanged(this);
+	}
+
+	public InstalledObject GetInstalledObject() {
+		return InstalledObject;
+	}
+
+	public LooseItem GetLooseItem() {
+		return LooseItem;
+	}
+
+	public Tile[] GetNeighbourTiles() {
+		List<Tile> neighbours = new List<Tile>();
+		for(int x = X - 1; x < X + 1; x++) {
+			for(int y = Y - 1; y < Y + 1; y++) {
+				Tile tile = world.GetTile(x, y);
+				if(tile == null)
+					continue;
+
+				neighbours.Add(tile);
+			}
+		}
+
+		return neighbours.ToArray();
+	}
+
+	public Enterabilty GetEnterabilty() {
+		if(MovementCost == 0)
+			return Enterabilty.Never;
+
+		return InstalledObject.GetEnterability();
 	}
 
 }

@@ -1,0 +1,20 @@
+Medieval/Fantasy Theme
+
+- Build a stronghold
+- Defend from invader(humans or monster)
+- Diseases
+- Bridges
+- Gates
+- Resources - Trees/Wood, Stone, Food, Iron, Monster Rare Drops?
+- Enemy death could have adverse affect
+
+- Enemies leave trail of negative effect(eg. fire)
+- Tech Tree or Requirement based upgrades or Both
+- Upgrades houses, people join stronghold from outside
+- Magic Buildings - Teleport Transportation, Defence
+- Defence - Walls, Towers, Gates, Archer, Soldiers, Moats, traps(spike pits, oil/tar spills), use resources to barricade gates(destroy building?)
+- Seasons(Negative/Positive effects, eg. crops die, different enemies, illness)?
+
+- People Statistic - Health, Hunger, Morale(leave when low).
+
+NOTE: Players will designate rooms

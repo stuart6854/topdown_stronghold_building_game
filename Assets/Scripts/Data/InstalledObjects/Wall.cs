@@ -16,6 +16,10 @@ public class Wall : WorldObjectMethod {
 		throw new System.NotImplementedException();
 	}
 
+	public override Enterabilty GetEnterabilty(WorldObject worldObject) {
+		return Enterabilty.Never;
+	}
+
 	public override BuildMethod GetBuildMethod() {
 		return BuildMethod.Grid;
 	}

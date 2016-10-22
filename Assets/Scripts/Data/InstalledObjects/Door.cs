@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class Door : WorldObjectMethod {
 
+	//TODO: Implement Door
+
 	public override void OnCreated(WorldObject worldObject) {
+		//TODO: Orientate dependent on neighbouring walls
 		throw new System.NotImplementedException();
 	}
 
@@ -14,6 +17,10 @@ public class Door : WorldObjectMethod {
 
 	public override void OnDestroyed(WorldObject worldObject) {
 		throw new System.NotImplementedException();
+	}
+
+	public override Enterabilty GetEnterabilty(WorldObject worldObject) {
+		return Enterabilty.Soon;
 	}
 
 	public override BuildMethod GetBuildMethod() {

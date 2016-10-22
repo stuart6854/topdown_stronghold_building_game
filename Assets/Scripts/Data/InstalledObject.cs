@@ -6,8 +6,6 @@ public class InstalledObject : WorldObject {
 
 	private Tile Tile;
 
-	private WorldObjectMethod methods;
-
 	public static InstalledObject CreatePrototype(string type, WorldObjectMethod methods) {
 		InstalledObject io = new InstalledObject();
 		io.ObjectType = type;
@@ -29,6 +27,18 @@ public class InstalledObject : WorldObject {
 		io.methods = this.methods;
 
 		return io;
+	}
+
+	public override void OnUpdate() {
+		if(methods != null)
+			methods.OnUpdate(this);
+	}
+
+	public Enterabilty GetEnterability() {
+		if(MovementCost == 0)
+			return Enterabilty.Never;
+
+		else return methods.GetEnterabilty(this);
 	}
 
 }

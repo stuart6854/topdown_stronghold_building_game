@@ -20,7 +20,7 @@ public class WorldController : MonoBehaviour {
 	}
 	
 	void Update () {
-		
+		world.OnUpdate();
 	}
 
 	public World GetWorld() {
