@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using Debug = UnityEngine.Debug;
 
 public class Job : IComparable<Job> {
 
@@ -23,10 +25,11 @@ public class Job : IComparable<Job> {
     public void DoJob(float deltaTime) {
         PassedTime += deltaTime;
 
-        if(PassedTime >= CompletionTime) {
-            if(OnComplete != null)
-                OnComplete(this);
-        }
+        if(PassedTime < CompletionTime)
+            return;
+
+        if(OnComplete != null)
+            OnComplete(this);
     }
 
     public int GetPriority() {
@@ -65,6 +68,20 @@ public class Job : IComparable<Job> {
 
     public int CompareTo(Job other) {
         return other.Priority.CompareTo(this.Priority);
+    }
+
+    public override bool Equals(object obj) {
+        Job otherJob = (Job) obj;
+        if(otherJob == null)
+            return false;
+
+        if(otherJob.Tile != this.Tile)
+            return false;
+
+        if(otherJob.Priority != this.Priority)
+            return false;
+
+        return true;
     }
 
 }

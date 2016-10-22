@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -47,6 +47,16 @@ public class JobController : MonoBehaviour {
         OnJobCreated(job);
     }
 
+    public Job GetJob() {
+        if(JobQueue.Count == 0)
+            return null;
+
+        Job job = JobQueue[0];
+        JobQueue.RemoveAt(0);
+
+        return job;
+    }
+
     private void OnJobCreated(Job job) {
         GameObject job_go = new GameObject("Job_" + job.GetTile().GetX() + "_" + job.GetTile().GetY());
         job_go.transform.SetParent(this.transform);
@@ -55,11 +65,13 @@ public class JobController : MonoBehaviour {
         SpriteRenderer sr = job_go.AddComponent<SpriteRenderer>();
         sr.material = SpriteMaterial;
         sr.sprite = JobSprite;
+
+		JobGameobjects.Add(job, job_go);
     }
 
     private void OnJobEnd(Job job) {
         if(!JobGameobjects.ContainsKey(job)) {
-            Debug.Log("SpriteController::OnWorldObjectChanged -> This worldobject doesn't have an associated gameobject!");
+            Debug.Log("JobController::OnJobEnd -> This Job doesn't have an associated GameObject!");
             return;
         }
 
