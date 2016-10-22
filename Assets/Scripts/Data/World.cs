@@ -9,6 +9,8 @@ public class World {
 	private int Width, Height;
 	private Tile[,] Tiles;
 
+	private Dictionary<string, InstalledObject> InstalledObjectPrototypes;
+
 	//Callbacks
 	private Action<WorldObject> OnWorldObjectCreated;
 	private Action<WorldObject> OnWorldObjectChanged;
@@ -16,9 +18,21 @@ public class World {
 	public World(int width, int height) {
 		this.Width = width;
 		this.Height = height;
+		this.InstalledObjectPrototypes = new Dictionary<string, InstalledObject>();
+	}
+
+	private void LoadInstalledObjectPrototypes() {
+		foreach(KeyValuePair<string, WorldObjectMethod> pair in WorldObjectMethods.WorldObject_Methods) {
+			InstalledObject io = InstalledObject.CreatePrototype(pair.Key, pair.Value);
+			io.RegisterOnCreatedCallback(OnWorldObjectCreated);
+			io.RegisterOnChangedCallback(OnWorldObjectChanged);
+			InstalledObjectPrototypes.Add(io.GetObjectType(), io);
+		}
 	}
 
 	public void InitialiseWorld() {
+		LoadInstalledObjectPrototypes();
+
 		Tiles = new Tile[Width, Height];
 
 		for(int x = 0; x < Width; x++) {
@@ -39,6 +53,11 @@ public class World {
 			return null;
 
 		return Tiles[x, y];
+	}
+
+	public void PlaceInstalledObject(string type, Tile tile) {
+		InstalledObject prototype = InstalledObjectPrototypes[type];
+		tile.PlaceInstalledObject(prototype);
 	}
 
 	public void RegisterOnWorldObjectCreatedCallback(Action<WorldObject> callback) {

@@ -38,6 +38,14 @@ public class WorldObject {
 		return Z;
 	}
 
+	public Action<WorldObject> GetOnCreated() {
+		return OnCreated;
+	}
+
+	public Action<WorldObject> GetOnChanged() {
+		return OnChanged;
+	}
+
 	public void RegisterOnCreatedCallback(Action<WorldObject> callback) {
 		OnCreated -= callback;
 		OnCreated += callback;

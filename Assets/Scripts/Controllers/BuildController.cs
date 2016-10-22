@@ -1,6 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum BuildMethod {
+	Single, Line, Grid
+}
+
 public class BuildController : MonoBehaviour {
 
 	public static BuildController Instance;
@@ -41,7 +45,7 @@ public class BuildController : MonoBehaviour {
 					if(BuildMode == WorldObjectType.Tile) {
 						t.ChangeType(ObjectType);
 					} else if(BuildMode == WorldObjectType.InstalledObject) {
-						//Place InstalledObject
+						WorldController.Instance.GetWorld().PlaceInstalledObject(ObjectType, t);
 					}
 				}
 			}

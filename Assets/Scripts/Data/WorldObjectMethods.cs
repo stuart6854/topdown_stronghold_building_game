@@ -1,9 +1,10 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 public static class WorldObjectMethods {
 
-	public static Dictionary<string, WorldObjectMethod> WorldObject_Methods = new Dictionary<string, WorldObjectMethod>();
+	public static readonly Dictionary<string, WorldObjectMethod> WorldObject_Methods = new Dictionary<string, WorldObjectMethod>() {
+		{ "wall", new Wall() },
+		{ "door", new Door() }
+	};
 
 }

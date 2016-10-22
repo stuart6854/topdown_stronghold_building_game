@@ -25,6 +25,21 @@ public class Tile : WorldObject {
 			OnCreated(this);
 	}
 
+	public bool PlaceInstalledObject(InstalledObject prototype) {
+		if(this.InstalledObject != null) {
+			return false;
+		}
+		
+		this.InstalledObject = prototype.PlaceInstance(this);
+
+		//TODO: Update neighbours if installed object connects to them
+
+		if(this.InstalledObject.GetOnCreated() != null)
+			this.InstalledObject.GetOnCreated()(this.InstalledObject);
+
+		return true;
+	}
+
 	public InstalledObject GetInstalledObject() {
 		return InstalledObject;
 	}
