@@ -35,9 +35,9 @@ public class Tile : WorldObject {
 			InstalledObject.OnUpdate();
 	}
 
-	public bool PlaceInstalledObject(InstalledObject prototype) {
+	public InstalledObject PlaceInstalledObject(InstalledObject prototype) {
 		if(this.InstalledObject != null) {
-			return false;
+			return null;
 		}
 		
 		this.InstalledObject = prototype.PlaceInstance(this);
@@ -58,7 +58,10 @@ public class Tile : WorldObject {
 		if(this.InstalledObject.GetOnCreated() != null)
 			this.InstalledObject.GetOnCreated()(this.InstalledObject);
 
-		return true;
+	    if(OnChanged != null)
+	        OnChanged(this);
+
+	    return this.InstalledObject;
 	}
 
 	public void ChangeType(string type) {

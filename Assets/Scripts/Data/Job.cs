@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
+using UnityEngine;
 using Debug = UnityEngine.Debug;
 
 public class Job : IComparable<Job> {
 
     private int Priority;
+    private float TimeCreated;
 
     private Tile Tile;
 
@@ -18,6 +20,7 @@ public class Job : IComparable<Job> {
         this.Tile = tile;
         this.CompletionTime = completionTime;
         this.Priority = priority;
+        this.TimeCreated = Time.realtimeSinceStartup;
 
         RegisterOnCompleteCallback(JobAction);
     }
@@ -67,7 +70,11 @@ public class Job : IComparable<Job> {
     }
 
     public int CompareTo(Job other) {
-        return other.Priority.CompareTo(this.Priority);
+        int result = other.Priority.CompareTo(this.Priority);
+        if(result == 0)
+            result = other.TimeCreated.CompareTo(this.TimeCreated);
+
+        return result;
     }
 
     public override bool Equals(object obj) {
@@ -79,6 +86,9 @@ public class Job : IComparable<Job> {
             return false;
 
         if(otherJob.Priority != this.Priority)
+            return false;
+
+        if(otherJob.TimeCreated != this.TimeCreated)
             return false;
 
         return true;

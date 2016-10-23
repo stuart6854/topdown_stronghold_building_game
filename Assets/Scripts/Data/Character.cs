@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,10 +6,12 @@ using UnityEngine;
 public class Character {
 
     //References
-    private Tile CurrentTile, DestinationTile;
+    private Tile CurrentTile, NextTile, DestinationTile;
     private float PercentageBetweenTiles;
 
     private Job CurrentJob;
+    private Tile[] CurrentPath;
+    private int PathIndex;
 
     //Data
     private float Rotation;
@@ -23,7 +25,7 @@ public class Character {
 
 
     public Character(Tile tile) {
-        this.CurrentTile = this.DestinationTile = tile;
+        this.CurrentTile = this.NextTile = this.DestinationTile = tile;
         this.OnChanged += CharacterSpriteController.Instance.OnCharacterChanged;
 
         this.DestinationTile = WorldController.Instance.GetTileAt(0, 0);
@@ -48,11 +50,14 @@ public class Character {
 
             if(CurrentJob == null) {
                 JobSearchCooldown = UnityEngine.Random.Range(0.1f, 0.5f);
-                DestinationTile = CurrentTile;
+                DestinationTile = NextTile = CurrentTile;
                 return;
             }
             return;
         }
+
+        if(CurrentPath == null)
+            return; //Still waiting on our path
 
         if(CurrentTile == CurrentJob.GetTile()) {
             CurrentJob.DoJob(Time.deltaTime);
@@ -60,11 +65,11 @@ public class Character {
     }
 
     private void Move() {
-        if(DestinationTile == CurrentTile)
+        if(CurrentTile == DestinationTile)
             return;
 
-        float x = Mathf.Pow(CurrentTile.GetX() - DestinationTile.GetX(), 2);
-        float y = Mathf.Pow(CurrentTile.GetY() - DestinationTile.GetY(), 2);
+        float x = Mathf.Pow(CurrentTile.GetX() - NextTile.GetX(), 2);
+        float y = Mathf.Pow(CurrentTile.GetY() - NextTile.GetY(), 2);
         float distToTravel = Mathf.Sqrt(x + y);
 
         float distThisFrame = MoveSpeed * Time.deltaTime;
@@ -74,16 +79,19 @@ public class Character {
         PercentageBetweenTiles += percentageThisFrame;
 
         if(PercentageBetweenTiles >= 1.0f) {
-            CurrentTile = DestinationTile;
+            PathIndex++;
+            CurrentTile = NextTile;
             PercentageBetweenTiles = 0;
+            if(PathIndex < CurrentPath.Length)
+                NextTile = CurrentPath[PathIndex];
         }
     }
 
     private void Rotate() {
-        if(DestinationTile == CurrentTile)
+        if(CurrentTile == NextTile)
             return;
 
-        Vector2 vecToDest = new Vector2(DestinationTile.GetX() - CurrentTile.GetX(), DestinationTile.GetY() - CurrentTile.GetY());
+        Vector2 vecToDest = new Vector2(NextTile.GetX() - CurrentTile.GetX(), NextTile.GetY() - CurrentTile.GetY());
         float angle = Mathf.Atan2(vecToDest.y, vecToDest.x) * Mathf.Rad2Deg;
         Rotation = Mathf.LerpAngle(Rotation, angle, Time.deltaTime * LookSpeed);
     }
@@ -96,25 +104,39 @@ public class Character {
         CurrentJob.RegisterOnCompleteCallback(OnJobComplete);
         CurrentJob.RegisterOnAbortedCallback(OnJobComplete);
         DestinationTile = CurrentJob.GetTile();
-        //TODO: Try and get path at this point to check if job is accessible
+        PathfindingController.Instance.RequestPath(CurrentTile, DestinationTile, OnPathRecieved);
+    }
+
+    private void OnPathRecieved(Tile[] path, bool success) {
+        if(!success || path.Length == 0 || path[path.Length - 1] != DestinationTile) {
+            CurrentJob = null;
+            JobSearchCooldown = UnityEngine.Random.Range(0.1f, 0.5f);
+            DestinationTile = NextTile = CurrentTile;
+            return;
+        }
+
+        CurrentPath = path;
+        PathIndex = 0;
+        NextTile = CurrentPath[0];
     }
 
     private void OnJobComplete(Job job) {
         CurrentJob = null;
-        DestinationTile = CurrentTile;
+	    CurrentPath = null;
+        DestinationTile = NextTile = CurrentTile;
         JobSearchCooldown = UnityEngine.Random.Range(0.1f, 0.5f);
     }
 
     public float GetX() {
-        return Mathf.Lerp(CurrentTile.GetX(), DestinationTile.GetX(), PercentageBetweenTiles);
+        return Mathf.Lerp(CurrentTile.GetX(), NextTile.GetX(), PercentageBetweenTiles);
     }
 
     public float GetY() {
-        return Mathf.Lerp(CurrentTile.GetY(), DestinationTile.GetY(), PercentageBetweenTiles);
+        return Mathf.Lerp(CurrentTile.GetY(), NextTile.GetY(), PercentageBetweenTiles);
     }
 
     public float GetZ() {
-        return 0.0f;
+        return -0.1f;
     }
 
     public float GetRotation() {

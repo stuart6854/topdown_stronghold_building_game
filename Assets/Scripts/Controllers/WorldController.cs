@@ -6,6 +6,8 @@ public class WorldController : MonoBehaviour {
 
 	public static WorldController Instance;
 
+    public const int WIDTH = 100, HEIGHT = 100;
+
 	private World world;
 
 	void Awake() {
@@ -13,10 +15,10 @@ public class WorldController : MonoBehaviour {
 	}
 	
 	void Start () {
-		world = new World(100, 100);
-		world.RegisterOnWorldObjectCreatedCallback(SpriteController.Instance.OnWorldObjectCreated);
-		world.RegisterOnWorldObjectChangedCallback(SpriteController.Instance.OnWorldObjectChanged);
-		world.InitialiseWorld();
+	    world = new World(WIDTH, HEIGHT);
+	    world.RegisterOnWorldObjectCreatedCallback(SpriteController.Instance.OnWorldObjectCreated);
+	    world.RegisterOnWorldObjectChangedCallback(SpriteController.Instance.OnWorldObjectChanged);
+	    world.InitialiseWorld();
 	}
 	
 	void Update () {

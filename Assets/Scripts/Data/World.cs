@@ -85,10 +85,27 @@ public class World {
 		return Tiles[x, y];
 	}
 
+    public int GetWidth() {
+        return Width;
+    }
+
+    public int GetHeight() {
+        return Height;
+    }
+
     public void RegisterOnWorldObjectCreatedCallback(Action<WorldObject> callback) {
 		OnWorldObjectCreated -= callback;
 		OnWorldObjectCreated += callback;
-	}
+
+        if(Tiles == null)
+            return;
+
+        for(int x = 0; x < Width; x++) {
+            for(int y = 0; y < Height; y++) {
+                Tiles[x, y].RegisterOnCreatedCallback(callback);
+            }
+        }
+    }
 
 	public void UnregisterOnWorldObjectCreatedCallback(Action<WorldObject> callback) {
 		OnWorldObjectCreated -= callback;
@@ -97,6 +114,15 @@ public class World {
 	public void RegisterOnWorldObjectChangedCallback(Action<WorldObject> callback) {
 		OnWorldObjectChanged -= callback;
 		OnWorldObjectChanged += callback;
+
+	    if(Tiles == null)
+	        return;
+
+	    for(int x = 0; x < Width; x++) {
+	        for(int y = 0; y < Height; y++) {
+	            Tiles[x, y].RegisterOnChangedCallback(callback);
+	        }
+	    }
 	}
 
 	public void UnregisterOnWorldObjectChangedCallback(Action<WorldObject> callback) {
