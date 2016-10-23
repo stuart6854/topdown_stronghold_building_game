@@ -69,7 +69,7 @@ public class Pathfinding : MonoBehaviour {
 					if(!neighbour.isWalkable || WillCutCorner(currentNode, neighbour) || closedSet.Contains(neighbour))
 						continue;
 
-					int newMovementCostToNeighbour = currentNode.gCost + GetDistance(currentNode, neighbour) + neighbour.movementPenalty;
+					int newMovementCostToNeighbour = currentNode.gCost + GetDistance(currentNode, neighbour) - neighbour.movementPenalty;
 
 					if(newMovementCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour)) {
 						neighbour.gCost = newMovementCostToNeighbour;

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Serialization;
+using UnityEditor;
 using UnityEngine;
 
 [RequireComponent(typeof(Pathfinding))]
@@ -61,6 +63,7 @@ public class PathfindingController : MonoBehaviour {
                 Node node = Pathfinding.GetGrid().GetNode(x, y);
                 Gizmos.color = (node.isWalkable) ? Color.green : Color.red;
                 Gizmos.DrawCube(new Vector3(x, y, 0), new Vector3(0.25f, 0.25f, 0.01f));
+//                Handles.Label(new Vector3(x + 0.25f, y - 0.25f, 0), node.movementPenalty.ToString());
             }
         }
     }

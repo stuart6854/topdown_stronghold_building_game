@@ -17,7 +17,8 @@ public abstract class WorldObject {
 
 	protected float MovementCost = 1.0f; //Multiplier - 2 = Double Speed, 0.5 = Half Speed
 
-	protected WorldObjectMethod methods;
+	protected WorldObjectMethod Methods;
+    protected Dictionary<string, object> Parameters;
 
 	protected Action<WorldObject> OnCreated;
 	protected Action<WorldObject> OnChanged;
@@ -49,8 +50,19 @@ public abstract class WorldObject {
 	}
 
 	public WorldObjectMethod GetMethods() {
-		return methods;
+		return Methods;
 	}
+
+    public void SetParameter(string key, object value) {
+        if(Parameters.ContainsKey(key))
+            Parameters[key] = value;
+        else
+            Parameters.Add(key, value);
+    }
+
+    public object GetParameter(string key) {
+        return Parameters[key];
+    }
 
 	public Action<WorldObject> GetOnCreated() {
 		return OnCreated;

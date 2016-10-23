@@ -20,7 +20,7 @@ public class Tile : WorldObject {
 		this.Y = y;
 		this.Z = 0.0f;
 		this.WorldObjectType = WorldObjectType.Tile;
-		base.ObjectType = objectType;
+		this.ObjectType = objectType;
 		this.world = world;
 
 		if(OnCreated != null)
@@ -28,8 +28,8 @@ public class Tile : WorldObject {
 	}
 
 	public override void OnUpdate() {
-		if(methods != null)
-			methods.OnUpdate(this);
+		if(Methods != null)
+			Methods.OnUpdate(this);
 
 		if(InstalledObject != null)
 			InstalledObject.OnUpdate();
@@ -70,7 +70,7 @@ public class Tile : WorldObject {
 
 		this.ObjectType = type;
 
-		if(OnChanged != null)
+	    if(OnChanged != null)
 			OnChanged(this);
 	}
 
@@ -120,9 +120,8 @@ public class Tile : WorldObject {
 		if(MovementCost == 0)
 			return Enterabilty.Never;
 
-		if(InstalledObject != null) {
+		if(InstalledObject != null)
 			return InstalledObject.GetEnterability();
-		}
 
 		return Enterabilty.Enterable;
 	}

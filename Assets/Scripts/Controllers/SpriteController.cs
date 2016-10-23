@@ -36,6 +36,28 @@ public class SpriteController : MonoBehaviour {
 		}
 	}
 
+    public void SetSprite(string spriteName, WorldObject worldObject) {
+        if(!WorldObjectGameObjects.ContainsKey(worldObject)) {
+            Debug.Log("SpriteController::SetSprite -> This worldobject doesn't have an associated gameobject!");
+            return;
+        }
+
+        GameObject wo_go = WorldObjectGameObjects[worldObject];
+
+        if(wo_go == null) {
+            Debug.Log("SpriteController::SetSprite -> This worldobjects associated gameobject is NULL!");
+            return;
+        }
+
+        if(!ObjectSprites.ContainsKey(spriteName)) {
+            Debug.Log("SpriteController::SetSprite -> The sprite " + spriteName + " does NOT Exist!");
+            return;
+        }
+
+        SpriteRenderer sr = wo_go.GetComponent<SpriteRenderer>();
+        sr.sprite = ObjectSprites[spriteName];
+    }
+
 	public void OnWorldObjectCreated(WorldObject worldObject) {
 		int x = worldObject.GetX();
 		int y = worldObject.GetY();
@@ -67,7 +89,7 @@ public class SpriteController : MonoBehaviour {
 		GameObject wo_go = WorldObjectGameObjects[worldObject];
 
 		if(wo_go == null) {
-			Debug.Log("SpriteController::OnWorldObjectChanged -> This worldobjects ssociated gameobject is NULL!");
+			Debug.Log("SpriteController::OnWorldObjectChanged -> This worldobjects associated gameobject is NULL!");
 			return;
 		}
 

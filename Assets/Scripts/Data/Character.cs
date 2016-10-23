@@ -68,11 +68,20 @@ public class Character {
         if(CurrentTile == DestinationTile)
             return;
 
+        if(NextTile.GetEnterabilty() == Enterabilty.Soon)
+            return;
+
         float x = Mathf.Pow(CurrentTile.GetX() - NextTile.GetX(), 2);
         float y = Mathf.Pow(CurrentTile.GetY() - NextTile.GetY(), 2);
         float distToTravel = Mathf.Sqrt(x + y);
 
         float distThisFrame = MoveSpeed * Time.deltaTime;
+
+        //Apply MovementCost
+        if(PercentageBetweenTiles < 0.5f)
+            distThisFrame *= CurrentTile.GetMovementCost();
+        else
+            distThisFrame *= NextTile.GetMovementCost();
 
         float percentageThisFrame = distThisFrame / distToTravel;
 

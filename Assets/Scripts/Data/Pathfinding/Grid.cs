@@ -27,7 +27,7 @@ public class Grid {
             for(int y = 0; y < Height; y++) {
                 Tile tile = WorldController.Instance.GetTileAt(x, y);
 
-                grid[x, y] = new Node(tile, IsTileWalkable(tile), 0);
+                grid[x, y] = new Node(tile, IsTileWalkable(tile), (int)(tile.GetMovementCost() * 10f));
             }
         }
     }
@@ -76,7 +76,7 @@ public class Grid {
         }
 
         if(tile != null)
-            grid[worldObject.GetX(), worldObject.GetY()] = new Node(tile, IsTileWalkable(tile), 1);
+            grid[worldObject.GetX(), worldObject.GetY()] = new Node(tile, IsTileWalkable(tile), (int)(tile.GetMovementCost() * 10f));
     }
 
     public int GetWidth() {

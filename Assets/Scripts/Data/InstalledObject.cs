@@ -12,7 +12,7 @@ public class InstalledObject : WorldObject {
 		InstalledObject io = new InstalledObject();
 		io.ObjectType = type;
 		io.WorldObjectType = WorldObjectType.InstalledObject;
-		io.methods = methods;
+		io.Methods = methods;
 		io.MovementCost = movementCost;
 		io.ConnectsToNeighbours = connectToNeighbours;
 
@@ -30,14 +30,17 @@ public class InstalledObject : WorldObject {
 		io.ConnectsToNeighbours = this.ConnectsToNeighbours;
 		io.OnCreated = this.OnCreated;
 		io.OnChanged = this.OnChanged;
-		io.methods = this.methods;
+		io.Methods = this.Methods;
+	    io.Parameters = new Dictionary<string, object>();
+
+	    io.Methods.OnCreated(io);
 
 		return io;
 	}
 
 	public override void OnUpdate() {
-		if(methods != null)
-			methods.OnUpdate(this);
+		if(Methods != null)
+			Methods.OnUpdate(this);
 	}
 
 	public Tile GetTile() {
@@ -48,7 +51,7 @@ public class InstalledObject : WorldObject {
 		if(MovementCost == 0)
 			return Enterabilty.Never;
 
-		else return methods.GetEnterabilty(this);
+		else return Methods.GetEnterabilty(this);
 	}
 
 	public bool GetConnectToNeighbours() {
