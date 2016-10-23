@@ -64,6 +64,29 @@ public class Tile : WorldObject {
 	    return this.InstalledObject;
 	}
 
+    public LooseItem PlaceLooseItem(LooseItem looseItem) {
+        if(this.MovementCost == 0)
+            return null;
+
+        if(this.InstalledObject != null && this.InstalledObject.GetMovementCost() == 0)
+            return null;
+
+        if(this.LooseItem != null) {
+            //TODO: Try combine stack
+
+            return this.LooseItem;
+        }
+
+        this.LooseItem = looseItem.Clone();
+        this.LooseItem.SetTile(this);
+        looseItem.SetStackSize(0);
+
+        if(OnCreated != null)
+            OnCreated(this.LooseItem);
+
+        return this.LooseItem;
+    }
+
 	public void ChangeType(string type) {
 		if(type == ObjectType)
 			return; //We are already this type

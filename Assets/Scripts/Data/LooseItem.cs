@@ -6,14 +6,46 @@ public class LooseItem : WorldObject {
 
 	private Tile Tile;
 
-	public LooseItem(Tile tile, string objectType) {
-		this.Tile = tile;
-		base.ObjectType = objectType;
+    //Data
+    private int MaxStackSize;
+    private int StackSize;
+
+	public LooseItem(string type, int amount) {
+	    this.WorldObjectType = WorldObjectType.LooseItem;
+		this.ObjectType = type;
 	}
 
-	public override void OnUpdate() {
-		if(Methods != null)
-			Methods.OnUpdate(this);
-	}
+    public LooseItem(LooseItem other) {
+        this.WorldObjectType = WorldObjectType.LooseItem;
+        this.ObjectType = other.ObjectType;
+        this.StackSize = other.StackSize;
+    }
 
+    public override void OnUpdate(){  }
+
+    public LooseItem Clone() {
+        return new LooseItem(this);
+    }
+
+    public void SetTile(Tile tile) {
+        this.Tile = tile;
+        this.X = tile.GetX();
+        this.Y = tile.GetY();
+    }
+
+    public Tile GetTile() {
+        return Tile;
+    }
+
+    public int GetMaxStackSize() {
+        return MaxStackSize;
+    }
+
+    public void SetStackSize(int size) {
+        this.StackSize = size;
+    }
+
+    public int GetStackSize() {
+        return StackSize;
+    }
 }

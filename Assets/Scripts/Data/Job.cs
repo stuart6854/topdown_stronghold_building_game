@@ -94,4 +94,8 @@ public class Job : IComparable<Job> {
         return true;
     }
 
+    public override int GetHashCode() {
+        return base.GetHashCode();
+    }
+
 }
