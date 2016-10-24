@@ -16,6 +16,31 @@ public class InputController : MonoBehaviour {
 	}
 	
 	void Update () {
+	    if(Input.GetKeyUp(KeyCode.H)) { //CODE FOR TESTING Pathfinding.FindPathToClosestTile
+	        Tile[] testTargets = new[] {
+	            WorldController.Instance.GetTileAt(5, 5),
+	            WorldController.Instance.GetTileAt(8, 5),
+	            WorldController.Instance.GetTileAt(3, 4),
+	            WorldController.Instance.GetTileAt(1, 5)
+	        };
+
+	        Tile[] path =
+	            PathfindingController.Instance.GetPathfinding()
+	                .FindPathToClosestTile(WorldController.Instance.GetTileAt(0, 0), testTargets);
+
+	        if(path == null) {
+	            Debug.Log("Path is NULL!");
+	            return;
+	        }
+
+	        if(path.Length == 0)
+	            Debug.Log("Path length is 0!");
+
+	        foreach(Tile tile in path) {
+	            Debug.Log(tile.GetX() + ", " + tile.GetY());
+	        }
+	    }
+
 		if(Input.GetKeyUp(KeyCode.Escape)) {
 			if(BuildController.Instance.GetBuildMode() != BuildMode.None) {
 				BuildController.Instance.SetBuildMode(BuildMode.None);

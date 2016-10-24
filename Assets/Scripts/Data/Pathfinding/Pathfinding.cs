@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using UnityEngine;
 
 public class Pathfinding : MonoBehaviour {
@@ -34,10 +35,22 @@ public class Pathfinding : MonoBehaviour {
 		return true;
 	}
 
-//	public void FindPath(Tile start, Tile end) {
-//		Tile[] path = FindPathInstant(start, end);
-//		pathController.FinishedProcessingPath(path, (path != null));
-//	}
+    public Tile[] FindPathToClosestTile(Tile start, Tile[] targets) {
+        int ShortestPathSize = int.MaxValue;
+        Tile[] ShortestPath = null;
+
+        for(int i = 0; i < targets.Length; i++) {
+            Tile[] path = FindPathInstant(start, targets[i]);
+            int pathSize = path.Length;
+            if(pathSize >= ShortestPathSize)
+                continue;
+
+            ShortestPath = path;
+            ShortestPathSize = pathSize;
+        }
+
+        return ShortestPath;
+    }
 
 	public Tile[] FindPathInstant(Tile start, Tile end) {
 		Stopwatch sw = new Stopwatch();
@@ -97,7 +110,7 @@ public class Pathfinding : MonoBehaviour {
 		return waypoints;
 	}
 
-	Tile[] RetracePath(Node startNode, Node endNode) {
+    Tile[] RetracePath(Node startNode, Node endNode) {
 		List<Tile> path = new List<Tile>();
 		Node currentNode = endNode;
 
