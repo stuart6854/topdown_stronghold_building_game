@@ -93,6 +93,8 @@ public class Tile : WorldObject {
 
 		this.ObjectType = type;
 
+	    PlaceLooseItem(new LooseItem("stone", 5)); //TODO: Temporary! For testing looseitems and job requirements
+
 	    if(OnChanged != null)
 			OnChanged(this);
 	}

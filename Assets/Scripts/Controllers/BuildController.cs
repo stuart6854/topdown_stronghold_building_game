@@ -47,17 +47,7 @@ public class BuildController : MonoBehaviour {
                 if(BuildMode == BuildMode.Character)
                     WorldController.Instance.GetWorld().PlaceCharacter(tile);
                 else {
-                    string type = ObjectType;
-
-                    if(BuildMode == BuildMode.Tile) {
-                        Job job = new Job(tile, j => tile.ChangeType(type), 1f, 0);
-                        if(tile.SetPendingJob(job))
-                            JobController.Instance.AddJob(job);
-                    } else if(BuildMode == BuildMode.InstalledObject) {
-                        Job job = new Job(tile, j => WorldController.Instance.GetWorld().PlaceInstalledObject(type, tile), 1f, 0);
-                        if(tile.SetPendingJob(job))
-                            JobController.Instance.AddJob(job);
-                    }
+                    SetupJob(tile);
                 }
             }
 
@@ -69,19 +59,8 @@ public class BuildController : MonoBehaviour {
             for(int x = (int) start.x; x <= end.x; x++) {
                 for(int y = (int) start.y; y <= end.y; y++) {
                     Tile tile = WorldController.Instance.GetTileAt(x, y);
-                    if(tile == null) continue;
-
-                    string type = ObjectType;
-
-                    if(BuildMode == BuildMode.Tile) {
-                        Job job = new Job(tile, j => tile.ChangeType(type), 1f, 0);
-                        if(tile.SetPendingJob(job))
-                            JobController.Instance.AddJob(job);
-                    } else if(BuildMode == BuildMode.InstalledObject) {
-                        Job job = new Job(tile, j => WorldController.Instance.GetWorld().PlaceInstalledObject(type, tile), 1f, 0);
-                        if(tile.SetPendingJob(job))
-                            JobController.Instance.AddJob(job);
-                    }
+                    if(tile != null)
+                        SetupJob(tile);
                 }
             }
         }
@@ -119,6 +98,22 @@ public class BuildController : MonoBehaviour {
                         sr.color = t.GetInstalledObject() == null ? Color.green : Color.red;
                 }
             }
+        }
+    }
+
+    private void SetupJob(Tile tile) {
+        string type = ObjectType;
+
+        Dictionary<string, int> requirements = WorldObjectMethod.Methods[ObjectType].GetConstructionRequirements();
+
+        if(BuildMode == BuildMode.Tile) {
+            Job job = new Job(tile, j => tile.ChangeType(type), requirements, 1f, 0);
+            if(tile.SetPendingJob(job))
+                JobController.Instance.AddJob(job);
+        } else if(BuildMode == BuildMode.InstalledObject) {
+            Job job = new Job(tile, j => WorldController.Instance.GetWorld().PlaceInstalledObject(type, tile), requirements, 1f, 0);
+            if(tile.SetPendingJob(job))
+                JobController.Instance.AddJob(job);
         }
     }
 

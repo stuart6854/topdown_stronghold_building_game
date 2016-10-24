@@ -37,6 +37,18 @@ public class LooseItem : WorldObject {
         return Tile;
     }
 
+    public override float GetZ() {
+        return -0.2f;
+    }
+
+    public void AddToStack(int amnt) {
+        StackSize += amnt;
+    }
+
+    public void RemoveFromStack(int amnt) {
+        StackSize -= amnt;
+    }
+
     public int GetMaxStackSize() {
         return MaxStackSize;
     }

@@ -58,4 +58,8 @@ public class InstalledObject : WorldObject {
 		return ConnectsToNeighbours;
 	}
 
+    public override float GetZ() {
+        return -0.1f;
+    }
+
 }

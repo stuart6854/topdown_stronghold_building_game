@@ -1,6 +1,9 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Character : WorldObject{
+
+    //TODO: Add LooseItem Inventory(separate class or built into this class?)
 
     //References
     private Tile CurrentTile, NextTile, DestinationTile;
@@ -16,6 +19,8 @@ public class Character : WorldObject{
 
     private float JobSearchCooldown;
 
+    private Inventory Inventory;
+
 
     public Character(Tile tile) {
         this.WorldObjectType = WorldObjectType.Character;
@@ -24,6 +29,8 @@ public class Character : WorldObject{
 
         this.OnChanged += SpriteController.Instance.OnWorldObjectChanged;
         this.DestinationTile = WorldController.Instance.GetTileAt(0, 0);
+
+        this.Inventory = new Inventory(4);
     }
 
     public override void OnUpdate() {
@@ -142,7 +149,7 @@ public class Character : WorldObject{
     }
 
     public override float GetZ() {
-        return -0.1f;
+        return -0.3f;
     }
 
     public Job GetCurrentJob() {
