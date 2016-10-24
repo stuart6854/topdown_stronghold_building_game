@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum WorldObjectType { 
-	Tile, InstalledObject, LooseItem
+	Tile, InstalledObject, LooseItem, Character
 }
 
 public abstract class WorldObject {
@@ -12,8 +12,9 @@ public abstract class WorldObject {
 	protected WorldObjectType WorldObjectType;
 	protected string ObjectType;
 
-	protected int X, Y;
+	protected float X, Y;
 	protected float Z;
+    protected float Rotation; //In Degrees
 
 	protected float MovementCost = 1.0f; //Multiplier - 2 = Double Speed, 0.5 = Half Speed
 
@@ -33,17 +34,21 @@ public abstract class WorldObject {
 		return ObjectType;
 	}
 
-	public int GetX() {
+	public virtual float GetX() {
 		return X;
 	}
 
-	public int GetY() {
+	public virtual float GetY() {
 		return Y;
 	}
 
-	public float GetZ() {
+	public virtual float GetZ() {
 		return Z;
 	}
+
+    public float GetRotation() {
+        return Rotation;
+    }
 
 	public float GetMovementCost() {
 		return MovementCost;

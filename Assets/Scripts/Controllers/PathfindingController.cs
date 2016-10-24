@@ -10,45 +10,18 @@ public class PathfindingController : MonoBehaviour {
     public static PathfindingController Instance;
 
     private Pathfinding Pathfinding;
-    private PathRequest CurrentRequest;
-
-    //Data
-    private Queue<PathRequest> PathRequests;
-    private bool IsProcessing;
-
 
     void Awake() {
         Instance = this;
         Pathfinding = GetComponent<Pathfinding>();
     }
 
-    private void Start() {
-        PathRequests = new Queue<PathRequest>();
-    }
-
-    public void RequestPath(Tile start, Tile end, Action<Tile[], bool> callback) {
-        PathRequest request = new PathRequest(start, end, callback);
-        PathRequests.Enqueue(request);
-        TryProcessNext();
+    public Tile[] RequestPath(Tile start, Tile end) {
+        return Pathfinding.FindPathInstant(start, end);
     }
 
     public bool PathStillValid(Tile[] path, int currentIndex) {
         return Pathfinding.PathStillValid(path, currentIndex);
-    }
-
-    private void TryProcessNext() {
-        if(!IsProcessing && PathRequests.Count > 0) {
-            PathRequest request = PathRequests.Dequeue();
-            CurrentRequest = request;
-            IsProcessing = true;
-            Pathfinding.FindPath(request.pathStart, request.pathEnd);
-        }
-    }
-
-    public void FinishedProcessingPath(Tile[] path, bool success) {
-        CurrentRequest.callback(path, success);
-        IsProcessing = false;
-        TryProcessNext();
     }
 
     private void OnDrawGizmosSelected() {
@@ -67,18 +40,6 @@ public class PathfindingController : MonoBehaviour {
 
     public Pathfinding GetPathfinding() {
         return Pathfinding;
-    }
-
-    struct PathRequest {
-        public Tile pathStart;
-        public Tile pathEnd;
-        public Action<Tile[], bool> callback;
-
-        public PathRequest(Tile start, Tile end, Action<Tile[], bool> callback) {
-            this.pathStart = start;
-            this.pathEnd = end;
-            this.callback = callback;
-        }
     }
 
 }

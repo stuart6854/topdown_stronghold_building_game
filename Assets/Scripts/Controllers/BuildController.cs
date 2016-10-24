@@ -69,11 +69,12 @@ public class BuildController : MonoBehaviour {
 
                     if(BuildMode == BuildMode.Tile) {
                         Job job = new Job(t, j => t.ChangeType(type), 1f, 0);
-                        JobController.Instance.AddJob(job, t);
+                        if(t.SetPendingJob(job))
+                            JobController.Instance.AddJob(job);
                     } else if(BuildMode == BuildMode.InstalledObject) {
-                        Job job = new Job(t,
-                            j => WorldController.Instance.GetWorld().PlaceInstalledObject(type, t), 1f, 0);
-                        JobController.Instance.AddJob(job, t);
+                        Job job = new Job(t, j => WorldController.Instance.GetWorld().PlaceInstalledObject(type, t), 1f, 0);
+                        if(t.SetPendingJob(job))
+                            JobController.Instance.AddJob(job);
                     }
                 }
             }

@@ -72,7 +72,7 @@ public class World {
     public void PlaceCharacter(Tile tile) {
         Character character = new Character(tile);
         Characters.Add(character);
-        CharacterSpriteController.Instance.OnCharacterCreated(character);
+        SpriteController.Instance.OnWorldObjectCreated(character);
     }
 
     public Tile GetTile(int x, int y) {

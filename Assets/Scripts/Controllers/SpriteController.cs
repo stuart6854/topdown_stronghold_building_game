@@ -12,6 +12,7 @@ public class SpriteController : MonoBehaviour {
 	public Transform TileParent;
 	public Transform InstalledObjectParent;
 	public Transform LooseItemParent;
+	public Transform CharacterParent;
 
 	private Dictionary<string, Sprite> ObjectSprites;
 
@@ -59,8 +60,8 @@ public class SpriteController : MonoBehaviour {
     }
 
 	public void OnWorldObjectCreated(WorldObject worldObject) {
-		int x = worldObject.GetX();
-		int y = worldObject.GetY();
+		float x = worldObject.GetX();
+		float y = worldObject.GetY();
 		float z = worldObject.GetZ();
 
 		GameObject obj = new GameObject(worldObject.GetObjectType() + "_" + x + "_" + y);
@@ -76,6 +77,8 @@ public class SpriteController : MonoBehaviour {
 			obj.transform.SetParent(InstalledObjectParent);
 		else if(worldObject.GetWorldObjectType() == WorldObjectType.LooseItem)
 			obj.transform.SetParent(LooseItemParent);
+	    else if(worldObject.GetWorldObjectType() == WorldObjectType.Character)
+		    obj.transform.SetParent(CharacterParent);
 
 		WorldObjectGameObjects.Add(worldObject, obj);
 	}
@@ -93,7 +96,15 @@ public class SpriteController : MonoBehaviour {
 			return;
 		}
 
-		SpriteRenderer sr = wo_go.GetComponent<SpriteRenderer>();
+	    float x = worldObject.GetX();
+	    float y = worldObject.GetY();
+	    float z = worldObject.GetZ();
+	    float rot = worldObject.GetRotation();
+
+	    wo_go.transform.position = new Vector3(x, y, z);
+	    wo_go.transform.eulerAngles = new Vector3(0, 0, rot);
+
+	    SpriteRenderer sr = wo_go.GetComponent<SpriteRenderer>();
 		sr.sprite = GetSprite(worldObject);
 	}
 
@@ -116,8 +127,8 @@ public class SpriteController : MonoBehaviour {
 	}
 
 	private int GetInstalledObjectBitmask(InstalledObject io) {
-		int x = io.GetTile().GetX();
-		int y = io.GetTile().GetY();
+		int x = (int)io.GetTile().GetX();
+		int y = (int)io.GetTile().GetY();
 		int bitmask = 0;
 
 		Tile tile = WorldController.Instance.GetTileAt(x, y + 1); //North

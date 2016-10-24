@@ -1,9 +1,6 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Character {
+public class Character : WorldObject{
 
     //References
     private Tile CurrentTile, NextTile, DestinationTile;
@@ -14,24 +11,22 @@ public class Character {
     private int PathIndex;
 
     //Data
-    private float Rotation;
     private const float MoveSpeed = 3.0f;
     private const float LookSpeed = 5.0f;
 
     private float JobSearchCooldown;
 
-    //Callbacks
-    private Action<Character> OnChanged;
-
 
     public Character(Tile tile) {
+        this.WorldObjectType = WorldObjectType.Character;
+        this.ObjectType = "character";
         this.CurrentTile = this.NextTile = this.DestinationTile = tile;
-        this.OnChanged += CharacterSpriteController.Instance.OnCharacterChanged;
 
+        this.OnChanged += SpriteController.Instance.OnWorldObjectChanged;
         this.DestinationTile = WorldController.Instance.GetTileAt(0, 0);
     }
 
-    public void OnUpdate() {
+    public override void OnUpdate() {
         UpdateJob();
         Move();
         Rotate();
@@ -53,14 +48,17 @@ public class Character {
                 DestinationTile = NextTile = CurrentTile;
                 return;
             }
-            return;
-        }
 
-        if(CurrentPath == null)
-            return; //Still waiting on our path
+        } else {
+            //TODO: Have required materials/resources
 
-        if(CurrentTile == CurrentJob.GetTile()) {
-            CurrentJob.DoJob(Time.deltaTime);
+
+            if(CurrentPath == null)
+                return; //Still waiting on our path
+
+            if(CurrentTile == CurrentJob.GetTile()) {
+                CurrentJob.DoJob(Time.deltaTime);
+            }
         }
     }
 
@@ -113,11 +111,10 @@ public class Character {
         CurrentJob.RegisterOnCompleteCallback(OnJobComplete);
         CurrentJob.RegisterOnAbortedCallback(OnJobComplete);
         DestinationTile = CurrentJob.GetTile();
-        PathfindingController.Instance.RequestPath(CurrentTile, DestinationTile, OnPathRecieved);
-    }
 
-    private void OnPathRecieved(Tile[] path, bool success) {
-        if(!success || path.Length == 0 || path[path.Length - 1] != DestinationTile) {
+        Tile[] path = PathfindingController.Instance.RequestPath(CurrentTile, DestinationTile);
+        if(path == null || path.Length == 0 || path[path.Length - 1] != DestinationTile)  {
+            JobController.Instance.AddJob(CurrentJob);
             CurrentJob = null;
             JobSearchCooldown = UnityEngine.Random.Range(0.1f, 0.5f);
             DestinationTile = NextTile = CurrentTile;
@@ -136,20 +133,16 @@ public class Character {
         JobSearchCooldown = UnityEngine.Random.Range(0.1f, 0.5f);
     }
 
-    public float GetX() {
+    public override float GetX() {
         return Mathf.Lerp(CurrentTile.GetX(), NextTile.GetX(), PercentageBetweenTiles);
     }
 
-    public float GetY() {
+    public override float GetY() {
         return Mathf.Lerp(CurrentTile.GetY(), NextTile.GetY(), PercentageBetweenTiles);
     }
 
-    public float GetZ() {
+    public override float GetZ() {
         return -0.1f;
-    }
-
-    public float GetRotation() {
-        return Rotation;
     }
 
     public Job GetCurrentJob() {

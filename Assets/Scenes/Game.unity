@@ -228,7 +228,6 @@ GameObject:
   m_Component:
   - component: {fileID: 341963557}
   - component: {fileID: 341963558}
-  - component: {fileID: 341963559}
   m_Layer: 0
   m_Name: SpriteController
   m_TagString: Controller
@@ -268,19 +267,6 @@ MonoBehaviour:
   TileParent: {fileID: 818422903}
   InstalledObjectParent: {fileID: 2124467713}
   LooseItemParent: {fileID: 1240592145}
---- !u!114 &341963559
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 341963556}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd627e700a810104cb4392702b007bb7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SpriteMaterial: {fileID: 2100000, guid: 55de3a4d2abcbee4fad9ec0ed8eda555, type: 2}
-  CharacterSprite: {fileID: 21300000, guid: 4b3cef45c96528c47b4fe81d77108a1a, type: 3}
   CharacterParent: {fileID: 1156835337}
 --- !u!1 &427585580
 GameObject:

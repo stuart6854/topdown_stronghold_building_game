@@ -9,7 +9,7 @@ public class JobController : MonoBehaviour {
     public Material SpriteMaterial;
     public Sprite JobSprite;
 
-    private List<Job> JobQueue;
+    private List<Job> JobQueue; //TODO: Some sort of advanced, intelligent job sorting based on things like priority, creationTime, its requirements, etc.
 
     private Dictionary<Job, GameObject> JobGameobjects;
 
@@ -24,19 +24,16 @@ public class JobController : MonoBehaviour {
 
 	}
 
-    public void AddJob(Job job, Tile tile) {
+    public void AddJob(Job job) {
         if(job.GetCompletionTime() <= 0.0f) {
             job.DoJob(0); //Lets autocomplete jobs with 0 or minus completion times. Why should AI waste time if it is gonna complete instantly!
-            return; //Job wasn't added to queue
+            return;
         }
 
         if(JobQueue.Contains(job)) {
             Debug.Log("JobController::AddJob -> This Job is already in the JobQueue!");
             return;
         }
-
-        if(!tile.SetPendingJob(job))
-            return;
 
         job.RegisterOnCompleteCallback(OnJobEnd);
         job.RegisterOnAbortedCallback(OnJobEnd);
@@ -58,6 +55,9 @@ public class JobController : MonoBehaviour {
     }
 
     private void OnJobCreated(Job job) {
+        if(JobGameobjects.ContainsKey(job))
+            return;
+
         GameObject job_go = new GameObject("Job_" + job.GetTile().GetX() + "_" + job.GetTile().GetY());
         job_go.transform.SetParent(this.transform);
         job_go.transform.position = new Vector3(job.GetTile().GetX(), job.GetTile().GetY(), 0);

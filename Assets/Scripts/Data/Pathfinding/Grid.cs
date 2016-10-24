@@ -44,8 +44,8 @@ public class Grid {
                 if(x == 0 && y == 0)
                     continue;
 
-                int checkX = node.tile.GetX() + x;
-                int checkY = node.tile.GetY() + y;
+                int checkX = (int)node.tile.GetX() + x;
+                int checkY = (int)node.tile.GetY() + y;
                 if(checkX >= 0 && checkX < Width && checkY >= 0 && checkY < Height) {
                     neighbours.Add(grid[checkX, checkY]);
                 }
@@ -76,7 +76,7 @@ public class Grid {
         }
 
         if(tile != null)
-            grid[worldObject.GetX(), worldObject.GetY()] = new Node(tile, IsTileWalkable(tile), (int)(tile.GetMovementCost() * 10f));
+            grid[(int)worldObject.GetX(), (int)worldObject.GetY()] = new Node(tile, IsTileWalkable(tile), (int)(tile.GetMovementCost() * 10f));
     }
 
     public int GetWidth() {

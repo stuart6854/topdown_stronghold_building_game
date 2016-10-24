@@ -123,8 +123,9 @@ public class Tile : WorldObject {
 
 	public Tile[] GetNeighbourTiles() {
 		List<Tile> neighbours = new List<Tile>();
-		for(int x = X - 1; x <= X + 1; x++) {
-			for(int y = Y - 1; y <= Y + 1; y++) {
+		for(int x = (int)X - 1; x <= X + 1; x++) {
+			for(int y = (int)Y - 1; y <= Y + 1; y++) {
+
 				if(x == this.X && y == this.Y)
 					continue;
 
