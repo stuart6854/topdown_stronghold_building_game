@@ -24,4 +24,10 @@ public class Wall : WorldObjectMethod {
 		return BuildMethod.Grid;
 	}
 
+    public override Dictionary<string, int> GetConstructionRequirements() {
+        return new Dictionary<string, int>() {
+            { "stone", 5 }
+        };
+    }
+
 }

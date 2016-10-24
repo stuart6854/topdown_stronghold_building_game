@@ -36,9 +36,9 @@ public class InputController : MonoBehaviour {
 		if(EventSystem.current.IsPointerOverGameObject())
 			return;
 
-	    if(BuildController.Instance.GetBuildMode() == BuildMode.Character) {
-	        Vector2 pos = cam.ScreenToWorldPoint(Input.mousePosition);
+	    if(BuildController.Instance.GetBuildMethod() == BuildMethod.Single || BuildController.Instance.GetBuildMode() == BuildMode.Character) {
 	        if(Input.GetMouseButtonUp(0)) {
+	            Vector2 pos = cam.ScreenToWorldPoint(Input.mousePosition);
 	            BuildController.Instance.DoAction(pos, Vector2.zero);
 	        }
 	    } else {

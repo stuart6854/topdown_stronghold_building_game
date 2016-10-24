@@ -2,20 +2,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum BuildMethod {
-
-    Single,
-    Line,
-    Grid
-
+    Single, Line, Grid
 }
 
 public enum BuildMode {
-
-    None,
-    Tile,
-    InstalledObject,
-    Character
-
+    None, Tile, InstalledObject, Character
 }
 
 public class BuildController : MonoBehaviour {
@@ -49,11 +40,26 @@ public class BuildController : MonoBehaviour {
         if(BuildMode == BuildMode.None)
             return;
 
-        if(BuildMode == BuildMode.Character) {
+        if(GetBuildMethod() == BuildMethod.Single || BuildMode == BuildMode.Character) {
             Tile tile = WorldController.Instance.GetTileAt(Mathf.RoundToInt(start.x), Mathf.RoundToInt(start.y));
 
-            if(tile != null)
-                WorldController.Instance.GetWorld().PlaceCharacter(tile);
+            if(tile != null) {
+                if(BuildMode == BuildMode.Character)
+                    WorldController.Instance.GetWorld().PlaceCharacter(tile);
+                else {
+                    string type = ObjectType;
+
+                    if(BuildMode == BuildMode.Tile) {
+                        Job job = new Job(tile, j => tile.ChangeType(type), 1f, 0);
+                        if(tile.SetPendingJob(job))
+                            JobController.Instance.AddJob(job);
+                    } else if(BuildMode == BuildMode.InstalledObject) {
+                        Job job = new Job(tile, j => WorldController.Instance.GetWorld().PlaceInstalledObject(type, tile), 1f, 0);
+                        if(tile.SetPendingJob(job))
+                            JobController.Instance.AddJob(job);
+                    }
+                }
+            }
 
         } else {
             ClearDragPreviews();
@@ -62,18 +68,18 @@ public class BuildController : MonoBehaviour {
 
             for(int x = (int) start.x; x <= end.x; x++) {
                 for(int y = (int) start.y; y <= end.y; y++) {
-                    Tile t = WorldController.Instance.GetTileAt(x, y);
-                    if(t == null) continue;
+                    Tile tile = WorldController.Instance.GetTileAt(x, y);
+                    if(tile == null) continue;
 
                     string type = ObjectType;
 
                     if(BuildMode == BuildMode.Tile) {
-                        Job job = new Job(t, j => t.ChangeType(type), 1f, 0);
-                        if(t.SetPendingJob(job))
+                        Job job = new Job(tile, j => tile.ChangeType(type), 1f, 0);
+                        if(tile.SetPendingJob(job))
                             JobController.Instance.AddJob(job);
                     } else if(BuildMode == BuildMode.InstalledObject) {
-                        Job job = new Job(t, j => WorldController.Instance.GetWorld().PlaceInstalledObject(type, t), 1f, 0);
-                        if(t.SetPendingJob(job))
+                        Job job = new Job(tile, j => WorldController.Instance.GetWorld().PlaceInstalledObject(type, tile), 1f, 0);
+                        if(tile.SetPendingJob(job))
                             JobController.Instance.AddJob(job);
                     }
                 }
@@ -124,6 +130,13 @@ public class BuildController : MonoBehaviour {
         BuildMode = buildMode;
     }
 
+    public BuildMethod GetBuildMethod() {
+        if(!WorldObjectMethod.Methods.ContainsKey(ObjectType))
+            return BuildMethod.Single;
+
+        return WorldObjectMethod.Methods[ObjectType].GetBuildMethod();
+    }
+
     public void PlaceTile(string type) {
         BuildMode = BuildMode.Tile;
         ObjectType = type;
@@ -135,7 +148,9 @@ public class BuildController : MonoBehaviour {
     }
 
     public void PlaceCharacter() {
+        //TODO: Note that this is temporary, in final game players wont be able to place new characters
         BuildMode = BuildMode.Character;
+        ObjectType = "character";
     }
 
     private void ClearDragPreviews() {

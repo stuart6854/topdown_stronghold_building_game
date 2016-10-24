@@ -48,10 +48,6 @@ public class Door : WorldObjectMethod {
 		return Enterabilty.Soon;
 	}
 
-	public override BuildMethod GetBuildMethod() {
-		return BuildMethod.Single;
-	}
-
     private void ChangeSprite(float openness, WorldObject worldObject) {
         if(openness < 0.1f) {
             SpriteController.Instance.SetSprite("door_0", worldObject);
@@ -62,6 +58,16 @@ public class Door : WorldObjectMethod {
         }else{
             SpriteController.Instance.SetSprite("door_3", worldObject);
         }
+    }
+
+    public override BuildMethod GetBuildMethod() {
+        return BuildMethod.Single;
+    }
+
+    public override Dictionary<string, int> GetConstructionRequirements() {
+        return new Dictionary<string, int>() {
+            { "wood", 2 }
+        };
     }
 
 }
