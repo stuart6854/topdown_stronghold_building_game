@@ -7,21 +7,21 @@ public class Node : IHeapItem<Node>{
     public readonly Tile tile;
 
     public readonly bool isWalkable;
-    public readonly int movementPenalty;
+    public readonly float movementPenalty;
 
-    public int gCost, hCost;
+    public float gCost, hCost;
 
     public Node parent;
 
     int heapIndex;
 
-    public Node(Tile tile, bool _isWalkable, int _penalty) {
+    public Node(Tile tile, bool _isWalkable, float _penalty) {
         this.tile = tile;
         this.isWalkable = _isWalkable;
         this.movementPenalty = _penalty;
     }
 
-    public int fCost {
+    public float fCost {
         get {
             return gCost + hCost;
         }

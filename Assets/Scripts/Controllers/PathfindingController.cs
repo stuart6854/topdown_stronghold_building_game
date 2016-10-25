@@ -20,6 +20,10 @@ public class PathfindingController : MonoBehaviour {
         return Pathfinding.FindPathInstant(start, end);
     }
 
+    public Tile[] RequestPathToObject(Tile start, string objectType) {
+        return Pathfinding.FindPathInstant(start, null, objectType);
+    }
+
     public bool PathStillValid(Tile[] path, int currentIndex) {
         return Pathfinding.PathStillValid(path, currentIndex);
     }

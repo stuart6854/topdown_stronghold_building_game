@@ -13,6 +13,7 @@ public class LooseItem : WorldObject {
 	public LooseItem(string type, int amount) {
 	    this.WorldObjectType = WorldObjectType.LooseItem;
 		this.ObjectType = type;
+	    this.StackSize = amount;
 	}
 
     public LooseItem(LooseItem other) {
@@ -47,6 +48,9 @@ public class LooseItem : WorldObject {
 
     public void RemoveFromStack(int amnt) {
         StackSize -= amnt;
+
+        if(StackSize <= 0 && Tile != null)
+            Tile.PlaceLooseItem(null);
     }
 
     public int GetMaxStackSize() {

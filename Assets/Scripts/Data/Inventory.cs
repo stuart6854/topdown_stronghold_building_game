@@ -72,6 +72,15 @@ public class Inventory {
         return stack;
     }
 
+    public bool Contains(string type, int amnt = 1) {
+        foreach(LooseItem stack in _Inventory) {
+            if(stack.GetObjectType() == type && stack.GetStackSize() >= amnt)
+                return true;
+        }
+
+        return false;
+    }
+
     private LooseItem TryAddToExistingStack(LooseItem stack) {
         LooseItem[] existingStacks = GetExistingStacks(stack.GetObjectType());
         if(existingStacks.Length == 0)

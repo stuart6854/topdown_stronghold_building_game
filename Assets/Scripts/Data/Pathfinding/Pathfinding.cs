@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 public class Pathfinding : MonoBehaviour {
 
@@ -35,33 +34,21 @@ public class Pathfinding : MonoBehaviour {
 		return true;
 	}
 
-    public Tile[] FindPathToClosestTile(Tile start, Tile[] targets) {
-        int ShortestPathSize = int.MaxValue;
-        Tile[] ShortestPath = null;
+	public Tile[] FindPathInstant(Tile start, Tile end, string objectType = null) {
+	    //If 'end' is null, then this A* algorithm becomes a Dijkstra Algorithm,
+	    //which is A* without the heuristics
 
-        for(int i = 0; i < targets.Length; i++) {
-            Tile[] path = FindPathInstant(start, targets[i]);
-            int pathSize = path.Length;
-            if(pathSize >= ShortestPathSize)
-                continue;
-
-            ShortestPath = path;
-            ShortestPathSize = pathSize;
-        }
-
-        return ShortestPath;
-    }
-
-	public Tile[] FindPathInstant(Tile start, Tile end) {
 		Stopwatch sw = new Stopwatch();
 		sw.Start();
 
 		bool pathSuccess = false;
 
 		Node startNode = Grid.GetNode((int)start.GetX(), (int)start.GetY());
-		Node targetNode = Grid.GetNode((int)end.GetX(), (int)end.GetY());
+	    Node targetNode = null;
+	    if(end != null)
+		    targetNode = Grid.GetNode((int)end.GetX(), (int)end.GetY());
 
-		if(targetNode.isWalkable) {
+		if((targetNode != null && targetNode.isWalkable) || objectType != null) {
 			Heap<Node> openSet = new Heap<Node>(Grid.GetWidth() * Grid.GetHeight());
 			HashSet<Node> closedSet = new HashSet<Node>();
 			openSet.Add(startNode);
@@ -71,34 +58,47 @@ public class Pathfinding : MonoBehaviour {
 
 				closedSet.Add(currentNode);
 
-				if(currentNode == targetNode) {
-					sw.Stop();
-//					print("Path Found: " + sw.ElapsedMilliseconds + "ms.");
+				if(targetNode != null && currentNode == targetNode) {
 					pathSuccess = true;
 					break;//Path found
+				}
+			    if(targetNode == null) {
+				    if(currentNode.tile.GetLooseItem() != null && currentNode.tile.GetLooseItem().GetObjectType() == objectType) {
+				        //We have found what we are looking for
+				        targetNode = currentNode;
+				        pathSuccess = true;
+				        break;//Path found
+				    }
 				}
 
 				foreach(Node neighbour in Grid.GetNeighbours(currentNode)) {
 					if(!neighbour.isWalkable || WillCutCorner(currentNode, neighbour) || closedSet.Contains(neighbour))
 						continue;
 
-					int newMovementCostToNeighbour = currentNode.gCost + GetDistance(currentNode, neighbour) - neighbour.movementPenalty;
+				    float newMovementCostToNeighbour = neighbour.movementPenalty * GetDistance(currentNode, neighbour); //currentNode.gCost + GetDistance(currentNode, neighbour) - neighbour.movementPenalty;
+				    float tempGScore = currentNode.gCost + newMovementCostToNeighbour;
 
-					if(newMovementCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour)) {
-						neighbour.gCost = newMovementCostToNeighbour;
-						neighbour.hCost = GetDistance(neighbour, targetNode);
-						neighbour.parent = currentNode;
+				    if(openSet.Contains(neighbour) && tempGScore >= neighbour.gCost)
+				        continue;
 
-						if(!openSet.Contains(neighbour))
-							openSet.Add(neighbour);
-						else
-							openSet.UpdateItem(neighbour);
-					}
+				    neighbour.parent = currentNode;
+				    neighbour.gCost = tempGScore;
+                    neighbour.hCost = GetHeuristic(neighbour, targetNode);
+
+                    if(!openSet.Contains(neighbour))
+                        openSet.Add(neighbour);
+                    else
+                        openSet.UpdateItem(neighbour);
+
 				}
 			}
 		}
 
-		Tile[] waypoints = null;
+
+	    sw.Stop();
+//		print("Path Found: " + sw.ElapsedMilliseconds + "ms.");
+
+	    Tile[] waypoints = null;
 
 		if(pathSuccess) {
 			waypoints = RetracePath(startNode, targetNode);
@@ -113,24 +113,42 @@ public class Pathfinding : MonoBehaviour {
     Tile[] RetracePath(Node startNode, Node endNode) {
 		List<Tile> path = new List<Tile>();
 		Node currentNode = endNode;
-
 		while(currentNode != startNode) {
 			path.Add(currentNode.tile);
 			currentNode = currentNode.parent;
 		}
+        path.Add(currentNode.tile);
 		Tile[] waypoints = path.ToArray();
 		Array.Reverse(waypoints);
 		return waypoints;
 	}
 
-	int GetDistance(Node nodeA, Node nodeB) {
+    private float GetHeuristic(Node start, Node end) {
+        if(end == null) {
+            // We have no fixed destination (i.e. probably looking for an inventory item)
+            // so just return 0 for the cost estimate (i.e. all directions as just as good)
+            return 0f;
+        }
+
+        return Mathf.Sqrt(Mathf.Pow(start.tile.GetX() - end.tile.GetX(), 2) +
+                          Mathf.Pow(start.tile.GetX() - end.tile.GetY(), 2));
+    }
+
+	float GetDistance(Node nodeA, Node nodeB) {
 		int distX = Mathf.Abs((int)nodeA.tile.GetX() - (int)nodeB.tile.GetX());
 		int distY = Mathf.Abs((int)nodeA.tile.GetY() - (int)nodeB.tile.GetY());
 
-		if(distX > distY)
-			return 14 * distY + 10 * (distX - distY);
+	    //Horizontal and Vertical Neighbours have distance of 1
+	    if(distX + distY == 1)
+	        return 1f;
 
-		return 14 * distX + 10 * (distY - distX);
+	    //Diagonal Neighbours have a distance of 1.41421356237
+	    if(distX == 1 && distY == 1)
+	        return 1.41421356237f;
+
+	    //Otherwise, just do the math
+	    return Mathf.Sqrt(Mathf.Pow(nodeA.tile.GetX() - nodeB.tile.GetX(), 2) +
+	                      Mathf.Pow(nodeA.tile.GetX() - nodeB.tile.GetY(), 2));
 	}
 
 	private bool WillCutCorner(Node currNode, Node neighbourNode ) {

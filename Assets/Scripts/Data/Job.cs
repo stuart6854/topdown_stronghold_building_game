@@ -53,7 +53,7 @@ public class Job : IComparable<Job> {
     }
 
     public Dictionary<string, int> GetRequirements() {
-        return Requirements;//TODO: Might cause issues if dictionary is passed as reference
+        return Requirements ?? new Dictionary<string, int>();//TODO: Might cause issues if dictionary is passed as reference
     }
 
     public float GetCompletionTime() {
