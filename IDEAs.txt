@@ -1,4 +1,4 @@
-Medieval/Fantasy Theme
+Medieval/Fantasy(Monsters/Mages) Theme
 
 - Build a stronghold
 - Defend from invader(humans or monster)
@@ -9,12 +9,15 @@ Medieval/Fantasy Theme
 - Enemy death could have adverse affect
 
 - Enemies leave trail of negative effect(eg. fire)
-- Tech Tree or Requirement based upgrades or Both
+- Tech Tree(research) or Requirement based upgrades or Both
 - Upgrades houses, people join stronghold from outside
 - Magic Buildings - Teleport Transportation, Defence
-- Defence - Walls, Towers, Gates, Archer, Soldiers, Moats, traps(spike pits, oil/tar spills), use resources to barricade gates(destroy building?)
+- Defence - Walls, Towers, Gates, Archer, Soldiers, Moats, traps(spike pits, oil/tar spills), use resources to barricade gates(destroy building?), tripwire based traps(poison dart), automated crossbows(or similar)
 - Seasons(Negative/Positive effects, eg. crops die, different enemies, illness)?
 
-- People Statistic - Health, Hunger, Morale(leave when low).
+- People Statistic - Health, Hunger, Morale(leave when low), skills(farm skill, attack skill, research skill(buff if higher/debuff if low), magic skill, etc.).
+- Animals(aggressive/not-agressive), huntable, tamable(used to defend)
+
+- Scavengers: goe away for while, can bring resources, food, people, or could die/become ill/injured(attacked(unseen), ifi survive attack and gets back it could trigger attack)
 
 NOTE: Players will designate rooms
