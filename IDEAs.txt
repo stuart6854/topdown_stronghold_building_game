@@ -20,4 +20,6 @@ Medieval/Fantasy(Monsters/Mages) Theme
 
 - Scavengers: goe away for while, can bring resources, food, people, or could die/become ill/injured(attacked(unseen), ifi survive attack and gets back it could trigger attack)
 
+- Trading(could be instead of scavengers)
+
 NOTE: Players will designate rooms
