@@ -26,7 +26,7 @@ public class World {
 	private void LoadInstalledObjectPrototypes() {
 		InstalledObject io;
 
-		io = InstalledObject.CreatePrototype("wall", new Wall(), 0, true);
+		io = InstalledObject.CreatePrototype("stoneWall_32", new Wall(), 0, true);
 		io.RegisterOnCreatedCallback(OnWorldObjectCreated);
 		io.RegisterOnChangedCallback(OnWorldObjectChanged);
 		InstalledObjectPrototypes.Add(io.GetObjectType(), io);

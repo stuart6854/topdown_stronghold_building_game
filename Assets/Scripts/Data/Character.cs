@@ -1,7 +1,10 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
+using BehaviourTrees;
 
+/// <summary>
+/// Character class Summary
+/// </summary>
 public class Character : WorldObject{
 
     //TODO: Add LooseItem Inventory(separate class or built into this class?)
@@ -9,6 +12,9 @@ public class Character : WorldObject{
     //References
     private Tile CurrentTile, NextTile, DestinationTile;
     private float PercentageBetweenTiles;
+
+    private BehaviourNode BehaviourTree;
+    private Blackboard Blackboard;
 
     private Job CurrentJob;
     private Tile[] CurrentPath;
@@ -30,17 +36,70 @@ public class Character : WorldObject{
         this.WorldObjectType = WorldObjectType.Character;
         this.ObjectType = "character";
         this.CurrentTile = this.NextTile = this.DestinationTile = tile;
+        this.Inventory = new Inventory(4);
 
         this.OnChanged += SpriteController.Instance.OnWorldObjectChanged;
-        this.DestinationTile = WorldController.Instance.GetTileAt(0, 0);
 
-        this.Inventory = new Inventory(4);
+        this.Methods = WorldObjectMethod.Methods["character"];
+        this.Methods.OnCreated(this);
+
+        InitBehaviourTree();
+    }
+
+    private void InitBehaviourTree() {
+        Blackboard = new Blackboard();
+        Blackboard.setTreeMemoryLocation("Character", this);
+        CharacterBehaviourRoot root = new CharacterBehaviourRoot();
+		
+		// Job Tree Start
+        SequenceNode CarryOutJobRoot = new SequenceNode();
+
+		SelectorNode HasGetJobSelector = new SelectorNode();
+	    HasGetJobSelector.AddChild(new HasJobLeaf());
+	    HasGetJobSelector.AddChild(new GetJobLeaf());
+	    CarryOutJobRoot.AddChild(HasGetJobSelector);
+
+		RepeatTillHaveJobRequirements RepeatTillHaveJobRequirements = new RepeatTillHaveJobRequirements();
+
+
+        SequenceNode JobRequirementsSequence = new SequenceNode();
+        JobRequirementsSequence.AddChild(new FindJobRequirement());
+
+
+        SelectorNode JobRequirementPathSelector = new SelectorNode();
+        JobRequirementPathSelector.AddChild(new HasPathLeaf());
+        JobRequirementPathSelector.AddChild(new FindPathLeaf());
+
+        JobRequirementsSequence.AddChild(JobRequirementPathSelector);
+        JobRequirementsSequence.AddChild(new MoveToDest());
+        JobRequirementsSequence.AddChild(new PickupRequirement());
+
+		RepeatTillHaveJobRequirements.SetChildNode(JobRequirementsSequence);
+
+        CarryOutJobRoot.AddChild(RepeatTillHaveJobRequirements);
+
+	    CarryOutJobRoot.AddChild(new SetJobDest());
+
+		SelectorNode JobPathSelector = new SelectorNode();
+		JobPathSelector.AddChild(new HasPathLeaf());
+		JobPathSelector.AddChild(new FindPathLeaf());
+
+	    CarryOutJobRoot.AddChild(JobPathSelector);
+		CarryOutJobRoot.AddChild(new MoveToDest());
+        CarryOutJobRoot.AddChild(new DoJob());
+
+        root.AddChild(CarryOutJobRoot);
+		// Job Tree End
+
+	    this.BehaviourTree = root;
     }
 
     public override void OnUpdate() {
-        UpdateJob();
-        Move();
-        Rotate();
+        this.BehaviourTree.Update(Blackboard);
+
+//        UpdateJob();
+//        Move();
+//        Rotate();
 
         if(OnChanged != null)
             OnChanged(this);
@@ -70,14 +129,11 @@ public class Character : WorldObject{
                     if(path == null) {
                         //We could find one of the requirements so this job is unable to be completed just now.
                         //So lets abandon and requeue the job
-                        Debug.Log("Couldnt find requirement! Abandoning Job!");
                         AbandonJob();
                         return;
                     }
                     //We have found a tile that contains something that we need.
                     //Lets go get it.
-                    Debug.Log("Got path to requirement: " + requirement.Key);
-                    Debug.Log("LooseItem has " + path[path.Length - 1].GetLooseItem().GetStackSize() + " " + path[path.Length - 1].GetLooseItem().GetObjectType());
                     CurrentRequirement = requirement.Key;
                     CurrentPath = path;
                     PathIndex = 0;
@@ -86,21 +142,17 @@ public class Character : WorldObject{
                 } else {
                     if(CurrentTile == DestinationTile) {
                         //We have reached a requirements location, hopefully.
-                        //TODO: Pickup Requirement
-                        Debug.Log("At Requirement!");
+
                         LooseItem item = CurrentTile.GetLooseItem();
                         int amnt = item.GetStackSize();
                         if(amnt < JobRequirements[CurrentRequirement]) {
                             Inventory.Add(new LooseItem(CurrentRequirement, amnt));
                             CurrentTile.GetLooseItem().RemoveFromStack(amnt);
                             JobRequirements[CurrentRequirement] -= amnt;
-                            Debug.Log("Added " + amnt + " " + CurrentRequirement);
                             CurrentRequirement = null;
                             CurrentPath = null; //Resets us to try find more of requirement as we have not fullfilled the required amount
                         } else {
-                            Debug.Log("CurrentRequirement: " + CurrentRequirement);
                             //We can fulfill the whole requirement here
-                            Debug.Log("Added " + JobRequirements[CurrentRequirement] + " " + CurrentRequirement);
                             Inventory.Add(new LooseItem(CurrentRequirement, JobRequirements[CurrentRequirement]));
                             CurrentTile.GetLooseItem().RemoveFromStack(JobRequirements[CurrentRequirement]);
                             JobRequirements.Remove(CurrentRequirement); //We dont require any more of this type
@@ -136,7 +188,7 @@ public class Character : WorldObject{
         }
     }
 
-    private void Move() {
+    public void Move() {
         if(CurrentTile == DestinationTile)
             return;
 
@@ -171,7 +223,7 @@ public class Character : WorldObject{
         }
     }
 
-    private void Rotate() {
+    public void Rotate() {
         if(CurrentTile == NextTile)
             return;
 
@@ -180,10 +232,17 @@ public class Character : WorldObject{
         Rotation = Mathf.LerpAngle(Rotation, angle, Time.deltaTime * LookSpeed);
     }
 
-    private void GetJob() {
+    public void SetPath(Tile[] path) {
+        CurrentPath = path;
+        PathIndex = 0;
+        NextTile = CurrentPath != null ? CurrentPath[0] : CurrentTile;
+        DestinationTile = CurrentPath != null ? CurrentPath[CurrentPath.Length - 1] : CurrentTile;
+    }
+
+    public bool GetJob() {
         CurrentJob = JobController.Instance.GetJob();
         if(CurrentJob == null)
-            return;
+            return false;
 
         CurrentJob.RegisterOnCompleteCallback(OnJobComplete);
         CurrentJob.RegisterOnAbortedCallback(OnJobComplete);
@@ -191,14 +250,18 @@ public class Character : WorldObject{
 
         //Check if job is accessible
         Tile[] path = PathfindingController.Instance.RequestPath(CurrentTile, DestinationTile);
-        if(path == null || path.Length == 0 || path[path.Length - 1] != DestinationTile)
-            AbandonJob();
+	    if(path == null || path.Length == 0 || path[path.Length - 1] != DestinationTile) {
+		    AbandonJob();
+		    return false;
+	    }
 
-        if(CurrentJob.GetRequirements() != null)
+	    if(CurrentJob.GetRequirements() != null)
             JobRequirements = new Dictionary<string, int>(CurrentJob.GetRequirements());
+
+	    return true;
     }
 
-    private bool HasJobRequirements() {
+    public bool HasJobRequirements() {
         if(JobRequirements == null)
             return true;
 
@@ -210,7 +273,7 @@ public class Character : WorldObject{
         return true;
     }
 
-    private KeyValuePair<string,int> GetUnfulfilledJobRequirement() {
+    public KeyValuePair<string,int> GetUnfulfilledJobRequirement() {
         foreach(KeyValuePair<string,int> pair in JobRequirements) {
             if(!Inventory.Contains(pair.Key, pair.Value))
                 return pair;
@@ -219,24 +282,26 @@ public class Character : WorldObject{
         return new KeyValuePair<string, int>();
     }
 
-    private void AbandonJob() {
+    public void AbandonJob() {
         JobController.Instance.AddJob(CurrentJob);
         CurrentJob = null;
         CurrentPath = null;
-        JobSearchCooldown = UnityEngine.Random.Range(0.1f, 0.5f);
-        DestinationTile = NextTile = CurrentTile;
+		DestinationTile = NextTile = CurrentTile;
+//		JobSearchCooldown = UnityEngine.Random.Range(0.1f, 0.5f);
+		BehaviourTree.ResetNode();
     }
 
-    private void OnJobComplete(Job job) {
+    public void OnJobComplete(Job job) {
         foreach(KeyValuePair<string,int> pair in job.GetRequirements()) {
             Inventory.Remove(pair.Key, pair.Value); //Remove the jobs required items. NOTE:They shouldn't have disapeared since we started the job
-            //In the future we may want required items to be used up during the job instead of after
+            //In the future we may want required items to be used up during the job instead of afterwards
         }
 
         CurrentJob = null;
 	    CurrentPath = null;
         DestinationTile = NextTile = CurrentTile;
-        JobSearchCooldown = UnityEngine.Random.Range(0.1f, 0.5f);
+        JobSearchCooldown = Random.Range(0.1f, 0.5f);
+//		Debug.Log("Job complete!");
     }
 
     public override float GetX() {
@@ -251,8 +316,44 @@ public class Character : WorldObject{
         return -0.3f;
     }
 
+    public Inventory GetInventory() {
+        return Inventory;
+    }
+
+    public BehaviourNode GetBehaviourTree() {
+        return BehaviourTree;
+    }
+
+    public Tile GetCurrentTile() {
+        return CurrentTile;
+    }
+
+    public Tile GetDestinationTile() {
+        return DestinationTile;
+    }
+
+	public void SetDestination(Tile tile) {
+		this.DestinationTile = tile;
+	}
+
+    public Tile[] GetCurrentPath() {
+        return CurrentPath;
+    }
+
     public Job GetCurrentJob() {
         return CurrentJob;
+    }
+
+    public Dictionary<string, int> GetJobRequirements() {
+        return JobRequirements;
+    }
+
+    public void SetCurrentJobRequirement(string requirement) {
+        this.CurrentRequirement = requirement;
+    }
+
+    public string GetCurrentJobRequirement() {
+        return CurrentRequirement;
     }
 
 }

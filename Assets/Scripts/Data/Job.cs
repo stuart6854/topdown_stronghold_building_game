@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
@@ -29,12 +29,12 @@ public class Job : IComparable<Job> {
         RegisterOnCompleteCallback(JobAction);
     }
 
-    public void DoJob(float deltaTime) {
+    public bool DoJob(float deltaTime) {
         //NOTE: AI should check if they have the requirements before calling this
         PassedTime += deltaTime;
 
         if(PassedTime < CompletionTime)
-            return;
+            return false;
 
         //Job is complete
 
@@ -42,6 +42,8 @@ public class Job : IComparable<Job> {
 
         if(OnComplete != null)
             OnComplete(this);
+
+        return true;
     }
 
     public int GetPriority() {

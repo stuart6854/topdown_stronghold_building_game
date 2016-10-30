@@ -107,11 +107,11 @@ public class BuildController : MonoBehaviour {
         Dictionary<string, int> requirements = WorldObjectMethod.Methods[ObjectType].GetConstructionRequirements();
 
         if(BuildMode == BuildMode.Tile) {
-            Job job = new Job(tile, j => tile.ChangeType(type), requirements, 1f, 0);
+            Job job = new Job(tile, j => tile.ChangeType(type), requirements, 1f, 1);
             if(tile.SetPendingJob(job))
                 JobController.Instance.AddJob(job);
         } else if(BuildMode == BuildMode.InstalledObject) {
-            Job job = new Job(tile, j => WorldController.Instance.GetWorld().PlaceInstalledObject(type, tile), requirements, 1f, 0);
+            Job job = new Job(tile, j => WorldController.Instance.GetWorld().PlaceInstalledObject(type, tile), requirements, 0f, 0);
             if(tile.SetPendingJob(job))
                 JobController.Instance.AddJob(job);
         }

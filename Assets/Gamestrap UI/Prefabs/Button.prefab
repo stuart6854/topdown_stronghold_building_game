@@ -5,11 +5,11 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 224: {fileID: 22439126}
-  - 222: {fileID: 22239126}
-  - 114: {fileID: 11439126}
+  - component: {fileID: 22439126}
+  - component: {fileID: 22239126}
+  - component: {fileID: 11439126}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -22,12 +22,12 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 224: {fileID: 22439128}
-  - 222: {fileID: 22239128}
-  - 114: {fileID: 11439128}
-  - 114: {fileID: 11439130}
+  - component: {fileID: 22439128}
+  - component: {fileID: 22239128}
+  - component: {fileID: 11439128}
+  - component: {fileID: 11439130}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -48,6 +48,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 24
@@ -56,6 +62,7 @@ MonoBehaviour:
     m_MinSize: 10
     m_MaxSize: 40
     m_Alignment: 4
+    m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
@@ -74,6 +81,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_Sprite: {fileID: 21300000, guid: 87fe2150c2e187246977e000167278ba, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
@@ -101,12 +114,12 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: .145098045, g: .321568638, b: .400000006, a: 1}
-    m_HighlightedColor: {r: .401568651, g: .525098026, b: .579999983, a: 1}
-    m_PressedColor: {r: .0580392145, g: .128627449, b: .159999996, a: 1}
-    m_DisabledColor: {r: .87843138, g: .87843138, b: .87843138, a: 1}
+    m_NormalColor: {r: 0.14509805, g: 0.32156864, b: 0.4, a: 1}
+    m_HighlightedColor: {r: 0.40156865, g: 0.525098, b: 0.58, a: 1}
+    m_PressedColor: {r: 0.058039214, g: 0.12862745, b: 0.16, a: 1}
+    m_DisabledColor: {r: 0.8784314, g: 0.8784314, b: 0.8784314, a: 1}
     m_ColorMultiplier: 1
-    m_FadeDuration: .100000001
+    m_FadeDuration: 0.1
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
     m_PressedSprite: {fileID: 0}
@@ -147,11 +160,12 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 22439128}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &22439128
 RectTransform:
   m_ObjectHideFlags: 1
@@ -165,11 +179,12 @@ RectTransform:
   - {fileID: 22439126}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_AnchorMin: {x: .5, y: .5}
-  m_AnchorMax: {x: .5, y: .5}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -472, y: 548}
   m_SizeDelta: {x: 200, y: 70}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -181,4 +196,3 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 139128}
   m_IsPrefabParent: 1
-  m_IsExploded: 1
