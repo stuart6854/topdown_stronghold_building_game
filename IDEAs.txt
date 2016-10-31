@@ -21,5 +21,9 @@ Medieval/Fantasy(Monsters/Mages) Theme
 - Scavengers: goe away for while, can bring resources, food, people, or could die/become ill/injured(attacked(unseen), ifi survive attack and gets back it could trigger attack)
 
 - Trading(could be instead of scavengers)
+- Players will designate rooms
 
-NOTE: Players will designate rooms
+UI Ideas
+
+- Right clicking on tile/object would bring a radial menu with options relevent to the object/item, eg. Door(Dismantle, Repair, etc.), Villager(Toggle Combat Mode, Drop weapon, Open stats menu, etc.)
+
