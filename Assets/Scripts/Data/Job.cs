@@ -4,10 +4,15 @@ using System.Diagnostics;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
+public enum JobType {
+	None, Construct, Deconstruct, Mine
+}
+
 public class Job : IComparable<Job> {
 
-    private int Priority;
-    private float TimeCreated;
+    private readonly int Priority;
+	private readonly JobType JobType;
+	private readonly float TimeCreated;
 
     private Tile Tile;
 
@@ -19,7 +24,8 @@ public class Job : IComparable<Job> {
     private Action<Job> OnComplete;
     private Action<Job> OnAborted;
 
-    public Job(Tile tile, Action<Job> JobAction, Dictionary<string, int> requirements , float completionTime = -1, int priority = 0) {
+    public Job(JobType type, Tile tile, Action<Job> JobAction, Dictionary<string, int> requirements, float completionTime = -1, int priority = 0) {
+	    this.JobType = type;
         this.Tile = tile;
         this.Requirements = requirements;
         this.CompletionTime = completionTime;
@@ -103,6 +109,9 @@ public class Job : IComparable<Job> {
         if(otherJob.Priority != this.Priority)
             return false;
 
+	    if(otherJob.JobType != this.JobType)
+		    return false;
+
         if(otherJob.TimeCreated != this.TimeCreated)
             return false;
 
@@ -110,7 +119,12 @@ public class Job : IComparable<Job> {
     }
 
     public override int GetHashCode() {
-        return base.GetHashCode();
+	    int hash = 13;
+	    hash = (hash * 7) + Priority.GetHashCode();
+	    hash = (hash * 7) + JobType.GetHashCode();
+	    hash = (hash * 7) + TimeCreated.GetHashCode();
+
+	    return hash;
     }
 
 }
