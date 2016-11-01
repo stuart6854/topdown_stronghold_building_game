@@ -108,10 +108,31 @@ public class SpriteController : MonoBehaviour {
 		sr.sprite = GetSprite(worldObject);
 	}
 
+	public void OnWorldObjectDestroyed(WorldObject worldObject) {
+		if(!WorldObjectGameObjects.ContainsKey(worldObject)) {
+			Debug.Log("SpriteController::OnWorldObjectDestroyed -> This worldobject doesn't have an associated gameobject!");
+			return;
+		}
+
+		GameObject wo_go = WorldObjectGameObjects[worldObject];
+
+		WorldObjectGameObjects.Remove(worldObject);
+
+		if(wo_go == null) {
+			Debug.Log("SpriteController::OnWorldObjectDestroyed -> This worldobjects associated gameobject is NULL!");
+			return;
+		}
+
+		Destroy(wo_go);
+
+		Debug.Log("Destoyed WorldObjects GameObject");
+
+	}
+
 	private Sprite GetSprite(WorldObject obj) {
 		InstalledObject installedObject = obj as InstalledObject;
 		if(installedObject != null) {
-			if(installedObject.GetConnectToNeighbours()) {
+			if(installedObject.DoesConnectToNeighbours()) {
 				int Bitmask = GetInstalledObjectBitmask(installedObject);
 
 				if(ObjectSprites.ContainsKey(installedObject.GetObjectType() + "_" + Bitmask))

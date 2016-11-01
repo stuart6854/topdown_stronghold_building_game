@@ -23,6 +23,7 @@ public abstract class WorldObject {
 
 	protected Action<WorldObject> OnCreated;
 	protected Action<WorldObject> OnChanged;
+	protected Action<WorldObject> OnDestroyed;
 
 	public abstract void OnUpdate();
 
@@ -77,6 +78,10 @@ public abstract class WorldObject {
 		return OnChanged;
 	}
 
+	public Action<WorldObject> GetOnDestroyed() {
+		return OnDestroyed;
+	}
+
 	public void RegisterOnCreatedCallback(Action<WorldObject> callback) {
 		OnCreated -= callback;
 		OnCreated += callback;
@@ -93,6 +98,15 @@ public abstract class WorldObject {
 
 	public void UnregisterOnChangedCallback(Action<WorldObject> callback) {
 		OnChanged -= callback;
+	}
+
+	public void RegisterOnDestroyedCallback(Action<WorldObject> callback) {
+		OnDestroyed -= callback;
+		OnDestroyed += callback;
+	}
+
+	public void UnregisterOnDestroyedCallback(Action<WorldObject> callback) {
+		OnDestroyed -= callback;
 	}
 
 }

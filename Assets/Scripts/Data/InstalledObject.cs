@@ -30,6 +30,7 @@ public class InstalledObject : WorldObject {
 		io.ConnectsToNeighbours = this.ConnectsToNeighbours;
 		io.OnCreated = this.OnCreated;
 		io.OnChanged = this.OnChanged;
+		io.OnDestroyed = this.OnDestroyed;
 		io.Methods = this.Methods;
 	    io.Parameters = new Dictionary<string, object>();
 
@@ -54,7 +55,7 @@ public class InstalledObject : WorldObject {
 		else return Methods.GetEnterabilty(this);
 	}
 
-	public bool GetConnectToNeighbours() {
+	public bool DoesConnectToNeighbours() {
 		return ConnectsToNeighbours;
 	}
 

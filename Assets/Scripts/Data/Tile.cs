@@ -36,13 +36,15 @@ public class Tile : WorldObject {
 	}
 
 	public InstalledObject PlaceInstalledObject(InstalledObject prototype) {
-		if(this.InstalledObject != null) {
+		if(this.InstalledObject != null)
 			return null;
-		}
 		
 		this.InstalledObject = prototype.PlaceInstance(this);
+		this.InstalledObject.RegisterOnCreatedCallback(this.OnCreated);
+		this.InstalledObject.RegisterOnChangedCallback(this.OnChanged);
+		this.InstalledObject.RegisterOnDestroyedCallback(this.OnDestroyed);
 
-		if(this.InstalledObject.GetConnectToNeighbours()) {
+		if(this.InstalledObject.DoesConnectToNeighbours()) {
 			foreach(Tile tile in GetNeighbourTiles()) {
 				if(tile.InstalledObject == null)
 					continue;
@@ -62,6 +64,33 @@ public class Tile : WorldObject {
 	        OnChanged(this);
 
 	    return this.InstalledObject;
+	}
+
+	public void RemoveInstalledObject() {
+		if(this.InstalledObject == null)
+			return;
+
+		InstalledObject io = this.InstalledObject;
+		this.InstalledObject = null;
+
+		if(io.GetOnDestroyed() != null)
+			io.GetOnDestroyed()(io);
+
+		if(io.DoesConnectToNeighbours()) {
+			foreach(Tile tile in GetNeighbourTiles()) {
+				if(tile.InstalledObject == null)
+					continue;
+
+				if(tile.InstalledObject.GetObjectType() != io.GetObjectType())
+					continue;
+
+				if(tile.InstalledObject.GetOnChanged() != null)
+					tile.InstalledObject.GetOnChanged()(tile.InstalledObject);
+			}
+		}
+
+		if(OnChanged != null)
+			OnChanged(this);
 	}
 
     public LooseItem PlaceLooseItem(LooseItem looseItem) {

@@ -15,6 +15,7 @@ public class World {
 	//Callbacks
 	private Action<WorldObject> OnWorldObjectCreated;
 	private Action<WorldObject> OnWorldObjectChanged;
+	private Action<WorldObject> OnWorldObjectDestroyed;
 
 	public World(int width, int height) {
 		this.Width = width;
@@ -24,16 +25,12 @@ public class World {
 	}
 
 	private void LoadInstalledObjectPrototypes() {
-		InstalledObject io;
+		InstalledObject io = null;
 
 		io = InstalledObject.CreatePrototype("stoneWall_32", new Wall(), 0, true);
-		io.RegisterOnCreatedCallback(OnWorldObjectCreated);
-		io.RegisterOnChangedCallback(OnWorldObjectChanged);
 		InstalledObjectPrototypes.Add(io.GetObjectType(), io);
 
 		io = InstalledObject.CreatePrototype("door", new Door(), 1, false);
-		io.RegisterOnCreatedCallback(OnWorldObjectCreated);
-		io.RegisterOnChangedCallback(OnWorldObjectChanged);
 		InstalledObjectPrototypes.Add(io.GetObjectType(), io);
 	}
 
@@ -47,6 +44,7 @@ public class World {
 				Tiles[x, y] = new Tile(x, y, "grass", this);
 				Tiles[x, y].RegisterOnCreatedCallback(OnWorldObjectCreated);
 				Tiles[x, y].RegisterOnChangedCallback(OnWorldObjectChanged);
+				Tiles[x, y].RegisterOnDestroyedCallback(OnWorldObjectDestroyed);
 				OnWorldObjectCreated(Tiles[x, y]);
 			}
 		}
@@ -68,6 +66,10 @@ public class World {
         InstalledObject prototype = InstalledObjectPrototypes[type];
         tile.PlaceInstalledObject(prototype);
     }
+
+	public void DemolishInstalledObject(Tile tile) {
+		tile.RemoveInstalledObject();
+	}
 
     public void PlaceCharacter(Tile tile) {
         Character character = new Character(tile);
@@ -127,6 +129,15 @@ public class World {
 
 	public void UnregisterOnWorldObjectChangedCallback(Action<WorldObject> callback) {
 		OnWorldObjectChanged -= callback;
+	}
+
+	public void RegisterOnWorldObjectDestroyedCallback(Action<WorldObject> callback) {
+		OnWorldObjectDestroyed -= callback;
+		OnWorldObjectDestroyed += callback;
+	}
+
+	public void UnregisterOnWorldObjectDestroyedCallback(Action<WorldObject> callback) {
+		OnWorldObjectDestroyed -= callback;
 	}
 
 }

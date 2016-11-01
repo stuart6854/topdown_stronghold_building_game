@@ -11,6 +11,9 @@ public class InputController : MonoBehaviour {
 	private bool isDragging = false;
 	private Vector2 DragStart;
 
+	private bool IsPanning = false;
+	private Vector3 MousePosLastFrame;
+
 	void Start () {
 		cam = Camera.main;
 	}
@@ -73,6 +76,27 @@ public class InputController : MonoBehaviour {
 
 		Vector3 movement = new Vector3(dX * CAMERA_SPEED * Time.deltaTime, dY * CAMERA_SPEED * Time.deltaTime, 0);
 		cam.transform.position += movement * cam.orthographicSize;
+
+		if(Input.GetMouseButton(2)) {
+			if(!IsPanning)
+				MousePosLastFrame = Input.mousePosition;
+
+			movement = MousePosLastFrame - new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0);
+
+			cam.transform.Translate(movement * Time.deltaTime * CAMERA_SPEED * (cam.orthographicSize * .1f));
+
+//			dX = MousePosLastFrame.x - Input.mousePosition.x;
+//			dY = MousePosLastFrame.y - Input.mousePosition.y;
+//
+//			movement = new Vector3(dX * CAMERA_SPEED * Time.deltaTime, dY * CAMERA_SPEED * Time.deltaTime, 0);
+//			cam.transform.position += movement * cam.orthographicSize;
+//
+			MousePosLastFrame = Input.mousePosition;
+
+			IsPanning = true;
+		} else {
+			IsPanning = false;
+		}
 	}
 
 }

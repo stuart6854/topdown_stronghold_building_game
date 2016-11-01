@@ -6,7 +6,7 @@ public enum BuildMethod {
 }
 
 public enum BuildMode {
-    None, Tile, InstalledObject, Character
+    None, Tile, InstalledObject, Character, Demolish
 }
 
 public class BuildController : MonoBehaviour {
@@ -79,8 +79,12 @@ public class BuildController : MonoBehaviour {
                 Tile t = WorldController.Instance.GetTileAt(x, y);
                 if(t == null) continue;
 
+//	            if(BuildMode == BuildMode.Demolish)
+//		            if(t.GetInstalledObject() == null)
+//						continue;
+
                 //Display the building hint on top of this tile
-                GameObject go = SimplePool.Spawn(BuildDragPrefab, new Vector3(x, y, -0.1f), Quaternion.identity);
+                GameObject go = SimplePool.Spawn(BuildDragPrefab, new Vector3(x, y, -2f), Quaternion.identity);
                 go.name = "Drag_Preview_Object";
                 go.transform.SetParent(this.transform, true);
 
@@ -96,6 +100,8 @@ public class BuildController : MonoBehaviour {
                         sr.color = Color.red;
                     else
                         sr.color = t.GetInstalledObject() == null ? Color.green : Color.red;
+                }else if(BuildMode == BuildMode.Demolish) {
+	                sr.color = t.GetInstalledObject() == null ? Color.white : Color.green;
                 }
             }
         }
@@ -104,17 +110,24 @@ public class BuildController : MonoBehaviour {
     private void SetupJob(Tile tile) {
         string type = ObjectType;
 
-        Dictionary<string, int> requirements = WorldObjectMethod.Methods[ObjectType].GetConstructionRequirements();
+	    Dictionary<string, int> requirements = null;
+		if(!string.IsNullOrEmpty(type))
+			requirements = WorldObjectMethod.Methods[type].GetConstructionRequirements();
 
+	    Job job = null;
         if(BuildMode == BuildMode.Tile) {
-            Job job = new Job(JobType.Construct, tile, j => tile.ChangeType(type), requirements, 1f, 1);
-            if(tile.SetPendingJob(job))
-                JobController.Instance.AddJob(job);
+            job = new Job(JobType.Construct, tile, j => tile.ChangeType(type), requirements, 1f, 1);
         } else if(BuildMode == BuildMode.InstalledObject) {
-            Job job = new Job(JobType.Construct, tile, j => WorldController.Instance.GetWorld().PlaceInstalledObject(type, tile), requirements, 0f, 0);
-            if(tile.SetPendingJob(job))
-                JobController.Instance.AddJob(job);
+            job = new Job(JobType.Construct, tile, j => WorldController.Instance.GetWorld().PlaceInstalledObject(type, tile), requirements, 0f, 0);
+            
+        }else if(BuildMode == BuildMode.Demolish) {
+	        job = new Job(JobType.Demolish, tile, j => WorldController.Instance.GetWorld().DemolishInstalledObject(tile), null, 0f, 0);
         }
+
+	    if(job != null) {
+			if(tile.SetPendingJob(job))
+				JobController.Instance.AddJob(job);
+		}
     }
 
     public BuildMode GetBuildMode() {
@@ -126,6 +139,9 @@ public class BuildController : MonoBehaviour {
     }
 
     public BuildMethod GetBuildMethod() {
+		if(BuildMode == BuildMode.Demolish)
+			return BuildMethod.Grid;
+
         if(!WorldObjectMethod.Methods.ContainsKey(ObjectType))
             return BuildMethod.Single;
 
@@ -147,6 +163,11 @@ public class BuildController : MonoBehaviour {
         BuildMode = BuildMode.Character;
         ObjectType = "character";
     }
+
+	public void SetDemolish() {
+		BuildMode = BuildMode.Demolish;
+		ObjectType = null;
+	}
 
     private void ClearDragPreviews() {
         //Despawn Drag Preview Objects, if any
