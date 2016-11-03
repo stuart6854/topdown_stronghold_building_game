@@ -23,6 +23,8 @@ Medieval/Fantasy(Monsters/Mages) Theme
 - Trading(could be instead of scavengers)
 - Players will designate rooms
 
+- Map Tile Texture Variation - eg. Different Variations of Grass(grass, grass w/ flowers, grass with slight difference), NOTE: This should be done later in development
+
 UI Ideas
 
 - Right clicking on tile/object would bring a radial menu with options relevent to the object/item, eg. Door(Dismantle, Repair, etc.), Villager(Toggle Combat Mode, Drop weapon, Open stats menu, etc.)
