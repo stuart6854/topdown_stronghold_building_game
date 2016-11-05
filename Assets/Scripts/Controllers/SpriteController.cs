@@ -8,7 +8,6 @@ public class SpriteController : MonoBehaviour {
 
 	public Material SpriteMaterial;
 
-
 	public Transform TileParent;
 	public Transform InstalledObjectParent;
 	public Transform LooseItemParent;
@@ -67,18 +66,30 @@ public class SpriteController : MonoBehaviour {
 		GameObject obj = new GameObject(worldObject.GetObjectType() + "_" + x + "_" + y);
 		obj.transform.position = new Vector3(x, y, z);
 
+		obj.AddComponent<BoxCollider2D>();
+
+		ObjectDataReference objDataRef = obj.AddComponent<ObjectDataReference>();
+		objDataRef.X = (int)x;
+		objDataRef.Y = (int)y;
+		objDataRef.ObjectType = worldObject.GetWorldObjectType();
+
 		SpriteRenderer sr = obj.AddComponent<SpriteRenderer>();
 		sr.material = SpriteMaterial;
 		sr.sprite = GetSprite(worldObject);
 
-		if(worldObject.GetWorldObjectType() == WorldObjectType.Tile)
+		if(worldObject.GetWorldObjectType() == WorldObjectType.Tile) {
 			obj.transform.SetParent(TileParent);
-		else if(worldObject.GetWorldObjectType() == WorldObjectType.InstalledObject)
+			obj.layer = LayerMask.NameToLayer("Tile");
+		} else if(worldObject.GetWorldObjectType() == WorldObjectType.InstalledObject) {
 			obj.transform.SetParent(InstalledObjectParent);
-		else if(worldObject.GetWorldObjectType() == WorldObjectType.LooseItem)
+			obj.layer = LayerMask.NameToLayer("InstalledObject");
+		} else if(worldObject.GetWorldObjectType() == WorldObjectType.LooseItem) {
 			obj.transform.SetParent(LooseItemParent);
-	    else if(worldObject.GetWorldObjectType() == WorldObjectType.Character)
-		    obj.transform.SetParent(CharacterParent);
+			obj.layer = LayerMask.NameToLayer("LooseItem");
+		} else if(worldObject.GetWorldObjectType() == WorldObjectType.Character) {
+			obj.transform.SetParent(CharacterParent);
+			obj.layer = LayerMask.NameToLayer("Character");
+		}
 
 		WorldObjectGameObjects.Add(worldObject, obj);
 	}

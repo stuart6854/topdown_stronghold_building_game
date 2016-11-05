@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InstalledObject : WorldObject {
+public class InstalledObject : WorldObject, IContextMenu {
 
 	private Tile Tile;
 
@@ -62,5 +62,16 @@ public class InstalledObject : WorldObject {
     public override float GetZ() {
         return -0.1f;
     }
+
+	public RadialMenuGenerator.RadialMenuItem[] MenuOptions_ContextMenu() {
+		List<RadialMenuGenerator.RadialMenuItem> MenuItems = new List<RadialMenuGenerator.RadialMenuItem>();
+
+		Font font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+
+		MenuItems.Add(new RadialMenuGenerator.RadialMenuItem("Dismantle", font, () => WorldController.Instance.GetWorld().DemolishInstalledObject(this.Tile)));
+		MenuItems.Add(new RadialMenuGenerator.RadialMenuItem("Cancel", font, null));
+
+		return MenuItems.ToArray();
+	}
 
 }

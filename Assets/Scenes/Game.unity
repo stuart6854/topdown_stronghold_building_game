@@ -142,6 +142,7 @@ Transform:
   - {fileID: 1200781915}
   - {fileID: 476460913}
   - {fileID: 1943023048}
+  - {fileID: 1192922771}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -268,6 +269,39 @@ MonoBehaviour:
   InstalledObjectParent: {fileID: 2124467713}
   LooseItemParent: {fileID: 1240592145}
   CharacterParent: {fileID: 1156835337}
+--- !u!1 &401589311
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 401589312}
+  m_Layer: 5
+  m_Name: RadialMenu
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &401589312
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 401589311}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1351219644}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &427585580
 GameObject:
   m_ObjectHideFlags: 0
@@ -929,6 +963,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da310b3b573a4ae4ea03576cf671980e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SelectionLayerMask:
+    serializedVersion: 2
+    m_Bits: 3584
 --- !u!1 &1039253578
 GameObject:
   m_ObjectHideFlags: 0
@@ -1055,6 +1092,66 @@ Transform:
   m_Father: {fileID: 341963557}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1192922770
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1192922771}
+  - component: {fileID: 1192922773}
+  - component: {fileID: 1192922772}
+  m_Layer: 0
+  m_Name: UIController
+  m_TagString: Controller
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 4294967295
+  m_IsActive: 1
+--- !u!4 &1192922771
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1192922770}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 148619182}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1192922772
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1192922770}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c98b22aa9c080a4bb9311d2041af77a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RadialMenuItemTexture: {fileID: 21300000, guid: 96ab0cbd065a29a45905003fbe0594cc,
+    type: 3}
+  NormalColor: {r: 1, g: 1, b: 1, a: 1}
+  HighlightedColor: {r: 0.53676474, g: 0.53676474, b: 0.53676474, a: 1}
+  PressedColor: {r: 0.27205884, g: 0.27205884, b: 0.27205884, a: 1}
+  Size: 800
+--- !u!114 &1192922773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1192922770}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af784a69c038a184cb828b543ab1dba6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UICanvas: {fileID: 1351219643}
+  RadialMenuParent: {fileID: 401589312}
 --- !u!1 &1200781914
 GameObject:
   m_ObjectHideFlags: 0
@@ -1493,6 +1590,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 1039253579}
+  - {fileID: 401589312}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

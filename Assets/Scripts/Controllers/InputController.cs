@@ -5,6 +5,8 @@ public class InputController : MonoBehaviour {
 
 	private const float CAMERA_SPEED = 1.5f;
 
+	public LayerMask SelectionLayerMask;
+
 	private Camera cam;
 
 	//Data
@@ -30,6 +32,8 @@ public class InputController : MonoBehaviour {
 		HandleDrag();
 		HandleCameraZoom();
 		HandleCameraMovement();
+
+		HandleClicks();
 	}
 
 	private void HandleDrag() {
@@ -96,6 +100,65 @@ public class InputController : MonoBehaviour {
 			IsPanning = true;
 		} else {
 			IsPanning = false;
+		}
+	}
+
+	private void HandleClicks() {
+		if(BuildController.Instance.GetBuildMode() != BuildMode.None)
+			return; //We are in build mode, so no selection can happen
+
+		if(EventSystem.current.IsPointerOverGameObject())
+			return; //Mouse is over a UI Element
+
+		if(!Input.GetMouseButtonUp(0) && !Input.GetMouseButtonUp(1))
+			return; //Neither Left or Right Mouse Buttons were clicked
+
+		//Get World Coords from click position
+		Vector2 worldPos = cam.ScreenToWorldPoint(Input.mousePosition);
+
+		//Get the clicked WorldObject
+		WorldObject selection = null;
+		RaycastHit2D hit = Physics2D.Raycast(worldPos, Vector2.zero, 10000, SelectionLayerMask);
+		if(hit.collider != null) {
+			//We hit something
+			ObjectDataReference worldObjectRef = hit.transform.GetComponent<ObjectDataReference>();
+			if(worldObjectRef == null)
+				return; //This object cant be linked to its data for some reason
+
+			//Get selection tile
+			Tile tile = WorldController.Instance.GetTileAt(worldObjectRef.X, worldObjectRef.Y);
+			if(tile == null)
+				return; //The selection is attached to a null tile for some reason
+
+			switch(worldObjectRef.ObjectType) {
+				case WorldObjectType.InstalledObject:
+					selection = tile.GetInstalledObject();
+					break;
+				case WorldObjectType.LooseItem:
+					selection = tile.GetLooseItem();
+					break;
+				case WorldObjectType.Character:
+					//TODO: Need a way to retrieve character
+					break;
+			}
+		}
+
+		if(selection == null)
+			return; //Nothing was selected
+
+		//Logic based of whether it was a left or right click
+		if(Input.GetMouseButtonUp(0)) {
+			//Left
+
+
+		}else if(Input.GetMouseButtonUp(1)) {
+			//Right
+
+			IContextMenu contextMenuObj = (IContextMenu) selection;
+			if(contextMenuObj == null)
+				return;
+
+			UIController.Instance.GenerateRadialMenu(contextMenuObj.MenuOptions_ContextMenu());
 		}
 	}
 
