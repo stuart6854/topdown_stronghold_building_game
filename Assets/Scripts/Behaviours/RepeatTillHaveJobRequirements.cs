@@ -42,9 +42,9 @@ public class RepeatTillHaveJobRequirements : DecoratorNode {
 
 		if(character.HasJobRequirements()) {
 			this.nodeStatus = NodeStatus.Success;
-			Debug.Log("Has Requirements");
+//			Debug.Log("Has Requirements");
 		} else {
-			Debug.Log("Dont have requirements still");
+//			Debug.Log("Dont have requirements still");
 		}
 	}
 

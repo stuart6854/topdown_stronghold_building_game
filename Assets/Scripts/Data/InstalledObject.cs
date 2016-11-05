@@ -63,13 +63,18 @@ public class InstalledObject : WorldObject, IContextMenu {
         return -0.1f;
     }
 
+	public void OnDismantled() {
+		WorldController.Instance.GetWorld().DemolishInstalledObject(this.Tile);
+		//TODO: Drop resources
+	}
+
 	public RadialMenuGenerator.RadialMenuItem[] MenuOptions_ContextMenu() {
 		List<RadialMenuGenerator.RadialMenuItem> MenuItems = new List<RadialMenuGenerator.RadialMenuItem>();
 
 		Font font = Resources.GetBuiltinResource<Font>("Arial.ttf");
 
-		MenuItems.Add(new RadialMenuGenerator.RadialMenuItem("Dismantle", font, () => WorldController.Instance.GetWorld().DemolishInstalledObject(this.Tile)));
-		MenuItems.Add(new RadialMenuGenerator.RadialMenuItem("Cancel", font, null));
+		MenuItems.Add(new RadialMenuGenerator.RadialMenuItem("Dismantle", font, this.OnDismantled));
+		MenuItems.Add(new RadialMenuGenerator.RadialMenuItem("Cancel", font, null)); //TODO: Allow player to cancel current order, eg. Cancel Order
 
 		return MenuItems.ToArray();
 	}

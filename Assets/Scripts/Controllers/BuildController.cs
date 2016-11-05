@@ -118,10 +118,10 @@ public class BuildController : MonoBehaviour {
         if(BuildMode == BuildMode.Tile) {
             job = new Job(JobType.Construct, tile, j => tile.ChangeType(type), requirements, 1f, 1);
         } else if(BuildMode == BuildMode.InstalledObject) {
-            job = new Job(JobType.Construct, tile, j => WorldController.Instance.GetWorld().PlaceInstalledObject(type, tile), requirements, 0f, 0);
+            job = new Job(JobType.Construct, tile, j => WorldController.Instance.GetWorld().PlaceInstalledObject(type, tile), requirements, 1f, 0);
             
         }else if(BuildMode == BuildMode.Demolish) {
-	        job = new Job(JobType.Demolish, tile, j => WorldController.Instance.GetWorld().DemolishInstalledObject(tile), null, 0f, 0);
+	        job = new Job(JobType.Demolish, tile, j => WorldController.Instance.GetWorld().DemolishInstalledObject(tile), null, 1f, 0);
         }
 
 	    if(job != null) {

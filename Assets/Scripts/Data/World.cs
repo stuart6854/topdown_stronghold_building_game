@@ -134,6 +134,15 @@ public class World {
 	public void RegisterOnWorldObjectDestroyedCallback(Action<WorldObject> callback) {
 		OnWorldObjectDestroyed -= callback;
 		OnWorldObjectDestroyed += callback;
+
+		if(Tiles == null)
+			return;
+
+		for(int x = 0; x < Width; x++) {
+			for(int y = 0; y < Height; y++) {
+				Tiles[x, y].RegisterOnDestroyedCallback(callback);
+			}
+		}
 	}
 
 	public void UnregisterOnWorldObjectDestroyedCallback(Action<WorldObject> callback) {

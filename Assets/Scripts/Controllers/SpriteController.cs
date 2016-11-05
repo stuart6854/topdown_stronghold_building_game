@@ -136,8 +136,7 @@ public class SpriteController : MonoBehaviour {
 
 		Destroy(wo_go);
 
-		Debug.Log("Destoyed WorldObjects GameObject");
-
+//		Debug.Log("Destoyed WorldObjects GameObject");
 	}
 
 	private Sprite GetSprite(WorldObject obj) {

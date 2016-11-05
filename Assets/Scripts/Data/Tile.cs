@@ -95,6 +95,10 @@ public class Tile : WorldObject {
 
     public LooseItem PlaceLooseItem(LooseItem looseItem) {
         if(looseItem == null) {
+	        if(this.LooseItem != null)
+				if(this.LooseItem.GetOnDestroyed() != null)
+					this.LooseItem.GetOnDestroyed()(this.LooseItem);
+
             this.LooseItem = null;
             return null;
         }
@@ -113,8 +117,12 @@ public class Tile : WorldObject {
 
         this.LooseItem = looseItem.Clone();
         this.LooseItem.SetTile(this);
-        looseItem.SetStackSize(0); //Incase we are passed a reference
+		this.LooseItem.RegisterOnCreatedCallback(this.OnCreated);
+		this.LooseItem.RegisterOnChangedCallback(this.OnChanged);
+		this.LooseItem.RegisterOnDestroyedCallback(this.OnDestroyed);
 
+		looseItem.SetStackSize(0); //Incase we are passed a reference
+		
         if(OnCreated != null)
             OnCreated(this.LooseItem);
 
