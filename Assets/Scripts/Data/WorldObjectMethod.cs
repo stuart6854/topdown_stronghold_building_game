@@ -8,7 +8,7 @@ public abstract class WorldObjectMethod {
         { "character", new CharacterMethods() },
         { "grass", new Grass() },
         { "floor", new Floor() },
-        { "stoneWall_32", new Wall() },
+        { "stoneWall_64_2.5d", new Wall() },
         { "door", new Door() }
     };
 
