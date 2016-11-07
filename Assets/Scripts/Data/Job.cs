@@ -12,7 +12,7 @@ public class Job : IComparable<Job> {
 
     private readonly int Priority;
 	private readonly JobType JobType;
-	private readonly float TimeCreated;
+	private float TimeCreated;
 
     private Tile Tile;
 
@@ -30,7 +30,7 @@ public class Job : IComparable<Job> {
         this.Requirements = requirements;
         this.CompletionTime = completionTime;
         this.Priority = priority;
-        this.TimeCreated = Time.realtimeSinceStartup;
+        ResetTimeCreated();
 
         RegisterOnCompleteCallback(JobAction);
     }
@@ -56,6 +56,10 @@ public class Job : IComparable<Job> {
         return Priority;
     }
 
+	public JobType GetJobType() {
+		return JobType;
+	}
+
     public Tile GetTile() {
         return Tile;
     }
@@ -71,6 +75,14 @@ public class Job : IComparable<Job> {
     public float GetPassedTime() {
         return PassedTime;
     }
+
+    public bool IsComplete() {
+        return (PassedTime >= CompletionTime);
+    }
+
+	public void ResetTimeCreated() {
+		this.TimeCreated = Time.realtimeSinceStartup;
+	}
 
     public void RegisterOnCompleteCallback(Action<Job> callback) {
         OnComplete -= callback;

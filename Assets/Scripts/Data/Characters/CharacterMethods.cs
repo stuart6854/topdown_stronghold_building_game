@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using BehaviourTrees;
+using System.Collections.Generic;
 
 public class CharacterMethods : WorldObjectMethod {
 

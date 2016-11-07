@@ -20,10 +20,6 @@ public class JobController : MonoBehaviour {
         JobGameobjects = new Dictionary<Job, GameObject>();
     }
 
-	void Start () {
-
-	}
-
     public void AddJob(Job job) {
         if(job.GetCompletionTime() <= 0.0f) {
             job.DoJob(0); //Lets autocomplete jobs with 0 or minus completion times. Why should AI waste time if it is gonna complete instantly!
@@ -35,6 +31,8 @@ public class JobController : MonoBehaviour {
             return;
         }
 
+		job.ResetTimeCreated();
+
         job.RegisterOnCompleteCallback(OnJobEnd);
         job.RegisterOnAbortedCallback(OnJobEnd);
 
@@ -44,7 +42,32 @@ public class JobController : MonoBehaviour {
         OnJobCreated(job);
     }
 
-    public Job GetJob() {
+	public void AddFailedJob(Job job) {
+		if(job.GetCompletionTime() <= 0.0f) {
+			job.DoJob(0); //Lets autocomplete jobs with 0 or minus completion times. Why should AI waste time if it is gonna complete instantly!
+			return;
+		}
+
+		if(JobQueue.Contains(job)) {
+			Debug.Log("JobController::AddJob -> This Job is already in the JobQueue!");
+			return;
+		}
+
+		job.RegisterOnCompleteCallback(OnJobEnd);
+		job.RegisterOnAbortedCallback(OnJobEnd);
+
+		QueuedJob queuedJob = new QueuedJob();
+		queuedJob.Job = job;
+		queuedJob.HasFailed = true;
+		queuedJob.JobType = job.GetJobType();
+
+//		JobQueue.Add(queuedJob);
+//		JobQueue.Sort(); //Sorts Jobs based on their priority - High to Low
+
+		OnJobCreated(job);
+	}
+
+	public Job GetJob() {
         if(JobQueue.Count == 0)
             return null;
 
@@ -52,6 +75,13 @@ public class JobController : MonoBehaviour {
         JobQueue.RemoveAt(0);
 
         return job;
+    }
+
+    public bool HasJob() {
+        if(JobQueue.Count == 0)
+            return false;
+
+        return true;
     }
 
     private void OnJobCreated(Job job) {
@@ -80,5 +110,13 @@ public class JobController : MonoBehaviour {
 
         Destroy(job_go);
     }
+
+	public class QueuedJob {
+
+		public Job Job;
+		public bool HasFailed;
+		public JobType JobType;
+
+	}
 
 }

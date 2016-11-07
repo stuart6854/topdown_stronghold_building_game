@@ -23,8 +23,8 @@ public class Pathfinding : MonoBehaviour {
 	    Grid = new Grid(WorldController.WIDTH, WorldController.HEIGHT);
 	}
 
-	public bool PathStillValid(Tile[] path, int currentIndex) {
-		for(int i = currentIndex; i < path.Length; i++) {
+	public bool PathStillValid(List<Tile> path) {
+		for(int i = 0; i < path.Count; i++) {
 			Tile tile = path[i];
 
 			if(!Grid.GetNode((int)tile.GetX(), (int)tile.GetY()).isWalkable)
@@ -34,7 +34,7 @@ public class Pathfinding : MonoBehaviour {
 		return true;
 	}
 
-	public Tile[] FindPathInstant(Tile start, Tile end, string objectType = null) {
+	public List<Tile> FindPathInstant(Tile start, Tile end, string objectType = null) {
 	    //If 'end' is null, then this A* algorithm becomes a Dijkstra Algorithm,
 	    //which is A* without the heuristics
 
@@ -98,19 +98,19 @@ public class Pathfinding : MonoBehaviour {
 	    sw.Stop();
 //		print("Path Found: " + sw.ElapsedMilliseconds + "ms.");
 
-	    Tile[] waypoints = null;
+	    List<Tile> waypoints = null;
 
 		if(pathSuccess) {
 			waypoints = RetracePath(startNode, targetNode);
 		}
 
-		if(waypoints != null && waypoints.Length == 0)
+		if(waypoints != null && waypoints.Count == 0)
 			waypoints = null;
 
 		return waypoints;
 	}
 
-    Tile[] RetracePath(Node startNode, Node endNode) {
+    List<Tile> RetracePath(Node startNode, Node endNode) {
 		List<Tile> path = new List<Tile>();
 		Node currentNode = endNode;
 		while(currentNode != startNode) {
@@ -118,9 +118,8 @@ public class Pathfinding : MonoBehaviour {
 			currentNode = currentNode.parent;
 		}
         path.Add(currentNode.tile);
-		Tile[] waypoints = path.ToArray();
-		Array.Reverse(waypoints);
-		return waypoints;
+        path.Reverse();
+		return path;
 	}
 
     private float GetHeuristic(Node start, Node end) {

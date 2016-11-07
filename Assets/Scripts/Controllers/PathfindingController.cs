@@ -16,16 +16,16 @@ public class PathfindingController : MonoBehaviour {
         Pathfinding = GetComponent<Pathfinding>();
     }
 
-    public Tile[] RequestPath(Tile start, Tile end) {
+    public List<Tile> RequestPath(Tile start, Tile end) {
         return Pathfinding.FindPathInstant(start, end);
     }
 
-    public Tile[] RequestPathToObject(Tile start, string objectType) {
+    public List<Tile> RequestPathToObject(Tile start, string objectType) {
         return Pathfinding.FindPathInstant(start, null, objectType);
     }
 
-    public bool PathStillValid(Tile[] path, int currentIndex) {
-        return Pathfinding.PathStillValid(path, currentIndex);
+    public bool PathStillValid(List<Tile> path) {
+        return Pathfinding.PathStillValid(path);
     }
 
     private void OnDrawGizmosSelected() {

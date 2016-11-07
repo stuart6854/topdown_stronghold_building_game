@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using BehaviourTrees;
 
 /// <summary>
 /// Character class Summary
@@ -13,11 +12,10 @@ public class Character : WorldObject{
     private Tile CurrentTile, NextTile, DestinationTile;
     private float PercentageBetweenTiles;
 
-    private BehaviourNode BehaviourTree;
-    private Blackboard Blackboard;
+    private CharacterFSM fsm;
 
     private Job CurrentJob;
-    private Tile[] CurrentPath;
+    private List<Tile> CurrentPath;
     private int PathIndex;
 
     //Data
@@ -43,150 +41,102 @@ public class Character : WorldObject{
         this.Methods = WorldObjectMethod.Methods["character"];
         this.Methods.OnCreated(this);
 
-        InitBehaviourTree();
+        fsm = new CharacterFSM(this);
+        WorldController.Instance.StartCoroutine(fsm.run());
+
+//        InitBehaviourTree();
     }
-
-    private void InitBehaviourTree() {
-        Blackboard = new Blackboard();
-        Blackboard.setTreeMemoryLocation("Character", this);
-        CharacterBehaviourRoot root = new CharacterBehaviourRoot();
-		
-		// Job Tree Start
-        SequenceNode CarryOutJobRoot = new SequenceNode();
-
-		SelectorNode HasGetJobSelector = new SelectorNode();
-	    HasGetJobSelector.AddChild(new HasJobLeaf());
-	    HasGetJobSelector.AddChild(new GetJobLeaf());
-	    CarryOutJobRoot.AddChild(HasGetJobSelector);
-
-		RepeatTillHaveJobRequirements RepeatTillHaveJobRequirements = new RepeatTillHaveJobRequirements();
-
-
-        SequenceNode JobRequirementsSequence = new SequenceNode();
-        JobRequirementsSequence.AddChild(new FindJobRequirement());
-
-
-        SelectorNode JobRequirementPathSelector = new SelectorNode();
-        JobRequirementPathSelector.AddChild(new HasPathLeaf());
-        JobRequirementPathSelector.AddChild(new FindPathLeaf());
-
-        JobRequirementsSequence.AddChild(JobRequirementPathSelector);
-        JobRequirementsSequence.AddChild(new MoveToDest());
-        JobRequirementsSequence.AddChild(new PickupRequirement());
-
-		RepeatTillHaveJobRequirements.SetChildNode(JobRequirementsSequence);
-
-        CarryOutJobRoot.AddChild(RepeatTillHaveJobRequirements);
-
-	    CarryOutJobRoot.AddChild(new SetJobDest());
-
-		SelectorNode JobPathSelector = new SelectorNode();
-		JobPathSelector.AddChild(new HasPathLeaf());
-		JobPathSelector.AddChild(new FindPathLeaf());
-
-	    CarryOutJobRoot.AddChild(JobPathSelector);
-		CarryOutJobRoot.AddChild(new MoveToDest());
-        CarryOutJobRoot.AddChild(new DoJob());
-
-        root.AddChild(CarryOutJobRoot);
-		// Job Tree End
-
-	    this.BehaviourTree = root;
-    }
-
+	
     public override void OnUpdate() {
-        this.BehaviourTree.Update(Blackboard);
-
-//        UpdateJob();
-//        Move();
-//        Rotate();
+        Move();
+        Rotate();
 
         if(OnChanged != null)
             OnChanged(this);
     }
 
-    private void UpdateJob() {
-        if(CurrentJob == null) {
-            JobSearchCooldown -= Time.deltaTime;
-            if(JobSearchCooldown > 0)
-                return;
-
-            GetJob();
-
-            if(CurrentJob == null) {
-                JobSearchCooldown = UnityEngine.Random.Range(0.1f, 0.5f);
-                DestinationTile = NextTile = CurrentTile;
-                return;
-            }
-
-        } else {
-            //TODO: Have required materials/resources
-            if(!HasJobRequirements()) {
-                if(CurrentPath == null) {
-                    KeyValuePair<string, int> requirement = GetUnfulfilledJobRequirement();
-
-                    Tile[] path = PathfindingController.Instance.RequestPathToObject(CurrentTile, requirement.Key);
-                    if(path == null) {
-                        //We could find one of the requirements so this job is unable to be completed just now.
-                        //So lets abandon and requeue the job
-                        AbandonJob();
-                        return;
-                    }
-                    //We have found a tile that contains something that we need.
-                    //Lets go get it.
-                    CurrentRequirement = requirement.Key;
-                    CurrentPath = path;
-                    PathIndex = 0;
-                    NextTile = CurrentPath[0];
-                    DestinationTile = CurrentPath[CurrentPath.Length - 1];
-                } else {
-                    if(CurrentTile == DestinationTile) {
-                        //We have reached a requirements location, hopefully.
-
-                        LooseItem item = CurrentTile.GetLooseItem();
-                        int amnt = item.GetStackSize();
-                        if(amnt < JobRequirements[CurrentRequirement]) {
-                            Inventory.Add(new LooseItem(CurrentRequirement, amnt));
-                            CurrentTile.GetLooseItem().RemoveFromStack(amnt);
-                            JobRequirements[CurrentRequirement] -= amnt;
-                            CurrentRequirement = null;
-                            CurrentPath = null; //Resets us to try find more of requirement as we have not fullfilled the required amount
-                        } else {
-                            //We can fulfill the whole requirement here
-                            Inventory.Add(new LooseItem(CurrentRequirement, JobRequirements[CurrentRequirement]));
-                            CurrentTile.GetLooseItem().RemoveFromStack(JobRequirements[CurrentRequirement]);
-                            JobRequirements.Remove(CurrentRequirement); //We dont require any more of this type
-                            CurrentPath = null;
-                            CurrentRequirement = null;
-                        }
-                    }
-                }
-
-            } else {
-                DestinationTile = CurrentJob.GetTile();
-
-                if(CurrentPath == null) {
-                    Tile[] path = PathfindingController.Instance.RequestPath(CurrentTile, DestinationTile);
-                    if(path == null) {
-                        AbandonJob();
-                        return;
-                    }
-
-                    CurrentPath = path;
-                    PathIndex = 0;
-                    NextTile = CurrentPath[0];
-                }else if(!PathfindingController.Instance.PathStillValid(CurrentPath, PathIndex)) {
-                    AbandonJob();
-                    return;
-                }
-
-                if(CurrentTile == CurrentJob.GetTile()) {
-                    CurrentJob.DoJob(Time.deltaTime);
-                }
-            }
-
-        }
-    }
+//    private void UpdateJob() {
+//        if(CurrentJob == null) {
+//            JobSearchCooldown -= Time.deltaTime;
+//            if(JobSearchCooldown > 0)
+//                return;
+//
+//            GetJob();
+//
+//            if(CurrentJob == null) {
+//                JobSearchCooldown = UnityEngine.Random.Range(0.1f, 0.5f);
+//                DestinationTile = NextTile = CurrentTile;
+//                return;
+//            }
+//
+//        } else {
+//            //TODO: Have required materials/resources
+//            if(!HasJobRequirements()) {
+//                if(CurrentPath == null) {
+//                    KeyValuePair<string, int> requirement = GetUnfulfilledJobRequirement();
+//
+//                    Tile[] path = PathfindingController.Instance.RequestPathToObject(CurrentTile, requirement.Key);
+//                    if(path == null) {
+//                        //We could find one of the requirements so this job is unable to be completed just now.
+//                        //So lets abandon and requeue the job
+//                        AbandonJob();
+//                        return;
+//                    }
+//                    //We have found a tile that contains something that we need.
+//                    //Lets go get it.
+//                    CurrentRequirement = requirement.Key;
+//                    CurrentPath = path;
+//                    PathIndex = 0;
+//                    NextTile = CurrentPath[0];
+//                    DestinationTile = CurrentPath[CurrentPath.Length - 1];
+//                } else {
+//                    if(CurrentTile == DestinationTile) {
+//                        //We have reached a requirements location, hopefully.
+//
+//                        LooseItem item = CurrentTile.GetLooseItem();
+//                        int amnt = item.GetStackSize();
+//                        if(amnt < JobRequirements[CurrentRequirement]) {
+//                            Inventory.Add(new LooseItem(CurrentRequirement, amnt));
+//                            CurrentTile.GetLooseItem().RemoveFromStack(amnt);
+//                            JobRequirements[CurrentRequirement] -= amnt;
+//                            CurrentRequirement = null;
+//                            CurrentPath = null; //Resets us to try find more of requirement as we have not fullfilled the required amount
+//                        } else {
+//                            //We can fulfill the whole requirement here
+//                            Inventory.Add(new LooseItem(CurrentRequirement, JobRequirements[CurrentRequirement]));
+//                            CurrentTile.GetLooseItem().RemoveFromStack(JobRequirements[CurrentRequirement]);
+//                            JobRequirements.Remove(CurrentRequirement); //We dont require any more of this type
+//                            CurrentPath = null;
+//                            CurrentRequirement = null;
+//                        }
+//                    }
+//                }
+//
+//            } else {
+//                DestinationTile = CurrentJob.GetTile();
+//
+//                if(CurrentPath == null) {
+//                    Tile[] path = PathfindingController.Instance.RequestPath(CurrentTile, DestinationTile);
+//                    if(path == null) {
+//                        AbandonJob();
+//                        return;
+//                    }
+//
+//                    CurrentPath = path;
+//                    PathIndex = 0;
+//                    NextTile = CurrentPath[0];
+//                }else if(!PathfindingController.Instance.PathStillValid(CurrentPath, PathIndex)) {
+//                    AbandonJob();
+//                    return;
+//                }
+//
+//                if(CurrentTile == CurrentJob.GetTile()) {
+//                    CurrentJob.DoJob(Time.deltaTime);
+//                }
+//            }
+//
+//        }
+//    }
 
     public void Move() {
         if(CurrentTile == DestinationTile)
@@ -215,11 +165,12 @@ public class Character : WorldObject{
         PercentageBetweenTiles += percentageThisFrame;
 
         if(PercentageBetweenTiles >= 1.0f) {
-            PathIndex++;
+//            PathIndex++;
             CurrentTile = NextTile;
             PercentageBetweenTiles = 0;
-            if(PathIndex < CurrentPath.Length)
-                NextTile = CurrentPath[PathIndex];
+            CurrentPath.RemoveAt(0);
+            if(CurrentPath.Count > 0)//Path still has Tiles
+                NextTile = CurrentPath[0];
         }
     }
 
@@ -232,11 +183,11 @@ public class Character : WorldObject{
         Rotation = Mathf.LerpAngle(Rotation, angle, Time.deltaTime * LookSpeed);
     }
 
-    public void SetPath(Tile[] path) {
+    public void SetPath(List<Tile> path) {
         CurrentPath = path;
         PathIndex = 0;
-        NextTile = CurrentPath != null ? CurrentPath[0] : CurrentTile;
-        DestinationTile = CurrentPath != null ? CurrentPath[CurrentPath.Length - 1] : CurrentTile;
+        NextTile = (CurrentPath != null ? CurrentPath[PathIndex] : CurrentTile);
+        DestinationTile = (CurrentPath != null ? CurrentPath[CurrentPath.Count - 1] : CurrentTile);
     }
 
     public bool GetJob() {
@@ -249,8 +200,8 @@ public class Character : WorldObject{
         DestinationTile = CurrentJob.GetTile();
 
         //Check if job is accessible
-        Tile[] path = PathfindingController.Instance.RequestPath(CurrentTile, DestinationTile);
-	    if(path == null || path.Length == 0 || path[path.Length - 1] != DestinationTile) {
+        List<Tile> path = PathfindingController.Instance.RequestPath(CurrentTile, DestinationTile);
+	    if(path == null || path.Count == 0 || path[path.Count - 1] != DestinationTile) {
 		    AbandonJob();
 		    return false;
 	    }
@@ -288,7 +239,7 @@ public class Character : WorldObject{
         CurrentPath = null;
 		DestinationTile = NextTile = CurrentTile;
 //		JobSearchCooldown = UnityEngine.Random.Range(0.1f, 0.5f);
-		BehaviourTree.ResetNode();
+//		BehaviourTree.ResetNode();
     }
 
     public void OnJobComplete(Job job) {
@@ -320,9 +271,9 @@ public class Character : WorldObject{
         return Inventory;
     }
 
-    public BehaviourNode GetBehaviourTree() {
-        return BehaviourTree;
-    }
+//    public BehaviourNode GetBehaviourTree() {
+//        return BehaviourTree;
+//    }
 
     public Tile GetCurrentTile() {
         return CurrentTile;
@@ -336,7 +287,7 @@ public class Character : WorldObject{
 		this.DestinationTile = tile;
 	}
 
-    public Tile[] GetCurrentPath() {
+    public List<Tile> GetCurrentPath() {
         return CurrentPath;
     }
 
