@@ -28,6 +28,13 @@ public class InputController : MonoBehaviour {
 				//Show Escape Menu - Resume, Save, Load, Settings, Exit, etc.
 			}
 		}
+		
+		if(ConsoleController.Instance.IsVisble) {
+			if(BuildController.Instance.GetBuildMode() != BuildMode.None) {
+				BuildController.Instance.SetBuildMode(BuildMode.None);
+			}
+			return;
+		}
 
 		HandleDrag();
 		HandleCameraZoom();

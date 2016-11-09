@@ -107,6 +107,13 @@ public class CharacterFSM : FSM {
 						//We have reached a requirements location, hopefully
 						string requirment = Character.GetCurrentJobRequirement();
 						LooseItem item = currTile.GetLooseItem();
+						if(item == null) {
+							Debug.LogError("This requirement has been taken!");
+							Character.SetCurrentJobRequirement(null);
+							Character.SetPath(null); // Reset
+							continue;
+						}
+
 						int amnt = item.GetStackSize();
 						if(amnt < Character.GetJobRequirements()[requirment]) {
 							//Not enough of what we need. We'll pick it up anyway and look for more
@@ -114,8 +121,7 @@ public class CharacterFSM : FSM {
 							currTile.GetLooseItem().RemoveFromStack(amnt);
 							Character.GetJobRequirements()[requirment] -= amnt;
 							Character.SetCurrentJobRequirement(null);
-							Character.SetPath(null);
-								// Resets us to try find more of requirement as we have not fullfilled the required amount
+							Character.SetPath(null); // Resets us to try find more of requirement as we have not fullfilled the required amount
 						} else {
 							//We can fullfil the whole remaining requirment here
 							Character.GetInventory().Add(new LooseItem(requirment, Character.GetJobRequirements()[requirment]));

@@ -13,6 +13,11 @@ public class BuildController : MonoBehaviour {
 
     public static BuildController Instance;
 
+    private static string InstaBuildVarName = "instabuild";
+	private static bool InstaBuild {
+		get { return bool.Parse(ConsoleController.Instance.GetSystemVariable(InstaBuildVarName)); }
+	}
+
     public GameObject BuildDragPrefab;
 
     private BuildMode BuildMode;
@@ -25,6 +30,8 @@ public class BuildController : MonoBehaviour {
     }
 
     private void Start() {
+        ConsoleController.Instance.RegisterSystemVariable(InstaBuildVarName, false);
+
         DragPreviewObjects = new List<GameObject>();
         SimplePool.Preload(BuildDragPrefab, 10, this.transform);
     }
@@ -34,6 +41,9 @@ public class BuildController : MonoBehaviour {
             BuildMode = BuildMode.None;
         }
 
+	    if(ConsoleController.Instance.IsVisble) {
+		    ClearDragPreviews();
+	    }
     }
 
     public void DoAction(Vector2 start, Vector2 end) {
@@ -114,14 +124,18 @@ public class BuildController : MonoBehaviour {
 		if(!string.IsNullOrEmpty(type))
 			requirements = WorldObjectMethod.Methods[type].GetConstructionRequirements();
 
+        float jobTime = 1.0f;
+        if(InstaBuild == true)
+            jobTime = 0f;
+
 	    Job job = null;
         if(BuildMode == BuildMode.Tile) {
-            job = new Job(JobType.Construct, tile, j => tile.ChangeType(type), requirements, 1f, 1);
+            job = new Job(JobType.Construct, tile, j => tile.ChangeType(type), requirements, jobTime, 1);
         } else if(BuildMode == BuildMode.InstalledObject) {
-            job = new Job(JobType.Construct, tile, j => WorldController.Instance.GetWorld().PlaceInstalledObject(type, tile), requirements, 1f, 0);
+            job = new Job(JobType.Construct, tile, j => WorldController.Instance.GetWorld().PlaceInstalledObject(type, tile), requirements, jobTime, 0);
             
         }else if(BuildMode == BuildMode.Demolish) {
-	        job = new Job(JobType.Demolish, tile, j => WorldController.Instance.GetWorld().DemolishInstalledObject(tile), null, 1f, 0);
+	        job = new Job(JobType.Demolish, tile, j => WorldController.Instance.GetWorld().DemolishInstalledObject(tile), null, jobTime, 0);
         }
 
 	    if(job != null) {
