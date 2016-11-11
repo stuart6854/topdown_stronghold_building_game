@@ -44,7 +44,12 @@ public class DevConsole : MonoBehaviour {
     void SetVisibility(bool visible) {
         ViewContainer.SetActive(visible);
 	    Console.IsVisble = visible;
-    }
+
+		if(visible)
+			SetInputFocus(true);
+		else
+			SetInputFocus(false);
+	}
 
     void onLogChanged(string[] newLog) {
         UpdateLogString(newLog);
@@ -66,8 +71,16 @@ public class DevConsole : MonoBehaviour {
         Console.RunCommandString(InputField.text);
         InputField.text = "";
         //Re-Focus Inputfield
-        EventSystem.current.SetSelectedGameObject(InputField.gameObject, null);
-        InputField.OnPointerClick(new PointerEventData(EventSystem.current));
+        SetInputFocus(true);
     }
+
+	private void SetInputFocus(bool focus) {
+		if(focus) {
+			EventSystem.current.SetSelectedGameObject(InputField.gameObject, null);
+			InputField.OnPointerClick(new PointerEventData(EventSystem.current));
+		} else {
+			EventSystem.current.SetSelectedGameObject(null, null);
+		}
+	}
 
 }
