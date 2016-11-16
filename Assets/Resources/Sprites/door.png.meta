@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 83a82a8f075578e49ae44a6d93a50ff5
-timeCreated: 1478343658
+timeCreated: 1478971635
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -52,7 +52,7 @@ TextureImporter:
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spritePixelsToUnits: 32
+  spritePixelsToUnits: 64
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
@@ -63,7 +63,7 @@ TextureImporter:
   textureFormatSet: 0
   platformSettings:
   - buildTarget: DefaultTexturePlatform
-    maxTextureSize: 128
+    maxTextureSize: 256
     textureFormat: -1
     textureCompression: 0
     compressionQuality: 50
@@ -71,7 +71,7 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 0
   - buildTarget: Standalone
-    maxTextureSize: 128
+    maxTextureSize: 256
     textureFormat: -1
     textureCompression: 0
     compressionQuality: 50
@@ -86,9 +86,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 109
-        width: 32
-        height: 6
+        y: 192
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -99,9 +99,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 77
-        width: 32
-        height: 6
+        y: 128
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -112,9 +112,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 45
-        width: 32
-        height: 6
+        y: 64
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -125,9 +125,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 13
-        width: 32
-        height: 6
+        y: 0
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}

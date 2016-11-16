@@ -27,7 +27,7 @@ public class World {
 	private void LoadInstalledObjectPrototypes() {
 		InstalledObject io = null;
 
-		io = InstalledObject.CreatePrototype("stoneWall_64_2.5d", new Wall(), 0, true);
+		io = InstalledObject.CreatePrototype("wall", new Wall(), 0, true);
 		InstalledObjectPrototypes.Add(io.GetObjectType(), io);
 
 		io = InstalledObject.CreatePrototype("door", new Door(), 1, false);
