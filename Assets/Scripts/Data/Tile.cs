@@ -23,8 +23,12 @@ public class Tile : WorldObject {
 		this.ObjectType = objectType;
 		this.world = world;
 
-		if(OnCreated != null)
-			OnCreated(this);
+		if(OnCreatedCB != null)
+			OnCreatedCB(this);
+	}
+
+	public override void OnCreated() {
+		throw new System.NotImplementedException();
 	}
 
 	public override void OnUpdate() {
@@ -35,16 +39,20 @@ public class Tile : WorldObject {
 			InstalledObject.OnUpdate();
 	}
 
+	public override void OnDestroyed() {
+		throw new System.NotImplementedException();
+	}
+
 	public InstalledObject PlaceInstalledObject(InstalledObject prototype) {
 		if(this.InstalledObject != null)
 			return null;
 		
-		this.InstalledObject = prototype.PlaceInstance(this);
-		this.InstalledObject.RegisterOnCreatedCallback(this.OnCreated);
-		this.InstalledObject.RegisterOnChangedCallback(this.OnChanged);
-		this.InstalledObject.RegisterOnDestroyedCallback(this.OnDestroyed);
+//		this.InstalledObject = prototype.PlaceInstance(this);
+		this.InstalledObject.RegisterOnCreatedCallback(this.OnCreatedCB);
+		this.InstalledObject.RegisterOnChangedCallback(this.OnChangedCB);
+		this.InstalledObject.RegisterOnDestroyedCallback(this.OnDestroyedCB);
 
-		if(this.InstalledObject.DoesConnectToNeighbours()) {
+		if(this.InstalledObject.GetConnectsToNeighbours()) {
 			foreach(Tile tile in GetNeighbourTiles()) {
 				if(tile.InstalledObject == null)
 					continue;
@@ -60,8 +68,8 @@ public class Tile : WorldObject {
 		if(this.InstalledObject.GetOnCreated() != null)
 			this.InstalledObject.GetOnCreated()(this.InstalledObject);
 
-	    if(OnChanged != null)
-	        OnChanged(this);
+	    if(OnChangedCB != null)
+	        OnChangedCB(this);
 
 	    return this.InstalledObject;
 	}
@@ -76,7 +84,7 @@ public class Tile : WorldObject {
 		if(io.GetOnDestroyed() != null)
 			io.GetOnDestroyed()(io);
 
-		if(io.DoesConnectToNeighbours()) {
+		if(io.GetConnectsToNeighbours()) {
 			foreach(Tile tile in GetNeighbourTiles()) {
 				if(tile.InstalledObject == null)
 					continue;
@@ -89,8 +97,8 @@ public class Tile : WorldObject {
 			}
 		}
 
-		if(OnChanged != null)
-			OnChanged(this);
+		if(OnChangedCB != null)
+			OnChangedCB(this);
 	}
 
     public LooseItem PlaceLooseItem(LooseItem looseItem) {
@@ -117,14 +125,14 @@ public class Tile : WorldObject {
 
         this.LooseItem = looseItem.Clone();
         this.LooseItem.SetTile(this);
-		this.LooseItem.RegisterOnCreatedCallback(this.OnCreated);
-		this.LooseItem.RegisterOnChangedCallback(this.OnChanged);
-		this.LooseItem.RegisterOnDestroyedCallback(this.OnDestroyed);
+		this.LooseItem.RegisterOnCreatedCallback(this.OnCreatedCB);
+		this.LooseItem.RegisterOnChangedCallback(this.OnChangedCB);
+		this.LooseItem.RegisterOnDestroyedCallback(this.OnDestroyedCB);
 
 		looseItem.SetStackSize(0); //Incase we are passed a reference
 		
-        if(OnCreated != null)
-            OnCreated(this.LooseItem);
+        if(OnCreatedCB != null)
+            OnCreatedCB(this.LooseItem);
 
         return this.LooseItem;
     }
@@ -137,8 +145,8 @@ public class Tile : WorldObject {
 
 	    PlaceLooseItem(new LooseItem("stone", 5)); //TODO: Temporary! For testing looseitems and job requirements
 
-	    if(OnChanged != null)
-			OnChanged(this);
+	    if(OnChangedCB != null)
+			OnChangedCB(this);
 	}
 
 	public InstalledObject GetInstalledObject() {

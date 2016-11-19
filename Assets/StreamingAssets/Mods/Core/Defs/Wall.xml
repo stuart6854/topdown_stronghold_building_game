@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Definitions>
+
+    <Definition>
+        <DefName>wall</DefName>
+        <Label>Wall</Label>
+		<Category>InstalledObject</Category>
+        <Width>1</Width>
+        <Height>1</Height>
+		
+		<Code assembly="Wall.cs" class="Wall"/>
+    </Definition>
+
+</Definitions>

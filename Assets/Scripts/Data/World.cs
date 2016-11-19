@@ -24,18 +24,18 @@ public class World {
 	    this.Characters = new List<Character>();
 	}
 
-	private void LoadInstalledObjectPrototypes() {
-		InstalledObject io = null;
-
-		io = InstalledObject.CreatePrototype("wall", new Wall(), 0, true);
-		InstalledObjectPrototypes.Add(io.GetObjectType(), io);
-
-		io = InstalledObject.CreatePrototype("door", new Door(), 1, false);
-		InstalledObjectPrototypes.Add(io.GetObjectType(), io);
-	}
+//	private void LoadInstalledObjectPrototypes() {
+//		InstalledObject io = null;
+//
+//		io = InstalledObject.CreatePrototype("wall", new Wall(), 0, true);
+//		InstalledObjectPrototypes.Add(io.GetObjectType(), io);
+//
+//		io = InstalledObject.CreatePrototype("door", new Door(), 1, false);
+//		InstalledObjectPrototypes.Add(io.GetObjectType(), io);
+//	}
 
 	public void InitialiseWorld() {
-		LoadInstalledObjectPrototypes();
+//		LoadInstalledObjectPrototypes();
 
 		Tiles = new Tile[Width, Height];
 

@@ -21,11 +21,15 @@ public abstract class WorldObject {
 	protected WorldObjectMethod Methods;
     protected Dictionary<string, object> Parameters;
 
-	protected Action<WorldObject> OnCreated;
-	protected Action<WorldObject> OnChanged;
-	protected Action<WorldObject> OnDestroyed;
+	protected Action<WorldObject> OnCreatedCB;
+	protected Action<WorldObject> OnChangedCB;
+	protected Action<WorldObject> OnDestroyedCB;
+
+	public abstract void OnCreated();
 
 	public abstract void OnUpdate();
+
+	public abstract void OnDestroyed();
 
 	public WorldObjectType GetWorldObjectType() {
 		return WorldObjectType;
@@ -71,42 +75,42 @@ public abstract class WorldObject {
     }
 
 	public Action<WorldObject> GetOnCreated() {
-		return OnCreated;
+		return OnCreatedCB;
 	}
 
 	public Action<WorldObject> GetOnChanged() {
-		return OnChanged;
+		return OnChangedCB;
 	}
 
 	public Action<WorldObject> GetOnDestroyed() {
-		return OnDestroyed;
+		return OnDestroyedCB;
 	}
 
 	public void RegisterOnCreatedCallback(Action<WorldObject> callback) {
-		OnCreated -= callback;
-		OnCreated += callback;
+		OnCreatedCB -= callback;
+		OnCreatedCB += callback;
 	}
 
 	public void UnregisterOnCreatedCallback(Action<WorldObject> callback) {
-		OnCreated -= callback;
+		OnCreatedCB -= callback;
 	}
 
 	public void RegisterOnChangedCallback(Action<WorldObject> callback) {
-		OnChanged -= callback;
-		OnChanged += callback;
+		OnChangedCB -= callback;
+		OnChangedCB += callback;
 	}
 
 	public void UnregisterOnChangedCallback(Action<WorldObject> callback) {
-		OnChanged -= callback;
+		OnChangedCB -= callback;
 	}
 
 	public void RegisterOnDestroyedCallback(Action<WorldObject> callback) {
-		OnDestroyed -= callback;
-		OnDestroyed += callback;
+		OnDestroyedCB -= callback;
+		OnDestroyedCB += callback;
 	}
 
 	public void UnregisterOnDestroyedCallback(Action<WorldObject> callback) {
-		OnDestroyed -= callback;
+		OnDestroyedCB -= callback;
 	}
 
 }

@@ -36,7 +36,7 @@ public class Character : WorldObject{
         this.CurrentTile = this.NextTile = this.DestinationTile = tile;
         this.Inventory = new Inventory(4);
 
-        this.OnChanged += SpriteController.Instance.OnWorldObjectChanged;
+        this.OnChangedCB += SpriteController.Instance.OnWorldObjectChanged;
 
         this.Methods = WorldObjectMethod.Methods["character"];
         this.Methods.OnCreated(this);
@@ -46,14 +46,22 @@ public class Character : WorldObject{
 
 //        InitBehaviourTree();
     }
-	
-    public override void OnUpdate() {
+
+	public override void OnCreated() {
+		throw new System.NotImplementedException();
+	}
+
+	public override void OnUpdate() {
         Move();
         Rotate();
 
-        if(OnChanged != null)
-            OnChanged(this);
+        if(OnChangedCB != null)
+            OnChangedCB(this);
     }
+
+	public override void OnDestroyed() {
+		throw new System.NotImplementedException();
+	}
 
 //    private void UpdateJob() {
 //        if(CurrentJob == null) {

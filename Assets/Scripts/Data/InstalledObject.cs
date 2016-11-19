@@ -2,47 +2,48 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InstalledObject : WorldObject, IContextMenu {
+public abstract class InstalledObject : WorldObject, IContextMenu {
 
 	private Tile Tile;
 
-	private bool ConnectsToNeighbours;
+//	public static InstalledObject CreatePrototype(string type, WorldObjectMethod methods, float movementCost = 1, bool connectToNeighbours = false) {
+//		InstalledObject io = new InstalledObject();
+//		io.ObjectType = type;
+//		io.WorldObjectType = WorldObjectType.InstalledObject;
+//		io.Methods = methods;
+//		io.MovementCost = movementCost;
+//		io.ConnectsToNeighbours = connectToNeighbours;
+//
+//		return io;
+//	}
 
-	public static InstalledObject CreatePrototype(string type, WorldObjectMethod methods, float movementCost = 1, bool connectToNeighbours = false) {
-		InstalledObject io = new InstalledObject();
-		io.ObjectType = type;
-		io.WorldObjectType = WorldObjectType.InstalledObject;
-		io.Methods = methods;
-		io.MovementCost = movementCost;
-		io.ConnectsToNeighbours = connectToNeighbours;
+//	public InstalledObject PlaceInstance(Tile tile) {
+//		InstalledObject io = new InstalledObject();
+//		io.ObjectType = this.ObjectType;
+//		io.WorldObjectType = this.WorldObjectType;
+//		io.Tile = tile;
+//		io.X = tile.GetX();
+//		io.Y = tile.GetY();
+//		io.MovementCost = this.MovementCost;
+//		io.ConnectsToNeighbours = this.ConnectsToNeighbours;
+//		io.OnCreated = this.OnCreated;
+//		io.OnChanged = this.OnChanged;
+//		io.OnDestroyed = this.OnDestroyed;
+//		io.Methods = this.Methods;
+//	    io.Parameters = new Dictionary<string, object>();
+//
+//	    io.Methods.OnCreated(io);
+//
+//		return io;
+//	}
 
-		return io;
-	}
+	public abstract Enterabilty GetEnterabilty();
 
-	public InstalledObject PlaceInstance(Tile tile) {
-		InstalledObject io = new InstalledObject();
-		io.ObjectType = this.ObjectType;
-		io.WorldObjectType = this.WorldObjectType;
-		io.Tile = tile;
-		io.X = tile.GetX();
-		io.Y = tile.GetY();
-		io.MovementCost = this.MovementCost;
-		io.ConnectsToNeighbours = this.ConnectsToNeighbours;
-		io.OnCreated = this.OnCreated;
-		io.OnChanged = this.OnChanged;
-		io.OnDestroyed = this.OnDestroyed;
-		io.Methods = this.Methods;
-	    io.Parameters = new Dictionary<string, object>();
+	public abstract BuildMethod GetBuildMethod();
 
-	    io.Methods.OnCreated(io);
+	public abstract void OnDismantled();
 
-		return io;
-	}
-
-	public override void OnUpdate() {
-		if(Methods != null)
-			Methods.OnUpdate(this);
-	}
+	public abstract Dictionary<string, int> GetConstructionRequirements();
 
 	public Tile GetTile() {
 		return Tile;
@@ -55,18 +56,11 @@ public class InstalledObject : WorldObject, IContextMenu {
 		else return Methods.GetEnterabilty(this);
 	}
 
-	public bool DoesConnectToNeighbours() {
-		return ConnectsToNeighbours;
-	}
+	public abstract bool GetConnectsToNeighbours();
 
-    public override float GetZ() {
+	public override float GetZ() {
         return -0.1f;
     }
-
-	public void OnDismantled() {
-		WorldController.Instance.GetWorld().DemolishInstalledObject(this.Tile);
-		//TODO: Drop resources
-	}
 
 	public RadialMenuGenerator.RadialMenuItem[] MenuOptions_ContextMenu() {
 		List<RadialMenuGenerator.RadialMenuItem> MenuItems = new List<RadialMenuGenerator.RadialMenuItem>();

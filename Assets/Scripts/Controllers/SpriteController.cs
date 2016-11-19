@@ -142,7 +142,7 @@ public class SpriteController : MonoBehaviour {
 	private Sprite GetSprite(WorldObject obj) {
 		InstalledObject installedObject = obj as InstalledObject;
 		if(installedObject != null) {
-			if(installedObject.DoesConnectToNeighbours()) {
+			if(installedObject.GetConnectsToNeighbours()) {
 				int Bitmask = GetInstalledObjectBitmask(installedObject);
 
 				if(ObjectSprites.ContainsKey(installedObject.GetObjectType() + "_" + Bitmask))

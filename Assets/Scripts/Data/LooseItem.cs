@@ -22,9 +22,17 @@ public class LooseItem : WorldObject {
         this.StackSize = other.StackSize;
     }
 
-    public override void OnUpdate(){  }
+	public override void OnCreated() {
+		throw new System.NotImplementedException();
+	}
 
-    public LooseItem Clone() {
+	public override void OnUpdate(){  }
+
+	public override void OnDestroyed() {
+		throw new System.NotImplementedException();
+	}
+
+	public LooseItem Clone() {
         return new LooseItem(this);
     }
 
