@@ -1,9 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// Character class Summary
-/// </summary>
 public class Character : WorldObject{
 
     //TODO: Add LooseItem Inventory(separate class or built into this class?)
@@ -31,37 +28,23 @@ public class Character : WorldObject{
 
 
     public Character(Tile tile) {
-        this.WorldObjectType = WorldObjectType.Character;
-        this.ObjectType = "character";
+//        this.ObjectType = "character";
         this.CurrentTile = this.NextTile = this.DestinationTile = tile;
         this.Inventory = new Inventory(4);
 
-        this.OnChangedCB += SpriteController.Instance.OnWorldObjectChanged;
-
-        this.Methods = WorldObjectMethod.Methods["character"];
-        this.Methods.OnCreated(this);
+//        this.OnChangedCB += SpriteController.Instance.OnWorldObjectChanged;
 
         fsm = new CharacterFSM(this);
         WorldController.Instance.StartCoroutine(fsm.run());
-
-//        InitBehaviourTree();
     }
 
-	public override void OnCreated() {
-		throw new System.NotImplementedException();
-	}
-
-	public override void OnUpdate() {
+	public void OnUpdate() {
         Move();
         Rotate();
 
-        if(OnChangedCB != null)
-            OnChangedCB(this);
+//        if(OnChangedCB != null)
+//            OnChangedCB(this);
     }
-
-	public override void OnDestroyed() {
-		throw new System.NotImplementedException();
-	}
 
 //    private void UpdateJob() {
 //        if(CurrentJob == null) {
@@ -150,7 +133,7 @@ public class Character : WorldObject{
         if(CurrentTile == DestinationTile)
             return;
 
-        if(NextTile.GetEnterabilty() == Enterabilty.Soon)
+        if(NextTile.GetEnterability() == Enterabilty.Soon)
             return;
 
         if(CurrentPath == null)
@@ -278,10 +261,6 @@ public class Character : WorldObject{
     public Inventory GetInventory() {
         return Inventory;
     }
-
-//    public BehaviourNode GetBehaviourTree() {
-//        return BehaviourTree;
-//    }
 
     public Tile GetCurrentTile() {
         return CurrentTile;

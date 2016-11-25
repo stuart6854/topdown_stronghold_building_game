@@ -101,18 +101,18 @@ public class BuildController : MonoBehaviour {
                 DragPreviewObjects.Add(go);
 
                 SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
-                if(t.GetPendingJob() != null) {
-                    sr.color = Color.red;
-                } else if(BuildMode == BuildMode.Tile) {
-                    sr.color = t.GetObjectType() != ObjectType ? Color.green : Color.red;
-                } else if(BuildMode == BuildMode.InstalledObject) {
-                    if(t.GetObjectType() == "null")
-                        sr.color = Color.red;
-                    else
-                        sr.color = t.GetInstalledObject() == null ? Color.green : Color.red;
-                }else if(BuildMode == BuildMode.Demolish) {
-	                sr.color = t.GetInstalledObject() == null ? Color.white : Color.green;
-                }
+//                if(t.GetPendingJob() != null) {
+//                    sr.color = Color.red;
+//                } else if(BuildMode == BuildMode.Tile) {
+//                    sr.color = t.GetObjectType() != ObjectType ? Color.green : Color.red;
+//                } else if(BuildMode == BuildMode.InstalledObject) {
+//                    if(t.GetObjectType() == "null")
+//                        sr.color = Color.red;
+//                    else
+//                        sr.color = t.GetInstalledObject() == null ? Color.green : Color.red;
+//                }else if(BuildMode == BuildMode.Demolish) {
+//	                sr.color = t.GetInstalledObject() == null ? Color.white : Color.green;
+//                }
             }
         }
     }
@@ -121,8 +121,8 @@ public class BuildController : MonoBehaviour {
         string type = ObjectType;
 
 	    Dictionary<string, int> requirements = null;
-		if(!string.IsNullOrEmpty(type))
-			requirements = WorldObjectMethod.Methods[type].GetConstructionRequirements();
+//		if(!string.IsNullOrEmpty(type))
+//			requirements = WorldObjectMethod.Methods[type].GetConstructionRequirements();
 
         float jobTime = 1.0f;
         if(InstaBuild == true)
@@ -130,7 +130,7 @@ public class BuildController : MonoBehaviour {
 
 	    Job job = null;
         if(BuildMode == BuildMode.Tile) {
-            job = new Job(JobType.Construct, tile, j => tile.ChangeType(type), requirements, jobTime, 1);
+//            job = new Job(JobType.Construct, tile, j => tile.ChangeType(type), requirements, jobTime, 1);
         } else if(BuildMode == BuildMode.InstalledObject) {
             job = new Job(JobType.Construct, tile, j => WorldController.Instance.GetWorld().PlaceInstalledObject(type, tile), requirements, jobTime, 0);
             
@@ -138,10 +138,10 @@ public class BuildController : MonoBehaviour {
 	        job = new Job(JobType.Demolish, tile, j => WorldController.Instance.GetWorld().DemolishInstalledObject(tile), null, jobTime, 0);
         }
 
-	    if(job != null) {
-			if(tile.SetPendingJob(job))
-				JobController.Instance.AddJob(job);
-		}
+//	    if(job != null) {
+//			if(tile.SetPendingJob(job))
+//				JobController.Instance.AddJob(job);
+//		}
     }
 
     public BuildMode GetBuildMode() {
@@ -156,10 +156,12 @@ public class BuildController : MonoBehaviour {
 		if(BuildMode == BuildMode.Demolish)
 			return BuildMethod.Grid;
 
-        if(!WorldObjectMethod.Methods.ContainsKey(ObjectType))
-            return BuildMethod.Single;
+//        if(!WorldObjectMethod.Methods.ContainsKey(ObjectType))
+//            return BuildMethod.Single;
+//
+//        return WorldObjectMethod.Methods[ObjectType].GetBuildMethod();
 
-        return WorldObjectMethod.Methods[ObjectType].GetBuildMethod();
+	    return BuildMethod.Single;
     }
 
     public void PlaceTile(string type) {

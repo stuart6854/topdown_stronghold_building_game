@@ -2,5 +2,6 @@
 <About>
   <name>Core</name>
   <author>Stuart Millman</author>
+  <TargetVersion></TargetVersion>
   <description>The Core Game Content.</description>
 </About>

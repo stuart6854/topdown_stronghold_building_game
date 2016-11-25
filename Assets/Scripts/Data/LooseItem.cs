@@ -11,26 +11,14 @@ public class LooseItem : WorldObject {
     private int StackSize;
 
 	public LooseItem(string type, int amount) {
-	    this.WorldObjectType = WorldObjectType.LooseItem;
-		this.ObjectType = type;
+//		this.ObjectType = type;
 	    this.StackSize = amount;
 	}
 
     public LooseItem(LooseItem other) {
-        this.WorldObjectType = WorldObjectType.LooseItem;
-        this.ObjectType = other.ObjectType;
+//        this.ObjectType = other.ObjectType;
         this.StackSize = other.StackSize;
     }
-
-	public override void OnCreated() {
-		throw new System.NotImplementedException();
-	}
-
-	public override void OnUpdate(){  }
-
-	public override void OnDestroyed() {
-		throw new System.NotImplementedException();
-	}
 
 	public LooseItem Clone() {
         return new LooseItem(this);
@@ -57,8 +45,8 @@ public class LooseItem : WorldObject {
     public void RemoveFromStack(int amnt) {
         StackSize -= amnt;
 
-        if(StackSize <= 0 && Tile != null)
-            Tile.PlaceLooseItem(null);
+//        if(StackSize <= 0 && Tile != null)
+//            Tile.PlaceLooseItem(null);
     }
 
     public int GetMaxStackSize() {

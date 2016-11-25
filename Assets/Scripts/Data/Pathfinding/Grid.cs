@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -56,9 +56,9 @@ public class Grid {
     }
 
     private bool IsTileWalkable(Tile tile) {
-        if(tile.GetInstalledObject() != null)
-            if(tile.GetInstalledObject().GetMovementCost() == 0)
-                return false;
+//        if(tile.GetInstalledObject() != null)
+//            if(tile.GetInstalledObject().GetMovementCost() == 0)
+//                return false;
 
         if(tile.GetMovementCost() == 0)
             return false;

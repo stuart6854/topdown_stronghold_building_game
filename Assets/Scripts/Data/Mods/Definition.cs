@@ -15,8 +15,8 @@ public class Definition {
 	private string DefinitionFile; //The Path to this definitions XML file
 
 	private string AssemblyFile; //The path to this defintions Assembly file
-	private Assembly Assembly; // The Assembly created from AssemblyFile
-	private string ClassName; // The name of the Class that belongs to this definition
+	public Assembly Assembly { get; protected set; } // The Assembly created from AssemblyFile
+	public string ClassName { get; protected set; } // The name of the Class that belongs to this definition
 
 	public Definition(Mod mod, string defName, string defFile) {
 		this.Mod = mod;
@@ -101,6 +101,14 @@ public class Definition {
 
 		Debug.Log("Definition -> Assembly Loaded: " + AssemblyFile);
 		return assembly;
+	}
+
+	public object CreateInstance() {
+		return Assembly.CreateInstance(ClassName);
+	}
+
+	public Type GetType() {
+		return Assembly.GetType(ClassName);
 	}
 
 }

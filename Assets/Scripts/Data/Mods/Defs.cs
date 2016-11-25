@@ -7,8 +7,8 @@ using UnityEngine;
 
 public class Defs {
 
-	private static Dictionary<string, Definition> InstalledObjectDefs = new Dictionary<string, Definition>();
-	private static Dictionary<string, Definition> LooseItemDefs = new Dictionary<string, Definition>();
+	public static Dictionary<string, Definition> InstalledObjectDefs { get; protected set; }
+	public static Dictionary<string, Definition> LooseItemDefs { get; protected set; }
 
 	public static void LoadDefs(Mod[] mods) {
 		InstalledObjectDefs = new Dictionary<string, Definition>();

@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 
 public class Inventory {
@@ -74,37 +74,37 @@ public class Inventory {
 
     public bool Contains(string type, int amnt = 1) {
         foreach(LooseItem stack in _Inventory) {
-            if(stack.GetObjectType() == type && stack.GetStackSize() >= amnt)
-                return true;
+//            if(stack.GetObjectType() == type && stack.GetStackSize() >= amnt)
+//                return true;
         }
 
         return false;
     }
 
     private LooseItem TryAddToExistingStack(LooseItem stack) {
-        LooseItem[] existingStacks = GetExistingStacks(stack.GetObjectType());
-        if(existingStacks.Length == 0)
-            return stack;//Their is no existing stack, so return the stack as given
+//        LooseItem[] existingStacks = GetExistingStacks(stack.GetObjectType());
+//        if(existingStacks.Length == 0)
+//            return stack;//Their is no existing stack, so return the stack as given
 
-        foreach(LooseItem existingStack in existingStacks) {
-            if(existingStack.GetStackSize() == existingStack.GetMaxStackSize())
-                continue; //There is no more space to add any of the stack at all, lets try the next stack(if one)
-
-            int spaceLeft = existingStack.GetMaxStackSize() - existingStack.GetStackSize(); //Get the existing stacks available space
-            if(spaceLeft >= stack.GetStackSize()) {
-                //There is enough room to add the whole stack
-                existingStack.AddToStack(stack.GetStackSize());
-                return null; //We managed to add the whole/remaining stack to the existing stack, so the passed stack no longer exists
-            }
-
-            //There is not enough room for the whole stack,
-            //so add what we can
-            existingStack.AddToStack(spaceLeft);
-            stack.RemoveFromStack(spaceLeft);
-
-            if(stack.GetStackSize() <= 0)
-                return null; //The stack has been completly added to other stacks
-        }
+//        foreach(LooseItem existingStack in existingStacks) {
+//            if(existingStack.GetStackSize() == existingStack.GetMaxStackSize())
+//                continue; //There is no more space to add any of the stack at all, lets try the next stack(if one)
+//
+//            int spaceLeft = existingStack.GetMaxStackSize() - existingStack.GetStackSize(); //Get the existing stacks available space
+//            if(spaceLeft >= stack.GetStackSize()) {
+//                //There is enough room to add the whole stack
+//                existingStack.AddToStack(stack.GetStackSize());
+//                return null; //We managed to add the whole/remaining stack to the existing stack, so the passed stack no longer exists
+//            }
+//
+//            //There is not enough room for the whole stack,
+//            //so add what we can
+//            existingStack.AddToStack(spaceLeft);
+//            stack.RemoveFromStack(spaceLeft);
+//
+//            if(stack.GetStackSize() <= 0)
+//                return null; //The stack has been completly added to other stacks
+//        }
 
         return stack;
     }
@@ -123,8 +123,8 @@ public class Inventory {
         List<LooseItem> existing = new List<LooseItem>();
 
         foreach(LooseItem stack in _Inventory) {
-            if(stack.GetObjectType() != type)
-                continue;
+//            if(stack.GetObjectType() != type)
+//                continue;
 
             existing.Add(stack);
         }

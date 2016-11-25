@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ObjectDataReference : MonoBehaviour {
 
-	public WorldObjectType ObjectType;
+//	public WorldObjectType ObjectType;
 	public int X, Y;
 
 }

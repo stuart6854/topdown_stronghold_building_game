@@ -63,35 +63,35 @@ public class SpriteController : MonoBehaviour {
 		float y = worldObject.GetY();
 		float z = worldObject.GetZ();
 
-		GameObject obj = new GameObject(worldObject.GetObjectType() + "_" + x + "_" + y);
-		obj.transform.position = new Vector3(x, y, z);
+//		GameObject obj = new GameObject(worldObject.GetObjectType() + "_" + x + "_" + y);
+//		obj.transform.position = new Vector3(x, y, z);
+//
+//		obj.AddComponent<BoxCollider2D>();
+//
+//		ObjectDataReference objDataRef = obj.AddComponent<ObjectDataReference>();
+//		objDataRef.X = (int)x;
+//		objDataRef.Y = (int)y;
+//		objDataRef.ObjectType = worldObject.GetWorldObjectType();
+//
+//		SpriteRenderer sr = obj.AddComponent<SpriteRenderer>();
+//		sr.material = SpriteMaterial;
+//		sr.sprite = GetSprite(worldObject);
+//
+//		if(worldObject.GetWorldObjectType() == WorldObjectType.Tile) {
+//			obj.transform.SetParent(TileParent);
+//			obj.layer = LayerMask.NameToLayer("Tile");
+//		} else if(worldObject.GetWorldObjectType() == WorldObjectType.InstalledObject) {
+//			obj.transform.SetParent(InstalledObjectParent);
+//			obj.layer = LayerMask.NameToLayer("InstalledObject");
+//		} else if(worldObject.GetWorldObjectType() == WorldObjectType.LooseItem) {
+//			obj.transform.SetParent(LooseItemParent);
+//			obj.layer = LayerMask.NameToLayer("LooseItem");
+//		} else if(worldObject.GetWorldObjectType() == WorldObjectType.Character) {
+//			obj.transform.SetParent(CharacterParent);
+//			obj.layer = LayerMask.NameToLayer("Character");
+//		}
 
-		obj.AddComponent<BoxCollider2D>();
-
-		ObjectDataReference objDataRef = obj.AddComponent<ObjectDataReference>();
-		objDataRef.X = (int)x;
-		objDataRef.Y = (int)y;
-		objDataRef.ObjectType = worldObject.GetWorldObjectType();
-
-		SpriteRenderer sr = obj.AddComponent<SpriteRenderer>();
-		sr.material = SpriteMaterial;
-		sr.sprite = GetSprite(worldObject);
-
-		if(worldObject.GetWorldObjectType() == WorldObjectType.Tile) {
-			obj.transform.SetParent(TileParent);
-			obj.layer = LayerMask.NameToLayer("Tile");
-		} else if(worldObject.GetWorldObjectType() == WorldObjectType.InstalledObject) {
-			obj.transform.SetParent(InstalledObjectParent);
-			obj.layer = LayerMask.NameToLayer("InstalledObject");
-		} else if(worldObject.GetWorldObjectType() == WorldObjectType.LooseItem) {
-			obj.transform.SetParent(LooseItemParent);
-			obj.layer = LayerMask.NameToLayer("LooseItem");
-		} else if(worldObject.GetWorldObjectType() == WorldObjectType.Character) {
-			obj.transform.SetParent(CharacterParent);
-			obj.layer = LayerMask.NameToLayer("Character");
-		}
-
-		WorldObjectGameObjects.Add(worldObject, obj);
+//		WorldObjectGameObjects.Add(worldObject, obj);
 	}
 
 	public void OnWorldObjectChanged(WorldObject worldObject) {
@@ -145,14 +145,14 @@ public class SpriteController : MonoBehaviour {
 			if(installedObject.GetConnectsToNeighbours()) {
 				int Bitmask = GetInstalledObjectBitmask(installedObject);
 
-				if(ObjectSprites.ContainsKey(installedObject.GetObjectType() + "_" + Bitmask))
-					return ObjectSprites[installedObject.GetObjectType() + "_" + Bitmask];
+//				if(ObjectSprites.ContainsKey(installedObject.GetObjectType() + "_" + Bitmask))
+//					return ObjectSprites[installedObject.GetObjectType() + "_" + Bitmask];
 			}
 		}
 
 
-		if(ObjectSprites.ContainsKey(obj.GetObjectType() + "_0"))
-			return ObjectSprites[obj.GetObjectType() + "_0"];
+//		if(ObjectSprites.ContainsKey(obj.GetObjectType() + "_0"))
+//			return ObjectSprites[obj.GetObjectType() + "_0"];
 
 		return null;
 	}
@@ -165,29 +165,29 @@ public class SpriteController : MonoBehaviour {
 		Tile tile = WorldController.Instance.GetTileAt(x, y + 1); //North
 		if(tile != null) {
 			InstalledObject tileIO = tile.GetInstalledObject();
-			if(tileIO != null && tileIO.GetObjectType() == io.GetObjectType())
-				bitmask += 1;
+//			if(tileIO != null && tileIO.GetObjectType() == io.GetObjectType())
+//				bitmask += 1;
 		}
 
 		tile = WorldController.Instance.GetTileAt(x + 1, y); //East
 		if(tile != null) {
 			InstalledObject tileIO = tile.GetInstalledObject();
-			if(tileIO != null && tileIO.GetObjectType() == io.GetObjectType())
-				bitmask += 2;
+//			if(tileIO != null && tileIO.GetObjectType() == io.GetObjectType())
+//				bitmask += 2;
 		}
 
 		tile = WorldController.Instance.GetTileAt(x, y - 1); //South
 		if(tile != null) {
 			InstalledObject tileIO = tile.GetInstalledObject();
-			if(tileIO != null && tileIO.GetObjectType() == io.GetObjectType())
-				bitmask += 4;
+//			if(tileIO != null && tileIO.GetObjectType() == io.GetObjectType())
+//				bitmask += 4;
 		}
 
 		tile = WorldController.Instance.GetTileAt(x - 1, y); //West
 		if(tile != null) {
 			InstalledObject tileIO = tile.GetInstalledObject();
-			if(tileIO != null && tileIO.GetObjectType() == io.GetObjectType())
-				bitmask += 8;
+//			if(tileIO != null && tileIO.GetObjectType() == io.GetObjectType())
+//				bitmask += 8;
 		}
 
 		return bitmask;

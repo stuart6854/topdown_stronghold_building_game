@@ -137,17 +137,17 @@ public class InputController : MonoBehaviour {
 			if(tile == null)
 				return; //The selection is attached to a null tile for some reason
 
-			switch(worldObjectRef.ObjectType) {
-				case WorldObjectType.InstalledObject:
-					selection = tile.GetInstalledObject();
-					break;
-				case WorldObjectType.LooseItem:
-					selection = tile.GetLooseItem();
-					break;
-				case WorldObjectType.Character:
-					//TODO: Need a way to retrieve character
-					break;
-			}
+//			switch(worldObjectRef.ObjectType) {
+//				case WorldObjectType.InstalledObject:
+//					selection = tile.GetInstalledObject();
+//					break;
+//				case WorldObjectType.LooseItem:
+//					selection = tile.GetLooseItem();
+//					break;
+//				case WorldObjectType.Character:
+//					//TODO: Need a way to retrieve character
+//					break;
+//			}
 		}
 
 		if(selection == null)

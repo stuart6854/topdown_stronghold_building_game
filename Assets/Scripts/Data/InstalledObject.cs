@@ -17,7 +17,7 @@ public abstract class InstalledObject : WorldObject, IContextMenu {
 //		return io;
 //	}
 
-//	public InstalledObject PlaceInstance(Tile tile) {
+	public InstalledObject PlaceInstance(Tile tile) {
 //		InstalledObject io = new InstalledObject();
 //		io.ObjectType = this.ObjectType;
 //		io.WorldObjectType = this.WorldObjectType;
@@ -25,23 +25,27 @@ public abstract class InstalledObject : WorldObject, IContextMenu {
 //		io.X = tile.GetX();
 //		io.Y = tile.GetY();
 //		io.MovementCost = this.MovementCost;
-//		io.ConnectsToNeighbours = this.ConnectsToNeighbours;
-//		io.OnCreated = this.OnCreated;
-//		io.OnChanged = this.OnChanged;
-//		io.OnDestroyed = this.OnDestroyed;
+////		io.ConnectsToNeighbours = this.ConnectsToNeighbours;
+//		io.OnCreatedCB = this.OnCreatedCB;
+//		io.OnChangedCB = this.OnChangedCB;
+//		io.OnDestroyedCB = this.OnDestroyedCB;
 //		io.Methods = this.Methods;
 //	    io.Parameters = new Dictionary<string, object>();
 //
 //	    io.Methods.OnCreated(io);
-//
+
 //		return io;
-//	}
 
-	public abstract Enterabilty GetEnterabilty();
+		return null;
+	}
 
-	public abstract BuildMethod GetBuildMethod();
+	public abstract void OnCreated();
 
-	public abstract void OnDismantled();
+	public abstract void OnUpdate();
+
+	public abstract void OnDestroyed();
+
+	public void OnDismantled() { }
 
 	public abstract Dictionary<string, int> GetConstructionRequirements();
 
@@ -49,28 +53,30 @@ public abstract class InstalledObject : WorldObject, IContextMenu {
 		return Tile;
 	}
 
-	public Enterabilty GetEnterability() {
-		if(MovementCost == 0)
-			return Enterabilty.Never;
-
-		else return Methods.GetEnterabilty(this);
+	public BuildMethod GetBuildMethod() {
+		return BuildMethod.Single; // Default. Can be overriden.
 	}
 
-	public abstract bool GetConnectsToNeighbours();
+	public Enterabilty GetEnterability() {
+		return Enterabilty.Never; // Default. Can be overriden.
+	}
+
+	public bool GetConnectsToNeighbours() {
+		return false;
+	}
 
 	public override float GetZ() {
         return -0.1f;
     }
 
-	public RadialMenuGenerator.RadialMenuItem[] MenuOptions_ContextMenu() {
-		List<RadialMenuGenerator.RadialMenuItem> MenuItems = new List<RadialMenuGenerator.RadialMenuItem>();
-
-		Font font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-
-		MenuItems.Add(new RadialMenuGenerator.RadialMenuItem("Dismantle", font, this.OnDismantled));
-		MenuItems.Add(new RadialMenuGenerator.RadialMenuItem("Cancel", font, null)); //TODO: Allow player to cancel current order, eg. Cancel Order
-
-		return MenuItems.ToArray();
-	}
+//	List<RadialMenuGenerator.RadialMenuItem> MenuItems = new List<RadialMenuGenerator.RadialMenuItem>();
+//
+//		Font font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+//
+//		MenuItems.Add(new RadialMenuGenerator.RadialMenuItem("Dismantle", font, this.OnDismantled));
+//		MenuItems.Add(new RadialMenuGenerator.RadialMenuItem("Cancel", font, null)); //TODO: Allow player to cancel current order, eg. Cancel Order
+//
+//		return MenuItems.ToArray();
+	public abstract RadialMenuGenerator.RadialMenuItem[] MenuOptions_ContextMenu();	
 
 }

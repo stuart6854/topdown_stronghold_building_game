@@ -24,15 +24,21 @@ public class World {
 	    this.Characters = new List<Character>();
 	}
 
-//	private void LoadInstalledObjectPrototypes() {
-//		InstalledObject io = null;
-//
+	private void LoadInstalledObjectPrototypes() {
+		foreach(KeyValuePair<string, Definition> installedObjectDef in Defs.InstalledObjectDefs) {
+			Definition def = installedObjectDef.Value;
+			Type type = def.GetType();
+			InstalledObject io = (InstalledObject)def.CreateInstance();
+		}
+		
+		//		InstalledObject io = null;
+
 //		io = InstalledObject.CreatePrototype("wall", new Wall(), 0, true);
 //		InstalledObjectPrototypes.Add(io.GetObjectType(), io);
 //
 //		io = InstalledObject.CreatePrototype("door", new Door(), 1, false);
 //		InstalledObjectPrototypes.Add(io.GetObjectType(), io);
-//	}
+	}
 
 	public void InitialiseWorld() {
 //		LoadInstalledObjectPrototypes();
@@ -42,9 +48,9 @@ public class World {
 		for(int x = 0; x < Width; x++) {
 			for(int y = 0; y < Height; y++) {
 				Tiles[x, y] = new Tile(x, y, "grass", this);
-				Tiles[x, y].RegisterOnCreatedCallback(OnWorldObjectCreated);
-				Tiles[x, y].RegisterOnChangedCallback(OnWorldObjectChanged);
-				Tiles[x, y].RegisterOnDestroyedCallback(OnWorldObjectDestroyed);
+//				Tiles[x, y].RegisterOnCreatedCallback(OnWorldObjectCreated);
+//				Tiles[x, y].RegisterOnChangedCallback(OnWorldObjectChanged);
+//				Tiles[x, y].RegisterOnDestroyedCallback(OnWorldObjectDestroyed);
 				OnWorldObjectCreated(Tiles[x, y]);
 			}
 		}
@@ -64,11 +70,11 @@ public class World {
 
     public void PlaceInstalledObject(string type, Tile tile) {
         InstalledObject prototype = InstalledObjectPrototypes[type];
-        tile.PlaceInstalledObject(prototype);
+//        tile.PlaceInstalledObject(prototype);
     }
 
 	public void DemolishInstalledObject(Tile tile) {
-		tile.RemoveInstalledObject();
+//		tile.RemoveInstalledObject();
 	}
 
     public void PlaceCharacter(Tile tile) {
@@ -102,11 +108,11 @@ public class World {
         if(Tiles == null)
             return;
 
-        for(int x = 0; x < Width; x++) {
-            for(int y = 0; y < Height; y++) {
-                Tiles[x, y].RegisterOnCreatedCallback(callback);
-            }
-        }
+//        for(int x = 0; x < Width; x++) {
+//            for(int y = 0; y < Height; y++) {
+//                Tiles[x, y].RegisterOnCreatedCallback(callback);
+//            }
+//        }
     }
 
 	public void UnregisterOnWorldObjectCreatedCallback(Action<WorldObject> callback) {
@@ -120,11 +126,11 @@ public class World {
 	    if(Tiles == null)
 	        return;
 
-	    for(int x = 0; x < Width; x++) {
-	        for(int y = 0; y < Height; y++) {
-	            Tiles[x, y].RegisterOnChangedCallback(callback);
-	        }
-	    }
+//	    for(int x = 0; x < Width; x++) {
+//	        for(int y = 0; y < Height; y++) {
+//	            Tiles[x, y].RegisterOnChangedCallback(callback);
+//	        }
+//	    }
 	}
 
 	public void UnregisterOnWorldObjectChangedCallback(Action<WorldObject> callback) {
@@ -138,11 +144,11 @@ public class World {
 		if(Tiles == null)
 			return;
 
-		for(int x = 0; x < Width; x++) {
-			for(int y = 0; y < Height; y++) {
-				Tiles[x, y].RegisterOnDestroyedCallback(callback);
-			}
-		}
+//		for(int x = 0; x < Width; x++) {
+//			for(int y = 0; y < Height; y++) {
+//				Tiles[x, y].RegisterOnDestroyedCallback(callback);
+//			}
+//		}
 	}
 
 	public void UnregisterOnWorldObjectDestroyedCallback(Action<WorldObject> callback) {
