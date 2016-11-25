@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace CoreMod {
 
-    public class Wall : InstalledObject{
+    public class Wall : InstalledObject {
 
         public override void OnCreated() {
 
@@ -12,20 +12,12 @@ namespace CoreMod {
 
         }
 
-        public override void OnDismantled() {
-
-        }
-
         public override void OnDestroyed() {
 
         }
 
-        public override Enterabilty GetEnterabilty() {
-            return 0;
-        }
-
         public override BuildMethod GetBuildMethod() {
-            return 0;
+            return BuildMethod.Grid;
         }
 
         public override Dictionary<string, int> GetConstructionRequirements() {
@@ -36,6 +28,10 @@ namespace CoreMod {
 
         public override bool GetConnectsToNeighbours() {
             return true;
+        }
+
+        public override RadialMenuGenerator.RadialMenuItem[] MenuOptions_ContextMenu() {
+            throw new System.NotImplementedException();
         }
 
     }

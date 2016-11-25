@@ -45,7 +45,7 @@ public abstract class InstalledObject : WorldObject, IContextMenu {
 
 	public abstract void OnDestroyed();
 
-	public void OnDismantled() { }
+	public virtual void OnDismantled() {}
 
 	public abstract Dictionary<string, int> GetConstructionRequirements();
 
@@ -53,15 +53,15 @@ public abstract class InstalledObject : WorldObject, IContextMenu {
 		return Tile;
 	}
 
-	public BuildMethod GetBuildMethod() {
+	public virtual BuildMethod GetBuildMethod() {
 		return BuildMethod.Single; // Default. Can be overriden.
 	}
 
-	public Enterabilty GetEnterability() {
+	public virtual Enterabilty GetEnterability() {
 		return Enterabilty.Never; // Default. Can be overriden.
 	}
 
-	public bool GetConnectsToNeighbours() {
+	public virtual bool GetConnectsToNeighbours() {
 		return false;
 	}
 

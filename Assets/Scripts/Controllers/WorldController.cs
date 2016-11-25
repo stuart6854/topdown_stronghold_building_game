@@ -11,8 +11,6 @@ public class WorldController : MonoBehaviour {
 	private World world;
 
 	void Awake() {
-//		Definition def = new Definition("");
-//		Mod mod = Mod.LoadMod(Application.streamingAssetsPath + "/Mods/Core/");
 		ModManager.LoadMods();
 		Defs.LoadDefs(ModManager.Mods.ToArray());
 

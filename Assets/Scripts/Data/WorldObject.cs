@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class WorldObject {
-
 	
 	protected float X, Y;
     protected float Rotation; // In Degrees
