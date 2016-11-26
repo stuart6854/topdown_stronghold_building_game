@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class ModManager {
 
+	public static bool ModsLoaded { get; protected set; }
+
 	public static List<Mod> Mods { get; protected set; }
 
 	public static void LoadMods() {
@@ -20,6 +22,7 @@ public class ModManager {
 
 			Mods.Add(mod);
 		}
+		ModsLoaded = true;
 
 		Debug.LogFormat("ModManager -> Loaded {0} Mods", Mods.Count);
 	}

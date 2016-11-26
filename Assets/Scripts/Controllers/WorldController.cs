@@ -11,7 +11,8 @@ public class WorldController : MonoBehaviour {
 	private World world;
 
 	void Awake() {
-		ModManager.LoadMods();
+		if(!ModManager.ModsLoaded)
+			ModManager.LoadMods();
 		Defs.LoadDefs(ModManager.Mods.ToArray());
 
 		Instance = this;

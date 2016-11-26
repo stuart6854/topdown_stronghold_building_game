@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour {
+
+	public OptionsMenu OptionsMenu;
 
 	public GameObject MainMenuPanel;
 	public GameObject OptionsMenuPanel;
@@ -13,6 +16,10 @@ public class MainMenu : MonoBehaviour {
 
 	private Animator MainMenuAnimator;
 	private Animator OptionsAnimator;
+
+	void Awake() {
+		OptionsMenu.LoadSettings();
+	}
 
 	public void Start() {
 		//Transitions
@@ -25,9 +32,26 @@ public class MainMenu : MonoBehaviour {
 		RefreshMods();
 	}
 
+	#region Main Menu
+
+	public void NewGame() {
+		//TODO: Implement New Game Menu
+		AsyncOperation SceneLoading = SceneManager.LoadSceneAsync("Game");
+	}
+
+	public void LoadGame() {
+		NewGame(); //TEMPORARY
+
+		//TODO: Implement Load Menu
+	}
+
+	#endregion
+
 	#region Settings
 
 	public void Options(bool In) {
+		OptionsMenu.ResetOptionsMenu();
+
 		MainMenuAnimator.enabled = true;
 		OptionsAnimator.enabled = true;
 
@@ -42,9 +66,7 @@ public class MainMenu : MonoBehaviour {
 
 	#region Sound
 
-	public void UpdateVolumeLabel(Text lbl, Slider slider) {
-		
-	}
+
 
 	#endregion
 
@@ -75,10 +97,6 @@ public class MainMenu : MonoBehaviour {
 	}
 
 	#endregion
-
-	public void ApplySettings() {
-		
-	}
 
 	#endregion
 
