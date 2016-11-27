@@ -10,7 +10,7 @@ public class World {
 	private Tile[,] Tiles;
     private List<Character> Characters;
 
-	private Dictionary<string, InstalledObject> InstalledObjectPrototypes;
+	private Dictionary<string, WorldObject> WorldObjectPrototypes;
 
 	//Callbacks
 	private Action<WorldObject> OnWorldObjectCreated;
@@ -20,7 +20,7 @@ public class World {
 	public World(int width, int height) {
 		this.Width = width;
 		this.Height = height;
-		this.InstalledObjectPrototypes = new Dictionary<string, InstalledObject>();
+		this.WorldObjectPrototypes = new Dictionary<string, WorldObject>();
 	    this.Characters = new List<Character>();
 	}
 
@@ -29,28 +29,29 @@ public class World {
 			Definition def = installedObjectDef.Value;
 			Type type = def.GetType();
 			InstalledObject io = (InstalledObject)def.CreateInstance();
+			if(io == null)
+				Debug.LogError("World::LoadInstalledObjectPrototypes -> Definition Instance created is Null!");
+			WorldObjectPrototypes.Add(def.DefName, io);
 		}
-		
-		//		InstalledObject io = null;
-
-//		io = InstalledObject.CreatePrototype("wall", new Wall(), 0, true);
-//		InstalledObjectPrototypes.Add(io.GetObjectType(), io);
-//
-//		io = InstalledObject.CreatePrototype("door", new Door(), 1, false);
-//		InstalledObjectPrototypes.Add(io.GetObjectType(), io);
 	}
 
 	public void InitialiseWorld() {
-//		LoadInstalledObjectPrototypes();
+		LoadInstalledObjectPrototypes();
 
 		Tiles = new Tile[Width, Height];
 
 		for(int x = 0; x < Width; x++) {
 			for(int y = 0; y < Height; y++) {
-				Tiles[x, y] = new Tile(x, y, "grass", this);
-//				Tiles[x, y].RegisterOnCreatedCallback(OnWorldObjectCreated);
-//				Tiles[x, y].RegisterOnChangedCallback(OnWorldObjectChanged);
-//				Tiles[x, y].RegisterOnDestroyedCallback(OnWorldObjectDestroyed);
+				//Tile Constructior Params example
+				//Activator.CreateInstance(type, constructorParam1, constructorParam2);
+				//
+
+
+				Tiles[x, y] = new Tile(x, y, this);
+				Tiles[x, y].ChangeType("grass");
+				Tiles[x, y].RegOnCreatedCB(OnWorldObjectCreated);
+				Tiles[x, y].RegOnUpdateCB(OnWorldObjectChanged);
+				Tiles[x, y].RegOnDestroyedCB(OnWorldObjectDestroyed);
 				OnWorldObjectCreated(Tiles[x, y]);
 			}
 		}
@@ -69,8 +70,8 @@ public class World {
 	}
 
     public void PlaceInstalledObject(string type, Tile tile) {
-        InstalledObject prototype = InstalledObjectPrototypes[type];
-//        tile.PlaceInstalledObject(prototype);
+	    InstalledObject prototype = (InstalledObject)Defs.GetIODef(type).CreateInstance();
+        tile.PlaceInstalledObject(type, prototype);
     }
 
 	public void DemolishInstalledObject(Tile tile) {
@@ -101,57 +102,72 @@ public class World {
         return Height;
     }
 
-    public void RegisterOnWorldObjectCreatedCallback(Action<WorldObject> callback) {
+	public WorldObject GetWorldObjectPrototype(string name) {
+		if(!WorldObjectPrototypes.ContainsKey(name)) {
+			Debug.LogError("World::GetWorldObjectPrototype -> There is NO prototype for the object '" + name + "'");
+			return null;
+		}
+
+		WorldObject wo_proto = WorldObjectPrototypes[name];
+		if(wo_proto == null) {
+			Debug.LogError("World::GetWorldObjectPrototype -> The prototype for object '" + name + "' is NULL!");
+			return null;
+		}
+
+		return wo_proto;
+	}
+
+    public void RegOnWOCreatedCB(Action<WorldObject> callback) {
 		OnWorldObjectCreated -= callback;
 		OnWorldObjectCreated += callback;
 
         if(Tiles == null)
             return;
 
-//        for(int x = 0; x < Width; x++) {
-//            for(int y = 0; y < Height; y++) {
-//                Tiles[x, y].RegisterOnCreatedCallback(callback);
-//            }
-//        }
+        for(int x = 0; x < Width; x++) {
+            for(int y = 0; y < Height; y++) {
+                Tiles[x, y].RegOnCreatedCB(callback);
+            }
+        }
     }
 
-	public void UnregisterOnWorldObjectCreatedCallback(Action<WorldObject> callback) {
+	public void DeregOnWOCreatedCB(Action<WorldObject> callback) {
 		OnWorldObjectCreated -= callback;
 	}
 
-	public void RegisterOnWorldObjectChangedCallback(Action<WorldObject> callback) {
+	public void RegOnWOUpdatedCB(Action<WorldObject> callback) {
 		OnWorldObjectChanged -= callback;
 		OnWorldObjectChanged += callback;
 
 	    if(Tiles == null)
 	        return;
 
-//	    for(int x = 0; x < Width; x++) {
-//	        for(int y = 0; y < Height; y++) {
-//	            Tiles[x, y].RegisterOnChangedCallback(callback);
-//	        }
-//	    }
+	    for(int x = 0; x < Width; x++) {
+	        for(int y = 0; y < Height; y++) {
+	            Tiles[x, y].RegOnUpdateCB(callback);
+	        }
+	    }
 	}
 
-	public void UnregisterOnWorldObjectChangedCallback(Action<WorldObject> callback) {
+	public void DeregOnWOUpdatedCB(Action<WorldObject> callback) {
 		OnWorldObjectChanged -= callback;
 	}
 
-	public void RegisterOnWorldObjectDestroyedCallback(Action<WorldObject> callback) {
+	public void RegOnWODestroyedCB(Action<WorldObject> callback) {
 		OnWorldObjectDestroyed -= callback;
 		OnWorldObjectDestroyed += callback;
 
 		if(Tiles == null)
 			return;
 
-//		for(int x = 0; x < Width; x++) {
-//			for(int y = 0; y < Height; y++) {
-//				Tiles[x, y].RegisterOnDestroyedCallback(callback);
-//			}
-//		}
+		for(int x = 0; x < Width; x++) {
+			for(int y = 0; y < Height; y++) {
+				Tiles[x, y].RegOnDestroyedCB(callback);
+			}
+		}
 	}
 
-	public void UnregisterOnWorldObjectDestroyedCallback(Action<WorldObject> callback) {
+	public void DeregOnWODestroyedCB(Action<WorldObject> callback) {
 		OnWorldObjectDestroyed -= callback;
 	}
 

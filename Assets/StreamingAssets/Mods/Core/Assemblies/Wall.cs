@@ -25,6 +25,10 @@ namespace CoreMod {
                 { "stone", 5 }
             };
         }
+		
+		public override Dictionary<string, int> GetDismantledDrops() {
+            return null;
+        }
 
         public override bool GetConnectsToNeighbours() {
             return true;

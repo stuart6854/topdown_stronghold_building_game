@@ -51,6 +51,10 @@ namespace CoreMod {
         public override Dictionary<string, int> GetConstructionRequirements() {
             return new Dictionary<string, int>(){ {"wood", 5} };
         }
+		
+		public override Dictionary<string, int> GetDismantledDrops() {
+            return null;
+        }
 
         public override bool GetConnectsToNeighbours() {
             return false;

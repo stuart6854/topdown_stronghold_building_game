@@ -8,7 +8,7 @@
         <Width>1</Width>
         <Height>1</Height>
 		
-		<Code assembly="Wall.cs" class="Wall"/>
+		<Code assembly="Wall.cs" class="CoreMod.Wall"/>
     </Definition>
 
 </Definitions>

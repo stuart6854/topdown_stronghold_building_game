@@ -18,12 +18,18 @@ public class Definition {
 	public Assembly Assembly { get; protected set; } // The Assembly created from AssemblyFile
 	public string ClassName { get; protected set; } // The name of the Class that belongs to this definition
 
+	public string DefName { get; protected set; }
+	public string DefLabel { get; protected set; }
+	public string DefCategory { get; protected set; }
+
 	public Definition(Mod mod, string defName, string defFile) {
 		this.Mod = mod;
 		this.DefinitionFile = defFile;
 
 		ParseDefinition(defName, defFile);
-		this.Assembly = LoadAssembly(this.AssemblyFile, this.ClassName);
+
+		if(!string.IsNullOrEmpty(this.AssemblyFile) && !string.IsNullOrEmpty(this.ClassName))
+			this.Assembly = LoadAssembly(this.AssemblyFile, this.ClassName);
 	}
 
 	private void ParseDefinition(string defName, string defFile) {
@@ -36,6 +42,21 @@ public class Definition {
 		while(reader.Read()) {
 			if(!reader.IsStartElement())
 				continue;
+
+			if(reader.Name == "DefName") {
+				reader.Read();
+				DefName = reader.Value;
+			}
+
+			if(reader.Name == "Label") {
+				reader.Read();
+				DefLabel = reader.Value;
+			}
+
+			if(reader.Name == "Category") {
+				reader.Read();
+				DefCategory = reader.Value;
+			}
 
 			if(reader.Name == "Code") {
 				assemblyFile = reader.GetAttribute("assembly");
@@ -57,10 +78,6 @@ public class Definition {
 			assembly = AssemblyFromDLL(assemblyFilePath);
 
 		return assembly;
-
-//		MethodInfo method = assembly.GetType(className);
-//		Action del = (Action) Delegate.CreateDelegate(typeof(Action), method);
-//		del.Invoke();
 	}
 
 	/// <summary>
@@ -90,6 +107,7 @@ public class Definition {
 		}
 
 		Debug.Log("Definition -> Assembly Loaded: " + AssemblyFile);
+
 		//Return Assembly
 		return result.CompiledAssembly;
 	}
@@ -104,7 +122,8 @@ public class Definition {
 	}
 
 	public object CreateInstance() {
-		return Assembly.CreateInstance(ClassName);
+		object instance = Assembly.CreateInstance(ClassName);
+		return instance;
 	}
 
 	public Type GetType() {

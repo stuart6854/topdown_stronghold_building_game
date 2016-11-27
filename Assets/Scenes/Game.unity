@@ -91,6 +91,11 @@ NavMeshSettings:
     cellSize: 0.16666667
     accuratePlacement: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &26002624 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1073512912145964, guid: 44712314a5b6f7e4eb091e4564ece28e,
+    type: 2}
+  m_PrefabInternal: {fileID: 1770578415}
 --- !u!224 &148533891
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2258,9 +2263,30 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 1.0000001
       objectReference: {fileID: 0}
+    - target: {fileID: 114495887818317758, guid: 44712314a5b6f7e4eb091e4564ece28e,
+        type: 2}
+      propertyPath: ViewContainer
+      value: 
+      objectReference: {fileID: 26002624}
+    - target: {fileID: 114495887818317758, guid: 44712314a5b6f7e4eb091e4564ece28e,
+        type: 2}
+      propertyPath: InputField
+      value: 
+      objectReference: {fileID: 1831449893}
+    - target: {fileID: 114495887818317758, guid: 44712314a5b6f7e4eb091e4564ece28e,
+        type: 2}
+      propertyPath: ConsoleLogText
+      value: 
+      objectReference: {fileID: 1988046864}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 44712314a5b6f7e4eb091e4564ece28e, type: 2}
   m_IsPrefabParent: 0
+--- !u!114 &1831449893 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114676489031234686, guid: 44712314a5b6f7e4eb091e4564ece28e,
+    type: 2}
+  m_PrefabInternal: {fileID: 1770578415}
+  m_Script: {fileID: 575553740, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
 --- !u!1 &1899482995
 GameObject:
   m_ObjectHideFlags: 0
@@ -2637,6 +2663,12 @@ RectTransform:
   m_PrefabParentObject: {fileID: 22492744, guid: 55f259d5b573dd14395cb4cb46b51ac8,
     type: 2}
   m_PrefabInternal: {fileID: 1950353106}
+--- !u!114 &1988046864 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114479104383933168, guid: 44712314a5b6f7e4eb091e4564ece28e,
+    type: 2}
+  m_PrefabInternal: {fileID: 1770578415}
+  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
 --- !u!224 &2057117459 stripped
 RectTransform:
   m_PrefabParentObject: {fileID: 22492744, guid: 55f259d5b573dd14395cb4cb46b51ac8,

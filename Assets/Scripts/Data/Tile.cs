@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tile : WorldObject {
+public class Tile : WorldObject, IConstructable {
 
 	//References
 	private World World;
@@ -13,15 +13,10 @@ public class Tile : WorldObject {
 	//Data
 	protected float MovementCost = 1.0f; // Multiplier
 
-	public Tile(int x, int y, string objectType, World world) {
+	public Tile(int x, int y, World world) {
 		this.X = x;
 		this.Y = y;
-//		this.WorldObjectType = WorldObjectType.Tile;
-//		this.ObjectType = objectType;
 		this.World = world;
-
-//		if(OnCreatedCB != null)
-//			OnCreatedCB(this);
 	}
 
 	public void OnUpdate() {
@@ -29,36 +24,33 @@ public class Tile : WorldObject {
 			InstalledObject.OnUpdate();
 	}
 
-//	public InstalledObject PlaceInstalledObject(InstalledObject prototype) {
-//		if(this.InstalledObject != null)
-//			return null;
-//
-//		this.InstalledObject = prototype.PlaceInstance(this);
-//		this.InstalledObject.RegisterOnCreatedCallback(this.OnCreatedCB);
-//		this.InstalledObject.RegisterOnChangedCallback(this.OnChangedCB);
-//		this.InstalledObject.RegisterOnDestroyedCallback(this.OnDestroyedCB);
-//
-//		if(this.InstalledObject.GetConnectsToNeighbours()) {
-//			foreach(Tile tile in GetNeighbourTiles()) {
-//				if(tile.InstalledObject == null)
-//					continue;
-//
-//				if(tile.InstalledObject.GetObjectType() != this.InstalledObject.GetObjectType())
-//					continue;
-//
-//				if(tile.InstalledObject.GetOnChanged() != null)
-//					tile.InstalledObject.GetOnChanged()(tile.InstalledObject);
-//			}
-//		}
-//
-//		if(this.InstalledObject.GetOnCreated() != null)
-//			this.InstalledObject.GetOnCreated()(this.InstalledObject);
-//
-//	    if(OnChangedCB != null)
-//	        OnChangedCB(this);
-//
-//	    return this.InstalledObject;
-//	}
+	public InstalledObject PlaceInstalledObject(string type, InstalledObject instance) {
+		if(this.InstalledObject != null)
+			return null;
+
+		instance.RegOnCreatedCB(this.OnCreatedCB);
+		instance.RegOnUpdateCB(this.OnUpdateCB);
+		instance.RegOnDestroyedCB(this.OnDestroyedCB);
+		this.InstalledObject = instance.PlaceInstance(type, this);
+
+		if(this.InstalledObject.GetConnectsToNeighbours()) {
+			foreach(Tile tile in GetNeighbourTiles()) {
+				if(tile.InstalledObject == null)
+					continue;
+
+				if(tile.InstalledObject.GetObjectType() != this.InstalledObject.GetObjectType())
+					continue;
+
+				if(tile.InstalledObject.GetOnUpdatedCB() != null)
+					tile.InstalledObject.GetOnUpdatedCB()(tile.InstalledObject);
+			}
+		}
+
+	    if(OnUpdateCB != null)
+			OnUpdateCB(this);
+
+	    return this.InstalledObject;
+	}
 
 //	public void RemoveInstalledObject() {
 //		if(this.InstalledObject == null)
@@ -123,17 +115,17 @@ public class Tile : WorldObject {
 //        return this.LooseItem;
 //    }
 
-//	public void ChangeType(string type) {
-//		if(type == ObjectType)
-//			return; //We are already this type
-//
-//		this.ObjectType = type;
-//
+	public void ChangeType(string type) {
+		if(type == ObjectType)
+			return; //We are already this type
+
+		this.ObjectType = type;
+
 //	    PlaceLooseItem(new LooseItem("stone", 5)); //TODO: Temporary! For testing looseitems and job requirements
-//
-//	    if(OnChangedCB != null)
-//			OnChangedCB(this);
-//	}
+
+	    if(OnUpdateCB != null)
+			OnUpdateCB(this);
+	}
 
 	public InstalledObject GetInstalledObject() {
 		return InstalledObject;
@@ -174,6 +166,14 @@ public class Tile : WorldObject {
 			return InstalledObject.GetEnterability();
 
 		return Enterabilty.Enterable;
+	}
+
+	public Dictionary<string, int> GetConstructionRequirements() {
+		return null;
+	}
+
+	public Dictionary<string, int> GetDismantledDrops() {
+		return null;
 	}
 
 }

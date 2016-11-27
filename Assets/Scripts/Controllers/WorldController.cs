@@ -20,9 +20,9 @@ public class WorldController : MonoBehaviour {
 	
 	void Start () {
 	    world = new World(WIDTH, HEIGHT);
-	    world.RegisterOnWorldObjectCreatedCallback(SpriteController.Instance.OnWorldObjectCreated);
-	    world.RegisterOnWorldObjectChangedCallback(SpriteController.Instance.OnWorldObjectChanged);
-	    world.RegisterOnWorldObjectDestroyedCallback(SpriteController.Instance.OnWorldObjectDestroyed);
+	    world.RegOnWOCreatedCB(SpriteController.Instance.OnWorldObjectCreated);
+	    world.RegOnWOUpdatedCB(SpriteController.Instance.OnWorldObjectChanged);
+	    world.RegOnWODestroyedCB(SpriteController.Instance.OnWorldObjectDestroyed);
 	    world.InitialiseWorld();
 	}
 	

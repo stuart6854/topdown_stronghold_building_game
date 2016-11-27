@@ -2,13 +2,12 @@
 <Definitions>
 
     <Definition>
-        <DefName>door</DefName>
-        <Label>Door</Label>
-		<Category>InstalledObject</Category>
+        <DefName>floor</DefName>
+        <Label>Floor</Label>
+		<Category>Tile</Category>
         <Width>1</Width>
         <Height>1</Height>
 		
-		<Code assembly="Door.cs" class="CoreMod.Door"/>
     </Definition>
 
 </Definitions>

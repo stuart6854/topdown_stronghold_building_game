@@ -17,7 +17,7 @@ public class Grid {
 
         CreateGrid();
 
-        WorldController.Instance.GetWorld().RegisterOnWorldObjectChangedCallback(OnTileChanged);
+        WorldController.Instance.GetWorld().RegOnWOUpdatedCB(OnTileChanged);
     }
 
     private void CreateGrid() {

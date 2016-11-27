@@ -75,4 +75,13 @@ public class Defs {
 		LooseItemDefs.Clear();
 	}
 
+	public static Definition GetIODef(string name) {
+		if(!InstalledObjectDefs.ContainsKey(name)) {
+			Debug.LogError("Defs::GetIODef -> InstalledObject Definition does not exist with name: " + name);
+			return null;
+		}
+
+		return InstalledObjectDefs[name];
+	}
+
 }

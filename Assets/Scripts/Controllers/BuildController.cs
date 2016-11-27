@@ -13,7 +13,7 @@ public class BuildController : MonoBehaviour {
 
     public static BuildController Instance;
 
-    private static string InstaBuildVarName = "instabuild";
+	private static string InstaBuildVarName = "instabuild";
 	private static bool InstaBuild {
 		get { return bool.Parse(ConsoleController.Instance.GetSystemVariable(InstaBuildVarName)); }
 	}
@@ -101,18 +101,19 @@ public class BuildController : MonoBehaviour {
                 DragPreviewObjects.Add(go);
 
                 SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
-//                if(t.GetPendingJob() != null) {
-//                    sr.color = Color.red;
-//                } else if(BuildMode == BuildMode.Tile) {
-//                    sr.color = t.GetObjectType() != ObjectType ? Color.green : Color.red;
-//                } else if(BuildMode == BuildMode.InstalledObject) {
-//                    if(t.GetObjectType() == "null")
-//                        sr.color = Color.red;
-//                    else
-//                        sr.color = t.GetInstalledObject() == null ? Color.green : Color.red;
-//                }else if(BuildMode == BuildMode.Demolish) {
-//	                sr.color = t.GetInstalledObject() == null ? Color.white : Color.green;
-//                }
+				//                if(t.GetPendingJob() != null) {
+				//                    sr.color = Color.red;
+				//                } else 
+				if(BuildMode == BuildMode.Tile) {
+                    sr.color = t.GetObjectType() != ObjectType ? Color.green : Color.red;
+                } else if(BuildMode == BuildMode.InstalledObject) {
+                    if(t.GetObjectType() == "null")
+                        sr.color = Color.red;
+                    else
+                        sr.color = t.GetInstalledObject() == null ? Color.green : Color.red;
+                }else if(BuildMode == BuildMode.Demolish) {
+	                sr.color = t.GetInstalledObject() == null ? Color.white : Color.green;
+                }
             }
         }
     }
@@ -121,16 +122,19 @@ public class BuildController : MonoBehaviour {
         string type = ObjectType;
 
 	    Dictionary<string, int> requirements = null;
-//		if(!string.IsNullOrEmpty(type))
-//			requirements = WorldObjectMethod.Methods[type].GetConstructionRequirements();
+	    if(!string.IsNullOrEmpty(type)) {
+		    IConstructable constructable = (IConstructable)WorldController.Instance.GetWorld().GetWorldObjectPrototype(type);
+		    if(constructable != null)
+			    requirements = constructable.GetConstructionRequirements();
+	    }
 
-        float jobTime = 1.0f;
+	    float jobTime = 1.0f;
         if(InstaBuild == true)
             jobTime = 0f;
 
 	    Job job = null;
         if(BuildMode == BuildMode.Tile) {
-//            job = new Job(JobType.Construct, tile, j => tile.ChangeType(type), requirements, jobTime, 1);
+            job = new Job(JobType.Construct, tile, j => tile.ChangeType(type), requirements, jobTime, 1);
         } else if(BuildMode == BuildMode.InstalledObject) {
             job = new Job(JobType.Construct, tile, j => WorldController.Instance.GetWorld().PlaceInstalledObject(type, tile), requirements, jobTime, 0);
             
@@ -140,7 +144,7 @@ public class BuildController : MonoBehaviour {
 
 //	    if(job != null) {
 //			if(tile.SetPendingJob(job))
-//				JobController.Instance.AddJob(job);
+				JobController.Instance.AddJob(job);
 //		}
     }
 
@@ -156,12 +160,13 @@ public class BuildController : MonoBehaviour {
 		if(BuildMode == BuildMode.Demolish)
 			return BuildMethod.Grid;
 
-//        if(!WorldObjectMethod.Methods.ContainsKey(ObjectType))
-//            return BuildMethod.Single;
-//
-//        return WorldObjectMethod.Methods[ObjectType].GetBuildMethod();
+	    if(BuildMode == BuildMode.InstalledObject) {
+		    InstalledObject io = (InstalledObject) WorldController.Instance.GetWorld().GetWorldObjectPrototype(ObjectType);
+		    if(io != null)
+			    return io.GetBuildMethod();
+	    }
 
-	    return BuildMethod.Single;
+		return BuildMethod.Single;
     }
 
     public void PlaceTile(string type) {

@@ -2,41 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class InstalledObject : WorldObject, IContextMenu {
+public abstract class InstalledObject : WorldObject, IContextMenu, IConstructable {
 
 	private Tile Tile;
 
-//	public static InstalledObject CreatePrototype(string type, WorldObjectMethod methods, float movementCost = 1, bool connectToNeighbours = false) {
-//		InstalledObject io = new InstalledObject();
-//		io.ObjectType = type;
-//		io.WorldObjectType = WorldObjectType.InstalledObject;
-//		io.Methods = methods;
-//		io.MovementCost = movementCost;
-//		io.ConnectsToNeighbours = connectToNeighbours;
-//
-//		return io;
-//	}
+	public InstalledObject PlaceInstance(string objectType, Tile tile) {
+		this.ObjectType = objectType;
+		this.Tile = tile;
+		this.X = tile.GetX();
+		this.Y = tile.GetY();
 
-	public InstalledObject PlaceInstance(Tile tile) {
-//		InstalledObject io = new InstalledObject();
-//		io.ObjectType = this.ObjectType;
-//		io.WorldObjectType = this.WorldObjectType;
-//		io.Tile = tile;
-//		io.X = tile.GetX();
-//		io.Y = tile.GetY();
-//		io.MovementCost = this.MovementCost;
-////		io.ConnectsToNeighbours = this.ConnectsToNeighbours;
-//		io.OnCreatedCB = this.OnCreatedCB;
-//		io.OnChangedCB = this.OnChangedCB;
-//		io.OnDestroyedCB = this.OnDestroyedCB;
-//		io.Methods = this.Methods;
-//	    io.Parameters = new Dictionary<string, object>();
-//
-//	    io.Methods.OnCreated(io);
+		this.OnCreatedCB(this);
 
-//		return io;
-
-		return null;
+		return this;
 	}
 
 	public abstract void OnCreated();
@@ -47,8 +25,6 @@ public abstract class InstalledObject : WorldObject, IContextMenu {
 
 	public virtual void OnDismantled() {}
 
-	public abstract Dictionary<string, int> GetConstructionRequirements();
-
 	public Tile GetTile() {
 		return Tile;
 	}
@@ -56,6 +32,9 @@ public abstract class InstalledObject : WorldObject, IContextMenu {
 	public virtual BuildMethod GetBuildMethod() {
 		return BuildMethod.Single; // Default. Can be overriden.
 	}
+
+	public abstract Dictionary<string, int> GetConstructionRequirements();
+	public abstract Dictionary<string, int> GetDismantledDrops();
 
 	public virtual Enterabilty GetEnterability() {
 		return Enterabilty.Never; // Default. Can be overriden.
@@ -77,6 +56,6 @@ public abstract class InstalledObject : WorldObject, IContextMenu {
 //		MenuItems.Add(new RadialMenuGenerator.RadialMenuItem("Cancel", font, null)); //TODO: Allow player to cancel current order, eg. Cancel Order
 //
 //		return MenuItems.ToArray();
-	public abstract RadialMenuGenerator.RadialMenuItem[] MenuOptions_ContextMenu();	
-
+	public abstract RadialMenuGenerator.RadialMenuItem[] MenuOptions_ContextMenu();
+	
 }
