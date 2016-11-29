@@ -7,63 +7,56 @@ using UnityEngine;
 
 public class Defs {
 
+	//TODO: May need to split Definition class of into more subclasses. Eg. Defs with Assemblies(eg. InstalledObjects), and defs without (eg. Tiles)
+
+	public static Dictionary<string, Definition> TileDefs { get; protected set; }
 	public static Dictionary<string, Definition> InstalledObjectDefs { get; protected set; }
 	public static Dictionary<string, Definition> LooseItemDefs { get; protected set; }
 
 	public static void LoadDefs(Mod[] mods) {
+		TileDefs = new Dictionary<string, Definition>();
 		InstalledObjectDefs = new Dictionary<string, Definition>();
 		LooseItemDefs = new Dictionary<string, Definition>();
 
 		foreach(Mod mod in mods) {
 			foreach(string defFile in mod.DefFiles) {
 				ParseDefinitionFile(defFile, mod);
-//				Definition def = new Definition(mod, defFile);
 			}
 		}
 
 	}
 
 	private static void ParseDefinitionFile(string defFile, Mod mod) {
-		string xmlCode = File.ReadAllText(defFile);
+		XmlDocument document = new XmlDocument();
+		document.Load(defFile);
+		XmlNode defNode = document.SelectSingleNode("Definitions");
+		if(defNode == null) {
+			Debug.LogError("Defs::ParseDefinitionFile -> Definition file is missing base 'Definitions' tag: " + defFile);
+			return;
+		}
 
-		XmlTextReader reader = new XmlTextReader(new StringReader(xmlCode));
-		bool InDef = false;
-		string name = "";
-		string category = "";
+		foreach(XmlNode childNode in defNode) {
+			if(childNode.Name != "Definition")
+				continue;
 
-		while(reader.Read()) {
-
-			if(reader.IsStartElement()) {
-				if(reader.Name == "Definition" && !InDef) {
-					InDef = true;
-					name = "";
-					category = "";
-					continue;
-				}
-
-				if(reader.Name == "DefName") {
-					reader.Read();
-					name = reader.Value;
-				} else if(reader.Name == "Category") {
-					reader.Read();
-					category = reader.Value;
-				}
-			}else if(reader.NodeType == XmlNodeType.EndElement) {
-				if(reader.Name != "Definition" || !InDef)
-					continue;
-				
-				Definition def = new Definition(mod, name, defFile);
-				NewDef(name, category, def);
-				InDef = false;
-			}
-
+			Definition def = new Definition(mod, defFile, childNode);
+			NewDef(def);
 		}
 	}
 
-	private static void NewDef(string name, string category, Definition def) {
+	private static void NewDef(Definition def) {
+		string name = def.Properties.DefName;
+		string category = def.Properties.DefCategory;
+
 		switch(category) {
+			case "Tile":
+				TileDefs.Add(name, def);
+				break;
 			case "InstalledObject":
 				InstalledObjectDefs.Add(name, def);
+				break;
+			case "LooseItem":
+				LooseItemDefs.Add(name, def);
 				break;
 			default:
 				break;
@@ -73,6 +66,15 @@ public class Defs {
 	public static void ClearDefs() {
 		InstalledObjectDefs.Clear();
 		LooseItemDefs.Clear();
+	}
+
+	public static Definition GetTileDef(string name) {
+		if(!TileDefs.ContainsKey(name)) {
+			Debug.LogError("Defs::GetTileDef -> Tile Definition does not exist with name: " + name);
+			return null;
+		}
+
+		return TileDefs[name];
 	}
 
 	public static Definition GetIODef(string name) {

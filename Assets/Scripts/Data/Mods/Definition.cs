@@ -14,59 +14,61 @@ public class Definition {
 	private Mod Mod; // The Mod this definition came from/belongs too
 	private string DefinitionFile; //The Path to this definitions XML file
 
+	public string DefCategory { get; protected set; }
+
 	private string AssemblyFile; //The path to this defintions Assembly file
 	public Assembly Assembly { get; protected set; } // The Assembly created from AssemblyFile
 	public string ClassName { get; protected set; } // The name of the Class that belongs to this definition
 
-	public string DefName { get; protected set; }
-	public string DefLabel { get; protected set; }
-	public string DefCategory { get; protected set; }
+	public DefinitionProperties Properties;
 
-	public Definition(Mod mod, string defName, string defFile) {
+	public Definition(Mod mod, string defFile, XmlNode defNode) {
 		this.Mod = mod;
 		this.DefinitionFile = defFile;
 
-		ParseDefinition(defName, defFile);
+		this.Properties = new DefinitionProperties(defNode);
 
-		if(!string.IsNullOrEmpty(this.AssemblyFile) && !string.IsNullOrEmpty(this.ClassName))
-			this.Assembly = LoadAssembly(this.AssemblyFile, this.ClassName);
+//		ParseDefinition(defName, defFile);
+
+//		if(!string.IsNullOrEmpty(this.AssemblyFile) && !string.IsNullOrEmpty(this.ClassName))
+//			this.Assembly = LoadAssembly(this.AssemblyFile, this.ClassName);
 	}
 
-	private void ParseDefinition(string defName, string defFile) {
-		string xmlCode = File.ReadAllText(defFile);
-
-		string assemblyFile = "";
-		string className = "";
-
-		XmlTextReader reader = new XmlTextReader(new StringReader(xmlCode));
-		while(reader.Read()) {
-			if(!reader.IsStartElement())
-				continue;
-
-			if(reader.Name == "DefName") {
-				reader.Read();
-				DefName = reader.Value;
-			}
-
-			if(reader.Name == "Label") {
-				reader.Read();
-				DefLabel = reader.Value;
-			}
-
-			if(reader.Name == "Category") {
-				reader.Read();
-				DefCategory = reader.Value;
-			}
-
-			if(reader.Name == "Code") {
-				assemblyFile = reader.GetAttribute("assembly");
-				className = reader.GetAttribute("class");
-			}
-		}
-
-		this.AssemblyFile = Mod.RootDir + "/Assemblies/" + assemblyFile;
-		this.ClassName = className;
-	}
+//	private void ParseDefinition(string defName, string defFile) {
+//		string xmlCode = File.ReadAllText(defFile);
+//
+//		string assemblyFile = "";
+//		string className = "";
+//
+//		XmlTextReader reader = new XmlTextReader(new StringReader(xmlCode));
+//		while(reader.Read()) {
+//			if(!reader.IsStartElement())
+//				continue;
+//
+//			if(reader.Name == "DefName") {
+//				reader.Read();
+//				DefName = reader.Value;
+//			}
+//
+//			if(reader.Name == "Label") {
+//				reader.Read();
+//				DefLabel = reader.Value;
+//			}
+//
+//			if(reader.Name == "Category") {
+//				reader.Read();
+//				DefCategory = reader.Value;
+//			}
+//
+//			if(reader.Name == "Code") {
+//				assemblyFile = reader.GetAttribute("assembly");
+//				className = reader.GetAttribute("class");
+//			}
+//		}
+//
+//		this.AssemblyFile = Mod.RootDir + "/Assemblies/" + assemblyFile;
+//		this.ClassName = className;
+//	}
 
 	private Assembly LoadAssembly(string assemblyFilePath, string className) {
 		Assembly assembly = null;

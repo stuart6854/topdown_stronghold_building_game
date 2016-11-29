@@ -3,10 +3,19 @@
 
     <Definition>
         <DefName>wall</DefName>
-        <Label>Wall</Label>
 		<Category>InstalledObject</Category>
+		
+        <Label>Wall</Label>
         <Width>1</Width>
         <Height>1</Height>
+				
+		<ConstructionRequirements>
+			<Item type="stone" amnt="5"/>
+		</ConstructionRequirements>
+		
+		<DemolishedDrops>
+			<Item type="stone" amnt="3"/>
+		</DemolishedDrops>
 		
 		<Code assembly="Wall.cs" class="CoreMod.Wall"/>
     </Definition>

@@ -3,10 +3,23 @@
 
     <Definition>
         <DefName>door</DefName>
-        <Label>Door</Label>
 		<Category>InstalledObject</Category>
+		
+        <Label>Door</Label>
         <Width>1</Width>
         <Height>1</Height>
+		
+		<ConstructionRequirements>
+			<Item type="wood" amnt="5"/>
+		</ConstructionRequirements>
+		
+		<DismantledDrops>
+			<Item type="door" amnt="1"/>
+		</DismantledDrops>
+		
+		<DemolishedDrops>
+			<Item type="wood" amnt="3"/>
+		</DemolishedDrops>
 		
 		<Code assembly="Door.cs" class="CoreMod.Door"/>
     </Definition>

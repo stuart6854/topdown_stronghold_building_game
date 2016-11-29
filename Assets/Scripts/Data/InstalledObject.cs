@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class InstalledObject : WorldObject, IContextMenu, IConstructable {
+public abstract class InstalledObject : Constructable, IContextMenu{
 
 	private Tile Tile;
 

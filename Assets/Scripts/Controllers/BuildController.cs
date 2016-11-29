@@ -123,9 +123,9 @@ public class BuildController : MonoBehaviour {
 
 	    Dictionary<string, int> requirements = null;
 	    if(!string.IsNullOrEmpty(type)) {
-		    IConstructable constructable = (IConstructable)WorldController.Instance.GetWorld().GetWorldObjectPrototype(type);
+		    Constructable constructable = (Constructable)WorldController.Instance.GetWorld().GetWorldObjectPrototype(type);
 		    if(constructable != null)
-			    requirements = constructable.GetConstructionRequirements();
+			    requirements = constructable.ConstructionRequirements;
 	    }
 
 	    float jobTime = 1.0f;

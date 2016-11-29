@@ -10,7 +10,7 @@ public class World {
 	private Tile[,] Tiles;
     private List<Character> Characters;
 
-	private Dictionary<string, WorldObject> WorldObjectPrototypes;
+	private Dictionary<string, Constructable> ConstructablePrototypes;
 
 	//Callbacks
 	private Action<WorldObject> OnWorldObjectCreated;
@@ -20,23 +20,33 @@ public class World {
 	public World(int width, int height) {
 		this.Width = width;
 		this.Height = height;
-		this.WorldObjectPrototypes = new Dictionary<string, WorldObject>();
+		this.ConstructablePrototypes = new Dictionary<string, Constructable>();
 	    this.Characters = new List<Character>();
 	}
 
-	private void LoadInstalledObjectPrototypes() {
-		foreach(KeyValuePair<string, Definition> installedObjectDef in Defs.InstalledObjectDefs) {
-			Definition def = installedObjectDef.Value;
+	private void LoadConstructablePrototypes() {
+		foreach(KeyValuePair<string, Definition> tileDef in Defs.TileDefs) {
+			Definition def = tileDef.Value;
+			Type type = def.GetType();
+			Tile tile = (Tile)def.CreateInstance();
+			if(tile == null)
+				Debug.LogError("World::LoadConstructablePrototypes -> Tile Definition Instance created is Null!");
+			ConstructablePrototypes.Add(def.Properties.DefName, tile);
+		}
+
+		foreach(KeyValuePair<string, Definition> ioDef in Defs.InstalledObjectDefs) {
+			Definition def = ioDef.Value;
 			Type type = def.GetType();
 			InstalledObject io = (InstalledObject)def.CreateInstance();
 			if(io == null)
-				Debug.LogError("World::LoadInstalledObjectPrototypes -> Definition Instance created is Null!");
-			WorldObjectPrototypes.Add(def.DefName, io);
+				Debug.LogError("World::LoadConstructablePrototypes -> InstalledObject Definition Instance created is Null!");
+			ConstructablePrototypes.Add(def.Properties.DefName, io);
 		}
+
 	}
 
 	public void InitialiseWorld() {
-		LoadInstalledObjectPrototypes();
+		LoadConstructablePrototypes();
 
 		Tiles = new Tile[Width, Height];
 
@@ -103,14 +113,14 @@ public class World {
     }
 
 	public WorldObject GetWorldObjectPrototype(string name) {
-		if(!WorldObjectPrototypes.ContainsKey(name)) {
-			Debug.LogError("World::GetWorldObjectPrototype -> There is NO prototype for the object '" + name + "'");
+		if(!ConstructablePrototypes.ContainsKey(name)) {
+			Debug.LogError("World::GetWorldObjectPrototype -> There isn't a prototype for the object of type: " + name);
 			return null;
 		}
 
-		WorldObject wo_proto = WorldObjectPrototypes[name];
+		WorldObject wo_proto = ConstructablePrototypes[name];
 		if(wo_proto == null) {
-			Debug.LogError("World::GetWorldObjectPrototype -> The prototype for object '" + name + "' is NULL!");
+			Debug.LogError("World::GetWorldObjectPrototype -> The prototype is NULL for object of type: " + name);
 			return null;
 		}
 
