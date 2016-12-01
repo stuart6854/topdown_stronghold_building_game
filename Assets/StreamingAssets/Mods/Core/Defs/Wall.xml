@@ -8,6 +8,8 @@
         <Label>Wall</Label>
         <Width>1</Width>
         <Height>1</Height>
+		
+		<BuildMethod>Grid</BuildMethod>
 				
 		<ConstructionRequirements>
 			<Item type="stone" amnt="5"/>

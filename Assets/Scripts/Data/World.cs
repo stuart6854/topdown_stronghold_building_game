@@ -25,21 +25,12 @@ public class World {
 	}
 
 	private void LoadConstructablePrototypes() {
-		foreach(KeyValuePair<string, Definition> tileDef in Defs.TileDefs) {
-			Definition def = tileDef.Value;
-			Type type = def.GetType();
-			Tile tile = (Tile)def.CreateInstance();
-			if(tile == null)
-				Debug.LogError("World::LoadConstructablePrototypes -> Tile Definition Instance created is Null!");
-			ConstructablePrototypes.Add(def.Properties.DefName, tile);
-		}
-
 		foreach(KeyValuePair<string, Definition> ioDef in Defs.InstalledObjectDefs) {
 			Definition def = ioDef.Value;
-			Type type = def.GetType();
-			InstalledObject io = (InstalledObject)def.CreateInstance();
+			Type type = def.Properties.GetAssemblyClassType();
+			InstalledObject io = (InstalledObject)def.Properties.CreateAssemblyClassInstance();
 			if(io == null)
-				Debug.LogError("World::LoadConstructablePrototypes -> InstalledObject Definition Instance created is Null!");
+				Debug.LogError("World::LoadConstructablePrototypes -> Could not create InstalledObject Instance!");
 			ConstructablePrototypes.Add(def.Properties.DefName, io);
 		}
 
@@ -80,7 +71,7 @@ public class World {
 	}
 
     public void PlaceInstalledObject(string type, Tile tile) {
-	    InstalledObject prototype = (InstalledObject)Defs.GetIODef(type).CreateInstance();
+	    InstalledObject prototype = (InstalledObject)Defs.GetIODef(type).Properties.CreateAssemblyClassInstance();
         tile.PlaceInstalledObject(type, prototype);
     }
 

@@ -9,6 +9,8 @@
         <Width>1</Width>
         <Height>1</Height>
 		
+		<BuildMethod>Single</BuildMethod>
+		
 		<ConstructionRequirements>
 			<Item type="wood" amnt="5"/>
 		</ConstructionRequirements>

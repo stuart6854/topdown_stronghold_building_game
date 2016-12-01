@@ -44,10 +44,6 @@ namespace CoreMod {
             return Enterabilty.Soon;
         }
 
-        public override BuildMethod GetBuildMethod() {
-            return BuildMethod.Single;
-        }
-
         public override Dictionary<string, int> GetConstructionRequirements() {
             return new Dictionary<string, int>(){ {"wood", 5} };
         }

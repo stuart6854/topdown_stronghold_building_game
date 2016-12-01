@@ -29,8 +29,8 @@ public abstract class InstalledObject : Constructable, IContextMenu{
 		return Tile;
 	}
 
-	public virtual BuildMethod GetBuildMethod() {
-		return BuildMethod.Single; // Default. Can be overriden.
+	public BuildMethod GetBuildMethod() {
+		return Defs.InstalledObjectDefs[this.ObjectType].Properties.GetValue("BuildMethod").ToBuildMethod();
 	}
 
 	public abstract Dictionary<string, int> GetConstructionRequirements();
