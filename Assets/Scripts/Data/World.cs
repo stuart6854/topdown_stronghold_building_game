@@ -10,8 +10,6 @@ public class World {
 	private Tile[,] Tiles;
     private List<Character> Characters;
 
-	private Dictionary<string, Constructable> ConstructablePrototypes;
-
 	//Callbacks
 	private Action<WorldObject> OnWorldObjectCreated;
 	private Action<WorldObject> OnWorldObjectChanged;
@@ -20,24 +18,11 @@ public class World {
 	public World(int width, int height) {
 		this.Width = width;
 		this.Height = height;
-		this.ConstructablePrototypes = new Dictionary<string, Constructable>();
 	    this.Characters = new List<Character>();
 	}
 
-	private void LoadConstructablePrototypes() {
-		foreach(KeyValuePair<string, Definition> ioDef in Defs.InstalledObjectDefs) {
-			Definition def = ioDef.Value;
-			Type type = def.Properties.GetAssemblyClassType();
-			InstalledObject io = (InstalledObject)def.Properties.CreateAssemblyClassInstance();
-			if(io == null)
-				Debug.LogError("World::LoadConstructablePrototypes -> Could not create InstalledObject Instance!");
-			ConstructablePrototypes.Add(def.Properties.DefName, io);
-		}
-
-	}
-
 	public void InitialiseWorld() {
-		LoadConstructablePrototypes();
+//		LoadConstructablePrototypes();
 
 		Tiles = new Tile[Width, Height];
 
@@ -71,8 +56,8 @@ public class World {
 	}
 
     public void PlaceInstalledObject(string type, Tile tile) {
-	    InstalledObject prototype = (InstalledObject)Defs.GetIODef(type).Properties.CreateAssemblyClassInstance();
-        tile.PlaceInstalledObject(type, prototype);
+	    InstalledObject instance = (InstalledObject)Defs.GetDef(type).Properties.CreateAssemblyClassInstance();
+        tile.PlaceInstalledObject(type, instance);
     }
 
 	public void DemolishInstalledObject(Tile tile) {
@@ -103,20 +88,20 @@ public class World {
         return Height;
     }
 
-	public WorldObject GetWorldObjectPrototype(string name) {
-		if(!ConstructablePrototypes.ContainsKey(name)) {
-			Debug.LogError("World::GetWorldObjectPrototype -> There isn't a prototype for the object of type: " + name);
-			return null;
-		}
-
-		WorldObject wo_proto = ConstructablePrototypes[name];
-		if(wo_proto == null) {
-			Debug.LogError("World::GetWorldObjectPrototype -> The prototype is NULL for object of type: " + name);
-			return null;
-		}
-
-		return wo_proto;
-	}
+//	public WorldObject GetWorldObjectPrototype(string name) {
+//		if(!ConstructablePrototypes.ContainsKey(name)) {
+//			Debug.LogError("World::GetWorldObjectPrototype -> There isn't a prototype for the object of type: " + name);
+//			return null;
+//		}
+//
+//		WorldObject wo_proto = ConstructablePrototypes[name];
+//		if(wo_proto == null) {
+//			Debug.LogError("World::GetWorldObjectPrototype -> The prototype is NULL for object of type: " + name);
+//			return null;
+//		}
+//
+//		return wo_proto;
+//	}
 
     public void RegOnWOCreatedCB(Action<WorldObject> callback) {
 		OnWorldObjectCreated -= callback;

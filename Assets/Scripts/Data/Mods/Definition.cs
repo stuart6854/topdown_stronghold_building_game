@@ -14,8 +14,6 @@ public class Definition {
 	private Mod Mod; // The Mod this definition came from/belongs too
 	private string DefinitionFile; //The Path to this definitions XML file
 
-	public string DefCategory { get; protected set; }
-
 	public DefinitionProperties Properties;
 
 	public Definition(Mod mod, string defFile, XmlNode defNode) {

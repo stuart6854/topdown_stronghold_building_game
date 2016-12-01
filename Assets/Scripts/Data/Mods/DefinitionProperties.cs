@@ -18,6 +18,7 @@ public class DefinitionProperties {
 	private string AssemblyFile; //The path to this defintions Assembly file
 	public Assembly Assembly { get; protected set; } // The Assembly created from AssemblyFile
 	public string ClassName { get; protected set; } // The name of the Class that belongs to this definition
+	public object Prototype { get; protected set; } //A prototype instance of the assembly
 
 	protected Dictionary<string, XMLTag> XMLData;
 
@@ -89,6 +90,7 @@ public class DefinitionProperties {
 		this.AssemblyFile = assemblyFilePath;
 		this.ClassName = className;
 		this.Assembly = assembly;
+		this.Prototype = CreateAssemblyClassInstance();
 	}
 
 	private Assembly CompileCode(string source) {
@@ -130,6 +132,10 @@ public class DefinitionProperties {
 	public object CreateAssemblyClassInstance() {
 		object instance = Assembly.CreateInstance(ClassName);
 		return instance;
+	}
+
+	public XMLTag GetXMLData(string key) {
+		return this.XMLData[key];
 	}
 
 	public string GetValue(string key) {

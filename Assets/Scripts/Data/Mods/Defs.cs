@@ -9,14 +9,13 @@ public class Defs {
 
 	//TODO: May need to split Definition class of into more subclasses. Eg. Defs with Assemblies(eg. InstalledObjects), and defs without (eg. Tiles)
 
-	public static Dictionary<string, Definition> TileDefs { get; protected set; }
-	public static Dictionary<string, Definition> InstalledObjectDefs { get; protected set; }
-	public static Dictionary<string, Definition> LooseItemDefs { get; protected set; }
+	public static Dictionary<string, Definition> Definitions { get; protected set; }
 
 	public static void LoadDefs(Mod[] mods) {
-		TileDefs = new Dictionary<string, Definition>();
-		InstalledObjectDefs = new Dictionary<string, Definition>();
-		LooseItemDefs = new Dictionary<string, Definition>();
+		Definitions = new Dictionary<string, Definition>();
+//		TileDefs = new Dictionary<string, Definition>();
+//		InstalledObjectDefs = new Dictionary<string, Definition>();
+//		LooseItemDefs = new Dictionary<string, Definition>();
 
 		foreach(Mod mod in mods) {
 			foreach(string defFile in mod.DefFiles) {
@@ -40,6 +39,7 @@ public class Defs {
 				continue;
 
 			Definition def = new Definition(mod, defFile, childNode);
+			Definitions.Add(def.Properties.DefName, def);
 			NewDef(def);
 		}
 	}
@@ -48,42 +48,34 @@ public class Defs {
 		string name = def.Properties.DefName;
 		string category = def.Properties.DefCategory;
 
-		switch(category) {
-			case "Tile":
-				TileDefs.Add(name, def);
-				break;
-			case "InstalledObject":
-				InstalledObjectDefs.Add(name, def);
-				break;
-			case "LooseItem":
-				LooseItemDefs.Add(name, def);
-				break;
-			default:
-				break;
-		}
+//		switch(category) {
+//			case "Tile":
+//				TileDefs.Add(name, def);
+//				break;
+//			case "InstalledObject":
+//				InstalledObjectDefs.Add(name, def);
+//				break;
+//			case "LooseItem":
+//				LooseItemDefs.Add(name, def);
+//				break;
+//			default:
+//				break;
+//		}
 	}
 
 	public static void ClearDefs() {
-		InstalledObjectDefs.Clear();
-		LooseItemDefs.Clear();
+		Definitions.Clear();
+//		InstalledObjectDefs.Clear();
+//		LooseItemDefs.Clear();
 	}
-
-	public static Definition GetTileDef(string name) {
-		if(!TileDefs.ContainsKey(name)) {
-			Debug.LogError("Defs::GetTileDef -> Tile Definition does not exist with name: " + name);
+	
+	public static Definition GetDef(string name) {
+		if(!Definitions.ContainsKey(name)) {
+			Debug.LogError("Defs::GetIODef -> A Definition does not exist with the name: " + name);
 			return null;
 		}
 
-		return TileDefs[name];
-	}
-
-	public static Definition GetIODef(string name) {
-		if(!InstalledObjectDefs.ContainsKey(name)) {
-			Debug.LogError("Defs::GetIODef -> InstalledObject Definition does not exist with name: " + name);
-			return null;
-		}
-
-		return InstalledObjectDefs[name];
+		return Definitions[name];
 	}
 
 }

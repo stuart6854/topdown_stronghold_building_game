@@ -123,9 +123,9 @@ public class BuildController : MonoBehaviour {
 
 	    Dictionary<string, int> requirements = null;
 	    if(!string.IsNullOrEmpty(type)) {
-		    Constructable constructable = (Constructable)WorldController.Instance.GetWorld().GetWorldObjectPrototype(type);
+		    Constructable constructable = (Constructable) Defs.GetDef(type).Properties.Prototype;
 		    if(constructable != null)
-			    requirements = constructable.ConstructionRequirements;
+			    requirements = constructable.GetConstructionRequirements(type);
 	    }
 
 	    float jobTime = 1.0f;
@@ -160,10 +160,13 @@ public class BuildController : MonoBehaviour {
 		if(BuildMode == BuildMode.Demolish)
 			return BuildMethod.Grid;
 
+		if(BuildMode == BuildMode.Tile)
+			return BuildMethod.Grid;
+
 	    if(BuildMode == BuildMode.InstalledObject) {
-		    InstalledObject io = (InstalledObject) WorldController.Instance.GetWorld().GetWorldObjectPrototype(ObjectType);
+		    InstalledObject io = (InstalledObject) Defs.GetDef(this.ObjectType).Properties.Prototype;
 		    if(io != null)
-			    return io.GetBuildMethod();
+			    return io.GetBuildMethod(this.ObjectType);
 	    }
 
 		return BuildMethod.Single;

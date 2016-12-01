@@ -55,8 +55,8 @@ public class OptionSelector : MonoBehaviour {
 			BackButton.interactable = false;
 		else
 			BackButton.interactable = true;
-
-		if(SelectedIndex >= Options.Count)
+		
+		if(SelectedIndex >= Options.Count - 1)
 			NextButton.interactable = false;
 		else
 			NextButton.interactable = true;

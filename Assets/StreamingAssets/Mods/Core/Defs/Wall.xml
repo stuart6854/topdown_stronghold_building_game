@@ -19,7 +19,7 @@
 			<Item type="stone" amnt="3"/>
 		</DemolishedDrops>
 		
-		<Code assembly="Wall.cs" class="CoreMod.Wall"/>
+		<Code assembly="CoreMod.dll" class="CoreMod.Wall"/>
     </Definition>
 
 </Definitions>

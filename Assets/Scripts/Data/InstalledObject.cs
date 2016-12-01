@@ -29,13 +29,6 @@ public abstract class InstalledObject : Constructable, IContextMenu{
 		return Tile;
 	}
 
-	public BuildMethod GetBuildMethod() {
-		return Defs.InstalledObjectDefs[this.ObjectType].Properties.GetValue("BuildMethod").ToBuildMethod();
-	}
-
-	public abstract Dictionary<string, int> GetConstructionRequirements();
-	public abstract Dictionary<string, int> GetDismantledDrops();
-
 	public virtual Enterabilty GetEnterability() {
 		return Enterabilty.Never; // Default. Can be overriden.
 	}

@@ -23,7 +23,7 @@
 			<Item type="wood" amnt="3"/>
 		</DemolishedDrops>
 		
-		<Code assembly="Door.cs" class="CoreMod.Door"/>
+		<Code assembly="CoreMod.dll" class="CoreMod.Door"/>
     </Definition>
 
 </Definitions>
