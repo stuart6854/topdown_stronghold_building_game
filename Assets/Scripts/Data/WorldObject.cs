@@ -3,9 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum WorldObjectType {
+	Tile, InstalledObject, LooseItem, Character
+}
+
 public class WorldObject {
 
 	protected string ObjectType;
+	protected WorldObjectType WorldObjectType;
 
 	protected float X, Y;
 	protected float Rotation; // In Degrees
@@ -16,6 +21,10 @@ public class WorldObject {
 
 	public string GetObjectType() {
 		return this.ObjectType;
+	}
+
+	public WorldObjectType GetWorldObjectType() {
+		return this.WorldObjectType;
 	}
 
 	public virtual float GetX() {

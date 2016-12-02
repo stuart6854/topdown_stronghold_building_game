@@ -17,6 +17,7 @@ public class Tile : Constructable {
 		this.X = x;
 		this.Y = y;
 		this.World = world;
+		this.WorldObjectType = WorldObjectType.Tile;
 	}
 
 	public void OnUpdate() {
@@ -52,32 +53,32 @@ public class Tile : Constructable {
 	    return this.InstalledObject;
 	}
 
-//	public void RemoveInstalledObject() {
-//		if(this.InstalledObject == null)
-//			return;
-//
-//		InstalledObject io = this.InstalledObject;
-//		this.InstalledObject = null;
-//
-//		if(io.GetOnDestroyed() != null)
-//			io.GetOnDestroyed()(io);
-//
-//		if(io.GetConnectsToNeighbours()) {
-//			foreach(Tile tile in GetNeighbourTiles()) {
-//				if(tile.InstalledObject == null)
-//					continue;
-//
-//				if(tile.InstalledObject.GetObjectType() != io.GetObjectType())
-//					continue;
-//
-//				if(tile.InstalledObject.GetOnChanged() != null)
-//					tile.InstalledObject.GetOnChanged()(tile.InstalledObject);
-//			}
-//		}
-//
-//		if(OnChangedCB != null)
-//			OnChangedCB(this);
-//	}
+	public void RemoveInstalledObject() {
+		if(this.InstalledObject == null)
+			return;
+
+		InstalledObject io = this.InstalledObject;
+		this.InstalledObject = null;
+
+		if(io.GetOnDestroyedCB() != null)
+			io.GetOnDestroyedCB()(io);
+
+		if(io.GetConnectsToNeighbours()) {
+			foreach(Tile tile in GetNeighbourTiles()) {
+				if(tile.InstalledObject == null)
+					continue;
+
+				if(tile.InstalledObject.GetObjectType() != io.GetObjectType())
+					continue;
+
+				if(tile.InstalledObject.GetOnUpdatedCB() != null)
+					tile.InstalledObject.GetOnUpdatedCB()(tile.InstalledObject);
+			}
+		}
+
+		if(OnUpdateCB != null)
+			OnUpdateCB(this);
+	}
 
 //    public LooseItem PlaceLooseItem(LooseItem looseItem) {
 //        if(looseItem == null) {

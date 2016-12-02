@@ -10,15 +10,15 @@ public class LooseItem : WorldObject {
     private int MaxStackSize;
     private int StackSize;
 
-	public LooseItem(string type, int amount) {
-//		this.ObjectType = type;
-	    this.StackSize = amount;
+	public LooseItem(LooseItem other) : this(other.ObjectType, other.StackSize){
+		
 	}
 
-    public LooseItem(LooseItem other) {
-//        this.ObjectType = other.ObjectType;
-        this.StackSize = other.StackSize;
-    }
+	public LooseItem(string type, int amount) {
+		this.ObjectType = type;
+	    this.StackSize = amount;
+		this.WorldObjectType = WorldObjectType.LooseItem;
+	}
 
 	public LooseItem Clone() {
         return new LooseItem(this);

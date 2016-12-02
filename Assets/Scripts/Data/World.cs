@@ -22,17 +22,10 @@ public class World {
 	}
 
 	public void InitialiseWorld() {
-//		LoadConstructablePrototypes();
-
 		Tiles = new Tile[Width, Height];
 
 		for(int x = 0; x < Width; x++) {
 			for(int y = 0; y < Height; y++) {
-				//Tile Constructior Params example
-				//Activator.CreateInstance(type, constructorParam1, constructorParam2);
-				//
-
-
 				Tiles[x, y] = new Tile(x, y, this);
 				Tiles[x, y].ChangeType("grass");
 				Tiles[x, y].RegOnCreatedCB(OnWorldObjectCreated);
@@ -61,12 +54,15 @@ public class World {
     }
 
 	public void DemolishInstalledObject(Tile tile) {
-//		tile.RemoveInstalledObject();
+		tile.RemoveInstalledObject();
 	}
 
     public void PlaceCharacter(Tile tile) {
         Character character = new Character(tile);
-        Characters.Add(character);
+		character.RegOnCreatedCB(OnWorldObjectCreated);
+		character.RegOnUpdateCB(OnWorldObjectChanged);
+		character.RegOnDestroyedCB(OnWorldObjectDestroyed);
+		Characters.Add(character);
         SpriteController.Instance.OnWorldObjectCreated(character);
     }
 
@@ -87,21 +83,6 @@ public class World {
     public int GetHeight() {
         return Height;
     }
-
-//	public WorldObject GetWorldObjectPrototype(string name) {
-//		if(!ConstructablePrototypes.ContainsKey(name)) {
-//			Debug.LogError("World::GetWorldObjectPrototype -> There isn't a prototype for the object of type: " + name);
-//			return null;
-//		}
-//
-//		WorldObject wo_proto = ConstructablePrototypes[name];
-//		if(wo_proto == null) {
-//			Debug.LogError("World::GetWorldObjectPrototype -> The prototype is NULL for object of type: " + name);
-//			return null;
-//		}
-//
-//		return wo_proto;
-//	}
 
     public void RegOnWOCreatedCB(Action<WorldObject> callback) {
 		OnWorldObjectCreated -= callback;

@@ -8,6 +8,7 @@ public abstract class InstalledObject : Constructable, IContextMenu{
 
 	public InstalledObject PlaceInstance(string objectType, Tile tile) {
 		this.ObjectType = objectType;
+		this.WorldObjectType = WorldObjectType.InstalledObject;
 		this.Tile = tile;
 		this.X = tile.GetX();
 		this.Y = tile.GetY();

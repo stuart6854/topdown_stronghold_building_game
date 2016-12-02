@@ -73,10 +73,10 @@ public class SpriteController : MonoBehaviour {
 
 		obj.AddComponent<BoxCollider2D>();
 
-//		ObjectDataReference objDataRef = obj.AddComponent<ObjectDataReference>();
-//		objDataRef.X = (int)x;
-//		objDataRef.Y = (int)y;
-//		objDataRef.ObjectType = worldObject.GetWorldObjectType();
+		ObjectDataReference objDataRef = obj.AddComponent<ObjectDataReference>();
+		objDataRef.X = (int)x;
+		objDataRef.Y = (int)y;
+		objDataRef.WorldObjectType = worldObject.GetWorldObjectType();
 
 		SpriteRenderer sr = obj.AddComponent<SpriteRenderer>();
 		sr.material = SpriteMaterial;

@@ -28,7 +28,8 @@ public class Character : WorldObject{
 
 
     public Character(Tile tile) {
-//        this.ObjectType = "character";
+        this.ObjectType = "character";
+		this.WorldObjectType = WorldObjectType.Character;
         this.CurrentTile = this.NextTile = this.DestinationTile = tile;
         this.Inventory = new Inventory(4);
 
