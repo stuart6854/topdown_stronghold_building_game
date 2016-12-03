@@ -27,7 +27,7 @@ public class Grid {
             for(int y = 0; y < Height; y++) {
                 Tile tile = WorldController.Instance.GetTileAt(x, y);
 
-                grid[x, y] = new Node(tile, IsTileWalkable(tile), (int)(tile.GetMovementCost() * 10f));
+                grid[x, y] = new Node(tile, IsTileWalkable(tile), (int)(tile.GetMovementMultiplier() * 10f));
             }
         }
     }
@@ -56,11 +56,11 @@ public class Grid {
     }
 
     private bool IsTileWalkable(Tile tile) {
-//        if(tile.GetInstalledObject() != null)
-//            if(tile.GetInstalledObject().GetMovementCost() == 0)
-//                return false;
+        if(tile.GetInstalledObject() != null)
+            if(tile.GetInstalledObject().GetMovementMultiplier() == 0)
+                return false;
 
-        if(tile.GetMovementCost() == 0)
+        if(tile.GetMovementMultiplier() == 0)
             return false;
 
         return true;
@@ -76,7 +76,7 @@ public class Grid {
         }
 
         if(tile != null)
-            grid[(int)worldObject.GetX(), (int)worldObject.GetY()] = new Node(tile, IsTileWalkable(tile), (int)(tile.GetMovementCost() * 10f));
+            grid[(int)worldObject.GetX(), (int)worldObject.GetY()] = new Node(tile, IsTileWalkable(tile), (int)(tile.GetMovementMultiplier() * 10f));
     }
 
     public int GetWidth() {

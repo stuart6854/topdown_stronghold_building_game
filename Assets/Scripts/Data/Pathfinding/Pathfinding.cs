@@ -63,12 +63,12 @@ public class Pathfinding : MonoBehaviour {
 					break;//Path found
 				}
 			    if(targetNode == null) {
-//				    if(currentNode.tile.GetLooseItem() != null && currentNode.tile.GetLooseItem().GetObjectType() == objectType) {
-//				        //We have found what we are looking for
-//				        targetNode = currentNode;
-//				        pathSuccess = true;
-//				        break;//Path found
-//				    }
+				    if(currentNode.tile.GetLooseItem() != null && currentNode.tile.GetLooseItem().GetObjectType() == objectType) {
+				        //We have found what we are looking for
+				        targetNode = currentNode;
+				        pathSuccess = true;
+				        break;//Path found
+				    }
 				}
 
 				foreach(Node neighbour in Grid.GetNeighbours(currentNode)) {

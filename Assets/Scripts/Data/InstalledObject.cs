@@ -30,6 +30,11 @@ public abstract class InstalledObject : Constructable, IContextMenu{
 		return Tile;
 	}
 
+	public int GetMovementMultiplier() {
+		string val = Defs.GetDef(this.ObjectType).Properties.GetValue("MovementMultiplier");
+		return int.Parse(val);
+	}
+
 	public virtual Enterabilty GetEnterability() {
 		return Enterabilty.Never; // Default. Can be overriden.
 	}

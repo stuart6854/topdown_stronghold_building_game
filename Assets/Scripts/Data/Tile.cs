@@ -10,12 +10,10 @@ public class Tile : Constructable {
 	private InstalledObject InstalledObject;
 	private LooseItem LooseItem;
 
-	//Data
-	protected float MovementCost = 1.0f; // Multiplier
-
-	public Tile(int x, int y, World world) {
+	public Tile(int x, int y, string type, World world) {
 		this.X = x;
 		this.Y = y;
+		this.ObjectType = type;
 		this.World = world;
 		this.WorldObjectType = WorldObjectType.Tile;
 	}
@@ -80,41 +78,41 @@ public class Tile : Constructable {
 			OnUpdateCB(this);
 	}
 
-//    public LooseItem PlaceLooseItem(LooseItem looseItem) {
-//        if(looseItem == null) {
-//	        if(this.LooseItem != null)
-//				if(this.LooseItem.GetOnDestroyed() != null)
-//					this.LooseItem.GetOnDestroyed()(this.LooseItem);
-//
-//            this.LooseItem = null;
-//            return null;
-//        }
-//
-//        if(this.MovementCost == 0)
-//            return null;
-//
-//        if(this.InstalledObject != null && this.InstalledObject.GetMovementCost() == 0)
-//            return null;
-//
-//        if(this.LooseItem != null) {
-//            //TODO: Try combine stack
-//
-//            return this.LooseItem;
-//        }
-//
-//        this.LooseItem = looseItem.Clone();
-//        this.LooseItem.SetTile(this);
-//		this.LooseItem.RegisterOnCreatedCallback(this.OnCreatedCB);
-//		this.LooseItem.RegisterOnChangedCallback(this.OnChangedCB);
-//		this.LooseItem.RegisterOnDestroyedCallback(this.OnDestroyedCB);
-//
-//		looseItem.SetStackSize(0); //Incase we are passed a reference
-//		
-//        if(OnCreatedCB != null)
-//            OnCreatedCB(this.LooseItem);
-//
-//        return this.LooseItem;
-//    }
+    public LooseItem PlaceLooseItem(LooseItem looseItem) {
+        if(looseItem == null) {
+	        if(this.LooseItem != null)
+				if(this.LooseItem.GetOnDestroyedCB() != null)
+					this.LooseItem.GetOnDestroyedCB()(this.LooseItem);
+
+            this.LooseItem = null;
+            return null;
+        }
+
+        if(this.GetMovementMultiplier() == 0)
+            return null;
+
+        if(this.InstalledObject != null && this.InstalledObject.GetMovementMultiplier() == 0)
+            return null;
+
+        if(this.LooseItem != null) {
+            //TODO: Try combine stack
+
+            return this.LooseItem;
+        }
+
+        this.LooseItem = looseItem.Clone();
+        this.LooseItem.SetTile(this);
+		this.LooseItem.RegOnCreatedCB(this.OnCreatedCB);
+		this.LooseItem.RegOnUpdateCB(this.OnUpdateCB);
+		this.LooseItem.RegOnDestroyedCB(this.OnDestroyedCB);
+
+		looseItem.SetStackSize(0); //Incase we are passed a reference
+		
+        if(OnCreatedCB != null)
+            OnCreatedCB(this.LooseItem);
+
+        return this.LooseItem;
+    }
 
 	public void ChangeType(string type) {
 		if(type == ObjectType)
@@ -122,7 +120,7 @@ public class Tile : Constructable {
 
 		this.ObjectType = type;
 
-//	    PlaceLooseItem(new LooseItem("stone", 5)); //TODO: Temporary! For testing looseitems and job requirements
+	    PlaceLooseItem(new LooseItem("stone", 5)); //NOTE: Temporary, for testing looseitems and job requirements
 
 	    if(OnUpdateCB != null)
 			OnUpdateCB(this);
@@ -155,12 +153,13 @@ public class Tile : Constructable {
 		return neighbours.ToArray();
 	}
 
-	public float GetMovementCost() {
-		return MovementCost;
+	public float GetMovementMultiplier() {
+		string val = Defs.GetDef(this.ObjectType).Properties.GetValue("MovementMultiplier");
+		return int.Parse(val);
 	}
 
 	public Enterabilty GetEnterability() {
-		if(MovementCost == 0)
+		if(GetMovementMultiplier() == 0)
 			return Enterabilty.Never;
 
 		if(InstalledObject != null)

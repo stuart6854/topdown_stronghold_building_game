@@ -26,8 +26,7 @@ public class World {
 
 		for(int x = 0; x < Width; x++) {
 			for(int y = 0; y < Height; y++) {
-				Tiles[x, y] = new Tile(x, y, this);
-				Tiles[x, y].ChangeType("grass");
+				Tiles[x, y] = new Tile(x, y, "grass", this);
 				Tiles[x, y].RegOnCreatedCB(OnWorldObjectCreated);
 				Tiles[x, y].RegOnUpdateCB(OnWorldObjectChanged);
 				Tiles[x, y].RegOnDestroyedCB(OnWorldObjectDestroyed);

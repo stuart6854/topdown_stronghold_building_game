@@ -33,7 +33,7 @@ public class Character : WorldObject{
         this.CurrentTile = this.NextTile = this.DestinationTile = tile;
         this.Inventory = new Inventory(4);
 
-//        this.OnChangedCB += SpriteController.Instance.OnWorldObjectChanged;
+        this.OnUpdateCB += SpriteController.Instance.OnWorldObjectChanged;
 
         fsm = new CharacterFSM(this);
         WorldController.Instance.StartCoroutine(fsm.run());
@@ -43,8 +43,8 @@ public class Character : WorldObject{
         Move();
         Rotate();
 
-//        if(OnChangedCB != null)
-//            OnChangedCB(this);
+        if(OnUpdateCB != null)
+			OnUpdateCB(this);
     }
 
 //    private void UpdateJob() {
@@ -148,9 +148,9 @@ public class Character : WorldObject{
 
         //Apply MovementCost
         if(PercentageBetweenTiles < 0.5f)
-            distThisFrame *= CurrentTile.GetMovementCost();
+            distThisFrame *= CurrentTile.GetMovementMultiplier();
         else
-            distThisFrame *= NextTile.GetMovementCost();
+            distThisFrame *= NextTile.GetMovementMultiplier();
 
         float percentageThisFrame = distThisFrame / distToTravel;
 

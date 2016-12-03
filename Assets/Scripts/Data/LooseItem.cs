@@ -45,8 +45,8 @@ public class LooseItem : WorldObject {
     public void RemoveFromStack(int amnt) {
         StackSize -= amnt;
 
-//        if(StackSize <= 0 && Tile != null)
-//            Tile.PlaceLooseItem(null);
+        if(StackSize <= 0 && Tile != null)
+            Tile.PlaceLooseItem(null);
     }
 
     public int GetMaxStackSize() {

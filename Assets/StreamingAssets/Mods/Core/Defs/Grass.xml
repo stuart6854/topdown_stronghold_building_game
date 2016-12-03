@@ -9,6 +9,8 @@
         <Width>1</Width>
         <Height>1</Height>
 		
+		<MovementMultiplier>1</MovementMultiplier>
+		
     </Definition>
 
 </Definitions>

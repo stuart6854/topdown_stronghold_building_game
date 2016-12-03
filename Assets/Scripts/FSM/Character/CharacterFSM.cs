@@ -61,21 +61,21 @@ public class CharacterFSM : FSM {
     private IEnumerator GetJob() {
         yield return null;
 
-//        Debug.Log("Trying to get a Job.");
+        Debug.Log("Trying to get a Job.");
 
         if(Character.GetJob()) {
             State = Job();
-//            Debug.Log("Got a Job. Going to work.");
+            Debug.Log("Got a Job. Going to work.");
         } else {
             State = Idle();
-//            Debug.Log("No Jobs. Going to Idle.");
+            Debug.Log("No Jobs. Going to Idle.");
         }
     }
 
     private IEnumerator Job() {
         yield return null;
 
-//        Debug.Log("Starting my Job.");
+        Debug.Log("Starting my Job.");
 
         //TODO: Do Job. Conditional Loop may be required
 
@@ -88,6 +88,7 @@ public class CharacterFSM : FSM {
 			if(!Character.HasJobRequirements()) {
 				if(Character.GetCurrentPath() == null) {
 					KeyValuePair<string, int> requirement = Character.GetUnfulfilledJobRequirement();
+//					Debug.Log("a");
 
 					List<Tile> path = PathfindingController.Instance.RequestPathToObject(currTile, requirement.Key);
 					if(path == null) {
@@ -95,19 +96,22 @@ public class CharacterFSM : FSM {
 						//So lets abandon and requeue the job
 						Character.AbandonJob();
 						State = Idle();
-//						Debug.Log("Could find requirement!");
+						Debug.Log("Could find requirement: " + requirement.Value + " " + requirement.Key);
 						yield break;
 					}
 					Character.SetCurrentJobRequirement(requirement.Key);
 					Character.SetPath(path);
 				} else {
 					if(!PathfindingController.Instance.PathStillValid(Character.GetCurrentPath())) {
+//						Debug.Log("b");
 						Character.SetPath(null);
 					} else if(currTile == Character.GetDestinationTile()) {
+//						Debug.Log("c");
 						//We have reached a requirements location, hopefully
 						string requirment = Character.GetCurrentJobRequirement();
 						LooseItem item = currTile.GetLooseItem();
 						if(item == null) {
+//							Debug.Log("-1");
 							Debug.LogError("This requirement has been taken!");
 							Character.SetCurrentJobRequirement(null);
 							Character.SetPath(null); // Reset
@@ -117,6 +121,7 @@ public class CharacterFSM : FSM {
 						int amnt = item.GetStackSize();
 						if(amnt < Character.GetJobRequirements()[requirment]) {
 							//Not enough of what we need. We'll pick it up anyway and look for more
+//							Debug.Log("d");
 							Character.GetInventory().Add(new LooseItem(requirment, amnt));
 							currTile.GetLooseItem().RemoveFromStack(amnt);
 							Character.GetJobRequirements()[requirment] -= amnt;
@@ -124,6 +129,7 @@ public class CharacterFSM : FSM {
 							Character.SetPath(null); // Resets us to try find more of requirement as we have not fullfilled the required amount
 						} else {
 							//We can fullfil the whole remaining requirment here
+//							Debug.Log("e");
 							Character.GetInventory().Add(new LooseItem(requirment, Character.GetJobRequirements()[requirment]));
 							currTile.GetLooseItem().RemoveFromStack(Character.GetJobRequirements()[requirment]);
 							Character.GetJobRequirements().Remove(requirment); // We dont require any more of this type
@@ -136,10 +142,13 @@ public class CharacterFSM : FSM {
                 Tile destTile = currentJob.GetTile();
                 Character.SetDestination(currentJob.GetTile());
 
-                if(Character.GetCurrentPath() == null) {
+//				Debug.Log("f");
+				if(Character.GetCurrentPath() == null) {
                     List<Tile> path = PathfindingController.Instance.RequestPath(currTile, destTile);
-                    if(path == null) {
-                        Character.AbandonJob();
+//					Debug.Log("g");
+					if(path == null) {
+//						Debug.Log("h");
+						Character.AbandonJob();
                         State = Idle();
 						Debug.Log("Could find Path to job!");
 						yield break;
@@ -148,10 +157,12 @@ public class CharacterFSM : FSM {
                     Character.SetPath(path);
                 } else if(!PathfindingController.Instance.PathStillValid(Character.GetCurrentPath())) {
 	                Character.SetPath(null);
-                }
+//					Debug.Log("i");
+				}
 
                 if(currTile == currentJob.GetTile()) {
-	                currentJob.DoJob(Time.deltaTime);
+//					Debug.Log("j");
+					currentJob.DoJob(Time.deltaTime);
                 }
             }
 
@@ -159,7 +170,7 @@ public class CharacterFSM : FSM {
         }
 
         this.State = Idle();
-//        Debug.Log("Completed my Job. Going to Idle.");
+        Debug.Log("Completed my Job. Going to Idle.");
 
     }
 
