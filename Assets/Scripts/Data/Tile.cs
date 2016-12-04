@@ -155,7 +155,7 @@ public class Tile : Constructable {
 
 	public float GetMovementMultiplier() {
 		string val = Defs.GetDef(this.ObjectType).Properties.GetValue("MovementMultiplier");
-		return int.Parse(val);
+		return float.Parse(val);
 	}
 
 	public Enterabilty GetEnterability() {

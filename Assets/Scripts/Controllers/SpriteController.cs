@@ -198,4 +198,14 @@ public class SpriteController : MonoBehaviour {
 		return bitmask;
 	}
 
+	public Sprite GetSprite(string key) {
+		key += "_0";
+		if(!ObjectSprites.ContainsKey(key)) {
+			Debug.LogError("SpriteController::GetSprite -> No Sprite with key: "  + key);
+			return null;
+		}
+
+		return ObjectSprites[key];
+	}
+
 }

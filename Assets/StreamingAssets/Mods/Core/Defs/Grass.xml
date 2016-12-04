@@ -9,7 +9,7 @@
         <Width>1</Width>
         <Height>1</Height>
 		
-		<MovementMultiplier>1</MovementMultiplier>
+		<MovementMultiplier>0.75</MovementMultiplier>
 		
     </Definition>
 
