@@ -144,21 +144,30 @@ public class SpriteController : MonoBehaviour {
 //		Debug.Log("Destoyed WorldObjects GameObject");
 	}
 
-	private Sprite GetSprite(WorldObject obj) {
-		InstalledObject installedObject = obj as InstalledObject;
-		if(installedObject != null) {
-			if(installedObject.GetConnectsToNeighbours()) {
-				int Bitmask = GetInstalledObjectBitmask(installedObject);
+	private Sprite GetSprite(WorldObject worldObject) {
+//		InstalledObject installedObject = worldObject as InstalledObject;
+//		if(installedObject != null) {
+//			if(installedObject.GetConnectsToNeighbours()) {
+//				int Bitmask = GetInstalledObjectBitmask(installedObject);
+//
+//				if(ObjectSprites.ContainsKey(installedObject.GetObjectType() + "_" + Bitmask))
+//					return ObjectSprites[installedObject.GetObjectType() + "_" + Bitmask];
+//			}
+//		}
 
-				if(ObjectSprites.ContainsKey(installedObject.GetObjectType() + "_" + Bitmask))
-					return ObjectSprites[installedObject.GetObjectType() + "_" + Bitmask];
-			}
-		}
+		string spriteName = worldObject.GetSpriteName();
+		if(ObjectSprites.ContainsKey(spriteName))
+			return ObjectSprites[spriteName];
 
+		Debug.LogError("SpriteController::GetSprite(key) -> Sprite no found: " + spriteName);
 
-		if(ObjectSprites.ContainsKey(obj.GetObjectType() + "_0"))
-			return ObjectSprites[obj.GetObjectType() + "_0"];
+		//If sprite NOT found
+		if(ObjectSprites.ContainsKey("null_sprite"))
+			return ObjectSprites["null_sprite"]; // Assign "Null" sprite if found
 
+		Debug.LogError("SpriteController::GetSprite(key) -> Sprite no found: null_sprite");
+
+		//Else return null
 		return null;
 	}
 
@@ -167,28 +176,28 @@ public class SpriteController : MonoBehaviour {
 		int y = (int)io.GetTile().GetY();
 		int bitmask = 0;
 
-		Tile tile = WorldController.Instance.GetTileAt(x, y + 1); //North
+		Tile tile = WorldController.GetTileAt(x, y + 1); //North
 		if(tile != null) {
 			InstalledObject tileIO = tile.GetInstalledObject();
 			if(tileIO != null && tileIO.GetObjectType() == io.GetObjectType())
 				bitmask += 1;
 		}
 
-		tile = WorldController.Instance.GetTileAt(x + 1, y); //East
+		tile = WorldController.GetTileAt(x + 1, y); //East
 		if(tile != null) {
 			InstalledObject tileIO = tile.GetInstalledObject();
 			if(tileIO != null && tileIO.GetObjectType() == io.GetObjectType())
 				bitmask += 2;
 		}
 
-		tile = WorldController.Instance.GetTileAt(x, y - 1); //South
+		tile = WorldController.GetTileAt(x, y - 1); //South
 		if(tile != null) {
 			InstalledObject tileIO = tile.GetInstalledObject();
 			if(tileIO != null && tileIO.GetObjectType() == io.GetObjectType())
 				bitmask += 4;
 		}
 
-		tile = WorldController.Instance.GetTileAt(x - 1, y); //West
+		tile = WorldController.GetTileAt(x - 1, y); //West
 		if(tile != null) {
 			InstalledObject tileIO = tile.GetInstalledObject();
 			if(tileIO != null && tileIO.GetObjectType() == io.GetObjectType())
@@ -199,13 +208,19 @@ public class SpriteController : MonoBehaviour {
 	}
 
 	public Sprite GetSprite(string key) {
-		key += "_0";
-		if(!ObjectSprites.ContainsKey(key)) {
-			Debug.LogError("SpriteController::GetSprite -> No Sprite with key: "  + key);
-			return null;
-		}
+		if(ObjectSprites.ContainsKey(key))
+			return ObjectSprites[key];
 
-		return ObjectSprites[key];
+		Debug.LogError("SpriteController::GetSprite(key) -> Sprite no found: " + key);
+
+		//If sprite NOT found
+		if(ObjectSprites.ContainsKey("null_sprite"))
+			return ObjectSprites["null_sprite"]; // Assign "Null" sprite if found
+
+		Debug.LogError("SpriteController::GetSprite(key) -> Sprite no found: null_sprite");
+
+		//Else return null
+		return null;
 	}
 
 }

@@ -121,7 +121,8 @@ public class DefinitionProperties {
 	}
 
 	private Assembly AssemblyFromDLL(string dllFile) {
-		Assembly assembly = Assembly.LoadFile(dllFile);
+		byte[] assemblyBytes = File.ReadAllBytes(dllFile);//Note: This way we are not keeping the DLL open
+		Assembly assembly = Assembly.Load(assemblyBytes);
 		if(assembly == null)
 			Debug.LogError("Definition -> Couldn't load DLL: " + dllFile);
 

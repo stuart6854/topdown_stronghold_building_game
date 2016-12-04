@@ -25,7 +25,7 @@ public class Grid {
 
         for(int x = 0; x < Width; x++) {
             for(int y = 0; y < Height; y++) {
-                Tile tile = WorldController.Instance.GetTileAt(x, y);
+                Tile tile = WorldController.GetTileAt(x, y);
 
                 grid[x, y] = new Node(tile, IsTileWalkable(tile), (int)(tile.GetMovementMultiplier() * 10f));
             }

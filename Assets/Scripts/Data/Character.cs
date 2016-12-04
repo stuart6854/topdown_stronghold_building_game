@@ -144,7 +144,7 @@ public class Character : WorldObject{
         float y = Mathf.Pow(CurrentTile.GetY() - NextTile.GetY(), 2);
         float distToTravel = Mathf.Sqrt(x + y);
 
-        float distThisFrame = MoveSpeed * Time.deltaTime;
+        float distThisFrame = (MoveSpeed * CurrentTile.GetMovementMultiplier()) * Time.deltaTime;
 
         //Apply MovementCost
         if(PercentageBetweenTiles < 0.5f)
@@ -259,7 +259,11 @@ public class Character : WorldObject{
         return -0.3f;
     }
 
-    public Inventory GetInventory() {
+	public override string GetSpriteName() {
+		return "character_sprite";
+	}
+
+	public Inventory GetInventory() {
         return Inventory;
     }
 

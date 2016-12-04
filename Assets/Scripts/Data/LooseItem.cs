@@ -24,40 +24,45 @@ public class LooseItem : WorldObject {
         return new LooseItem(this);
     }
 
-    public void SetTile(Tile tile) {
-        this.Tile = tile;
-        this.X = tile.GetX();
-        this.Y = tile.GetY();
-    }
-
-    public Tile GetTile() {
-        return Tile;
-    }
-
-    public override float GetZ() {
-        return -0.2f;
-    }
-
-    public void AddToStack(int amnt) {
+	public void AddToStack(int amnt) {
         StackSize += amnt;
     }
 
-    public void RemoveFromStack(int amnt) {
+	public void RemoveFromStack(int amnt) {
         StackSize -= amnt;
 
         if(StackSize <= 0 && Tile != null)
             Tile.PlaceLooseItem(null);
     }
 
-    public int GetMaxStackSize() {
-        return MaxStackSize;
-    }
-
-    public void SetStackSize(int size) {
+	public void SetStackSize(int size) {
         this.StackSize = size;
     }
 
-    public int GetStackSize() {
+	public void SetTile(Tile tile) {
+		this.Tile = tile;
+		this.X = tile.GetX();
+		this.Y = tile.GetY();
+	}
+
+	public int GetMaxStackSize() {
+		return MaxStackSize;
+	}
+
+	public Tile GetTile() {
+		return Tile;
+	}
+
+	public int GetStackSize() {
         return StackSize;
     }
+
+	public override float GetZ() {
+		return -0.2f;
+	}
+
+	public override string GetSpriteName() {
+		return "looseitem_" + ObjectType;
+	}
+
 }

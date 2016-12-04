@@ -51,7 +51,7 @@ public class BuildController : MonoBehaviour {
             return;
 
         if(GetBuildMethod() == BuildMethod.Single || BuildMode == BuildMode.Character) {
-            Tile tile = WorldController.Instance.GetTileAt(Mathf.RoundToInt(start.x), Mathf.RoundToInt(start.y));
+            Tile tile = WorldController.GetTileAt(Mathf.RoundToInt(start.x), Mathf.RoundToInt(start.y));
 
             if(tile != null) {
                 if(BuildMode == BuildMode.Character)
@@ -68,7 +68,7 @@ public class BuildController : MonoBehaviour {
 
             for(int x = (int) start.x; x <= end.x; x++) {
                 for(int y = (int) start.y; y <= end.y; y++) {
-                    Tile tile = WorldController.Instance.GetTileAt(x, y);
+                    Tile tile = WorldController.GetTileAt(x, y);
                     if(tile != null)
                         SetupJob(tile);
                 }
@@ -86,7 +86,7 @@ public class BuildController : MonoBehaviour {
 
         for(int x = (int) start.x; x <= end.x; x++) {
             for(int y = (int) start.y; y <= end.y; y++) {
-                Tile t = WorldController.Instance.GetTileAt(x, y);
+                Tile t = WorldController.GetTileAt(x, y);
                 if(t == null) continue;
 
 //	            if(BuildMode == BuildMode.Demolish)

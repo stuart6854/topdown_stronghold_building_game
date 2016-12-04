@@ -7,7 +7,7 @@ public enum WorldObjectType {
 	Tile, InstalledObject, LooseItem, Character
 }
 
-public class WorldObject {
+public abstract class WorldObject {
 
 	protected string ObjectType;
 	protected WorldObjectType WorldObjectType;
@@ -18,6 +18,8 @@ public class WorldObject {
 	protected Action<WorldObject> OnCreatedCB;
 	protected Action<WorldObject> OnUpdateCB;
 	protected Action<WorldObject> OnDestroyedCB;
+
+	public abstract string GetSpriteName();
 
 	public string GetObjectType() {
 		return this.ObjectType;

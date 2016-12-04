@@ -35,7 +35,7 @@ public class UIController : MonoBehaviour {
 
 			Image image = btn_obj.transform.GetChild(0).GetComponent<Image>();
 			if(image != null) {
-				Sprite sprite = SpriteController.Instance.GetSprite(def.Properties.DefName);
+				Sprite sprite = SpriteController.Instance.GetSprite(def.Properties.DefName + "_icon");
 				if(sprite != null) {
 					image.sprite = sprite;
 				}

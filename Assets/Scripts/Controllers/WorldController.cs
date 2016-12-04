@@ -34,8 +34,16 @@ public class WorldController : MonoBehaviour {
 		return world;
 	}
 
-	public Tile GetTileAt(int x, int y) {
+	public Tile GetTile(int x, int y) {
 		return world.GetTile(x, y);
 	}
+
+	#region Static-Methods
+
+	public static Tile GetTileAt(int x, int y) {
+		return Instance.GetTile(x, y);
+	}
+
+	#endregion
 
 }

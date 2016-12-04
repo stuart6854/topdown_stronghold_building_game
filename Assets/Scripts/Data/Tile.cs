@@ -126,6 +126,10 @@ public class Tile : Constructable {
 			OnUpdateCB(this);
 	}
 
+	public override string GetSpriteName() {
+		return "tile_" + ObjectType;
+	}
+
 	public InstalledObject GetInstalledObject() {
 		return InstalledObject;
 	}

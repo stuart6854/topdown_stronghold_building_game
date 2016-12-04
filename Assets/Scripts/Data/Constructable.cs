@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Constructable : WorldObject {
+public abstract class Constructable : WorldObject {
 
 	private Dictionary<string, int> ConstructionRequirements;
 	private Dictionary<string, int> DismantledDrops;
@@ -54,5 +54,7 @@ public class Constructable : WorldObject {
 
 		return this.DismantledDrops;
 	}
+
+	public abstract override string GetSpriteName();
 
 }

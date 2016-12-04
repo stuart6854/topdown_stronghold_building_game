@@ -133,7 +133,7 @@ public class InputController : MonoBehaviour {
 				return; //This object cant be linked to its data for some reason
 
 			//Get selection tile
-			Tile tile = WorldController.Instance.GetTileAt(worldObjectRef.X, worldObjectRef.Y);
+			Tile tile = WorldController.GetTileAt(worldObjectRef.X, worldObjectRef.Y);
 			if(tile == null)
 				return; //The selection is attached to a null tile for some reason
 
