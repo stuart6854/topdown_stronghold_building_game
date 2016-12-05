@@ -21,25 +21,25 @@ public class JobController : MonoBehaviour {
     }
 
     public void AddJob(Job job) {
-        if(job.GetCompletionTime() <= 0.0f) {
+		if(job.GetCompletionTime() <= 0.0f) {
             job.DoJob(0); //Lets autocomplete jobs with 0 or minus completion times. Why should AI waste time if it is gonna complete instantly!
             return;
-        }
+		}
 
-        if(JobQueue.Contains(job)) {
+		if(JobQueue.Contains(job)) {
             Debug.Log("JobController::AddJob -> This Job is already in the JobQueue!");
             return;
-        }
+		}
 
 		job.ResetTimeCreated();
 
         job.RegisterOnCompleteCallback(OnJobEnd);
         job.RegisterOnAbortedCallback(OnJobEnd);
 
-        JobQueue.Add(job);
+		JobQueue.Add(job);
         JobQueue.Sort(); //Sorts Jobs based on their priority - High to Low
 
-        OnJobCreated(job);
+		OnJobCreated(job);
     }
 
 	public void AddFailedJob(Job job) {

@@ -48,7 +48,7 @@ public class Pathfinding : MonoBehaviour {
 	    if(end != null)
 		    targetNode = Grid.GetNode((int)end.GetX(), (int)end.GetY());
 
-		if((targetNode != null && targetNode.isWalkable) || objectType != null) {
+		if(targetNode != null || objectType != null) {
 			Heap<Node> openSet = new Heap<Node>(Grid.GetWidth() * Grid.GetHeight());
 			HashSet<Node> closedSet = new HashSet<Node>();
 			openSet.Add(startNode);
@@ -72,7 +72,7 @@ public class Pathfinding : MonoBehaviour {
 				}
 
 				foreach(Node neighbour in Grid.GetNeighbours(currentNode)) {
-					if(!neighbour.isWalkable || WillCutCorner(currentNode, neighbour) || closedSet.Contains(neighbour))
+					if((!neighbour.isWalkable && neighbour != targetNode) || WillCutCorner(currentNode, neighbour) || closedSet.Contains(neighbour))
 						continue;
 
 				    float newMovementCostToNeighbour = neighbour.movementPenalty * GetDistance(currentNode, neighbour); //currentNode.gCost + GetDistance(currentNode, neighbour) - neighbour.movementPenalty;

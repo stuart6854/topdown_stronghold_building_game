@@ -157,12 +157,14 @@ public class Character : WorldObject{
         PercentageBetweenTiles += percentageThisFrame;
 
         if(PercentageBetweenTiles >= 1.0f) {
-//            PathIndex++;
             CurrentTile = NextTile;
             PercentageBetweenTiles = 0;
-            CurrentPath.RemoveAt(0);
-            if(CurrentPath.Count > 0)//Path still has Tiles
-                NextTile = CurrentPath[0];
+
+	        if(CurrentPath.Count > 0) 
+		        CurrentPath.RemoveAt(0);
+
+		    if(CurrentPath.Count > 0) //Path still has Tiles
+			    NextTile = CurrentPath[0];
         }
     }
 

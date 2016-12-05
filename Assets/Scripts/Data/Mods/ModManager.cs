@@ -24,7 +24,7 @@ public class ModManager {
 		}
 		ModsLoaded = true;
 
-		Debug.LogFormat("ModManager -> Loaded {0} Mods", Mods.Count);
+		Debug.LogFormat("ModManager -> Loaded {0} mods.", Mods.Count);
 	}
 
 }

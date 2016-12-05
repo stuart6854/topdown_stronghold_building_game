@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class World {
@@ -53,7 +54,17 @@ public class World {
     }
 
 	public void DemolishInstalledObject(Tile tile) {
+		InstalledObject io = tile.GetInstalledObject();
 		tile.RemoveInstalledObject();
+		Dictionary<string, int> drops = io.GetDismantledDrops(io.GetObjectType());
+		WorldController.Instance.StartCoroutine(DropLooseItems(tile, drops));
+	}
+
+	public void DestroyInstalledObject(Tile tile) {
+		InstalledObject io = tile.GetInstalledObject();
+		tile.RemoveInstalledObject();
+		Dictionary<string, int> drops = io.GetDestroyedDrops(io.GetObjectType());
+		WorldController.Instance.StartCoroutine(DropLooseItems(tile, drops));
 	}
 
     public void PlaceCharacter(Tile tile) {
@@ -64,6 +75,61 @@ public class World {
 		Characters.Add(character);
         SpriteController.Instance.OnWorldObjectCreated(character);
     }
+
+	private IEnumerator DropLooseItems(Tile initialTile, Dictionary<string, int> drops) {
+		Queue<Tile> QueuedTiles = new Queue<Tile>();
+		QueuedTiles.Enqueue(initialTile);
+
+		List<Tile> ProcessedTiled = new List<Tile>();
+
+		while(drops.Count > 0 && QueuedTiles.Count > 0 ) {
+			Tile tile = QueuedTiles.Dequeue();
+			if(tile == null)
+				continue;
+
+			if(ProcessedTiled.Contains(tile))
+				continue;
+
+			InstalledObject io = tile.GetInstalledObject();
+			if(io != null && io.GetMovementMultiplier() == 0f)
+				continue;
+
+			if(tile.GetLooseItem() == null) {
+				KeyValuePair<string, int> pair = drops.First();
+				string type = pair.Key;
+				int amnt = pair.Value;
+
+				tile.PlaceLooseItem(new LooseItem(type, amnt));
+				drops.Remove(type);
+			} else {
+				LooseItem looseItem = tile.GetLooseItem();
+				foreach(KeyValuePair<string, int> pair in drops) {
+					string type = pair.Key;
+					int amnt = pair.Value;
+
+					if(looseItem.GetObjectType() == type) {
+						looseItem.AddToStack(amnt);
+						drops.Remove(type);
+						break;
+					}
+				}
+			}
+
+			//Get Neighbours
+			foreach(Tile neighbourTile in tile.GetNeighbourTiles()) {
+				if(ProcessedTiled.Contains(neighbourTile))
+					continue;
+
+				QueuedTiles.Enqueue(neighbourTile);
+			}
+
+			ProcessedTiled.Add(tile);
+
+			yield return null;
+		}
+
+		yield return null;
+	}
 
     public Tile GetTile(int x, int y) {
 		if(x < 0 || x >= Width)

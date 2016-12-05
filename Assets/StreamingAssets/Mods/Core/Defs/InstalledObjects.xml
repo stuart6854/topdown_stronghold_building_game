@@ -19,9 +19,14 @@
 			<Item type="stone" amnt="5"/>
 		</ConstructionRequirements>
 		
-		<DemolishedDrops>
+		<DismantleTime>5</DismantleTime>
+		<DismantleDrops>
 			<Item type="stone" amnt="3"/>
-		</DemolishedDrops>
+		</DismantleDrops>
+		
+		<DestroyedDrops>
+			<Item type="stone" amnt="3"/>
+		</DestroyedDrops>
 		
 		<Code assembly="CoreMod.dll" class="CoreMod.Wall"/>
     </Definition>
@@ -44,13 +49,14 @@
 			<Item type="wood" amnt="5"/>
 		</ConstructionRequirements>
 		
-		<DismantledDrops>
+		<DismantleTime>5</DismantleTime>
+		<DismantleDrops>
 			<Item type="door" amnt="1"/>
-		</DismantledDrops>
+		</DismantleDrops>
 		
-		<DemolishedDrops>
+		<DestroyedDrops>
 			<Item type="wood" amnt="3"/>
-		</DemolishedDrops>
+		</DestroyedDrops>
 		
 		<Code assembly="CoreMod.dll" class="CoreMod.Door"/>
     </Definition>
@@ -68,9 +74,12 @@
 		
 		<BuildMethod>Grid</BuildMethod>
 		
-		<DemolishedDrops>
+		<ConstructionTime>0</ConstructionTime>
+		
+		<DismantleTime>5</DismantleTime>
+		<DismantleDrops>
 			<Item type="stone" amnt="5"/>
-		</DemolishedDrops>
+		</DismantleDrops>
 		
 		<Code assembly="CoreMod.dll" class="CoreMod.Stone"/>
     </Definition>

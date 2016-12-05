@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CharacterFSM : FSM {
@@ -65,10 +66,10 @@ public class CharacterFSM : FSM {
 
         if(Character.GetJob()) {
             State = Job();
-//            Debug.Log("Got a Job. Going to work.");
+            Debug.Log("Got a Job. Going to work.");
         } else {
             State = Idle();
-//            Debug.Log("No Jobs. Going to Idle.");
+            Debug.Log("No Jobs. Going to Idle.");
         }
     }
 
@@ -142,29 +143,29 @@ public class CharacterFSM : FSM {
                 Tile destTile = currentJob.GetTile();
                 Character.SetDestination(currentJob.GetTile());
 
-//				Debug.Log("f");
-				if(Character.GetCurrentPath() == null) {
-                    List<Tile> path = PathfindingController.Instance.RequestPath(currTile, destTile);
-//					Debug.Log("g");
-					if(path == null) {
-//						Debug.Log("h");
-						Character.AbandonJob();
-                        State = Idle();
-//						Debug.Log("Could find Path to job!");
-						yield break;
-                    }
-
-                    Character.SetPath(path);
-                } else if(!PathfindingController.Instance.PathStillValid(Character.GetCurrentPath())) {
-	                Character.SetPath(null);
-//					Debug.Log("i");
-				}
-
-                if(currTile == currentJob.GetTile()) {
-//					Debug.Log("j");
+				if(currTile == currentJob.GetTile() || currTile.GetNeighbourTiles().Contains(currentJob.GetTile())) {
+//					Debug.Log("f");
 					currentJob.DoJob(Time.deltaTime);
-                }
-            }
+				} else {
+//				    Debug.Log("g");
+					if(Character.GetCurrentPath() == null) {
+						List<Tile> path = PathfindingController.Instance.RequestPath(currTile, destTile);
+//					    Debug.Log("h");
+						if(path == null) {
+							Character.AbandonJob();
+							State = Idle();
+//						    Debug.Log("Could find Path to job!");
+							yield break;
+						}
+
+						path.RemoveAt(path.Count - 1);
+						Character.SetPath(path);
+					} else if(!PathfindingController.Instance.PathStillValid(Character.GetCurrentPath())) {
+						Character.SetPath(null);
+//					    Debug.Log("j");
+					}
+				}
+			}
 
             yield return null;
         }

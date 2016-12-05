@@ -5,8 +5,8 @@ public enum BuildMethod {
     Single, Line, Grid
 }
 
-public enum BuildMode {
-    None, Tile, InstalledObject, Character, Demolish
+public enum ActionMode {
+    None, Tile, InstalledObject, Character, Demolish, Destroy
 }
 
 public class BuildController : MonoBehaviour {
@@ -20,7 +20,7 @@ public class BuildController : MonoBehaviour {
 
     public GameObject BuildDragPrefab;
 
-    private BuildMode BuildMode;
+    private ActionMode ActionMode;
     private string ObjectType;
 
     private List<GameObject> DragPreviewObjects;
@@ -38,7 +38,7 @@ public class BuildController : MonoBehaviour {
 
     void Update() {
         if(Input.GetKeyUp(KeyCode.Escape)) {
-            BuildMode = BuildMode.None;
+            ActionMode = ActionMode.None;
         }
 
 	    if(ConsoleController.Instance.IsVisble) {
@@ -47,18 +47,21 @@ public class BuildController : MonoBehaviour {
     }
 
     public void DoAction(Vector2 start, Vector2 end) {
-        if(BuildMode == BuildMode.None)
+        if(ActionMode == ActionMode.None)
             return;
 
-        if(GetBuildMethod() == BuildMethod.Single || BuildMode == BuildMode.Character) {
+        if(GetBuildMethod() == BuildMethod.Single || ActionMode == ActionMode.Character) {
             Tile tile = WorldController.GetTileAt(Mathf.RoundToInt(start.x), Mathf.RoundToInt(start.y));
 
             if(tile != null) {
-                if(BuildMode == BuildMode.Character)
+                if(ActionMode == ActionMode.Character)
                     WorldController.Instance.GetWorld().PlaceCharacter(tile);
                 else {
-                    SetupJob(tile);
-                }
+					if(ActionMode == ActionMode.Demolish)
+						SetupDemolishOrder(tile);
+					else
+						SetupBuildOrder(tile);
+				}
             }
 
         } else {
@@ -69,8 +72,12 @@ public class BuildController : MonoBehaviour {
             for(int x = (int) start.x; x <= end.x; x++) {
                 for(int y = (int) start.y; y <= end.y; y++) {
                     Tile tile = WorldController.GetTileAt(x, y);
-                    if(tile != null)
-                        SetupJob(tile);
+	                if(tile != null) {
+						if(ActionMode == ActionMode.Demolish)
+							SetupDemolishOrder(tile);
+						else
+							SetupBuildOrder(tile);
+	                }
                 }
             }
         }
@@ -79,7 +86,7 @@ public class BuildController : MonoBehaviour {
     public void OnDragging(Vector2 start, Vector2 end) {
         ClearDragPreviews();
 
-        if(BuildMode == BuildMode.None || BuildMode == BuildMode.Character)
+        if(ActionMode == ActionMode.None || ActionMode == ActionMode.Character)
             return;
 
         GetLoopCoords(start, end, out start, out end);
@@ -89,7 +96,7 @@ public class BuildController : MonoBehaviour {
                 Tile t = WorldController.GetTileAt(x, y);
                 if(t == null) continue;
 
-//	            if(BuildMode == BuildMode.Demolish)
+//	            if(ActionMode == ActionMode.Demolish)
 //		            if(t.GetInstalledObject() == null)
 //						continue;
 
@@ -104,22 +111,25 @@ public class BuildController : MonoBehaviour {
 				//                if(t.GetPendingJob() != null) {
 				//                    sr.color = Color.red;
 				//                } else 
-				if(BuildMode == BuildMode.Tile) {
+				if(ActionMode == ActionMode.Tile) {
                     sr.color = t.GetObjectType() != ObjectType ? Color.green : Color.red;
-                } else if(BuildMode == BuildMode.InstalledObject) {
+                } else if(ActionMode == ActionMode.InstalledObject) {
                     if(t.GetObjectType() == "null")
                         sr.color = Color.red;
                     else
                         sr.color = t.GetInstalledObject() == null ? Color.green : Color.red;
-                }else if(BuildMode == BuildMode.Demolish) {
+                }else if(ActionMode == ActionMode.Demolish) {
 	                sr.color = t.GetInstalledObject() == null ? Color.white : Color.green;
                 }
             }
         }
     }
 
-    private void SetupJob(Tile tile) {
-        string type = ObjectType;
+    private void SetupBuildOrder(Tile tile) {
+	    if(tile.GetInstalledObject() != null)
+		    return;
+
+	    string type = ObjectType;
 
 	    Dictionary<string, int> requirements = null;
 	    if(!string.IsNullOrEmpty(type)) {
@@ -128,49 +138,62 @@ public class BuildController : MonoBehaviour {
 			    requirements = constructable.GetConstructionRequirements(type);
 	    }
 
-	    float jobTime;
-	    if(InstaBuild == true)
-		    jobTime = 0f;
-	    else {
-			string val = Defs.GetDef(type).Properties.GetValue("ConstructionTime");
-		    if(val == string.Empty)
-			    jobTime = 1.0f;
-		    else
+	    float jobTime = 0f;
+	    if(!InstaBuild) {
+		    string val = Defs.GetDef(type).Properties.GetValue("ConstructionTime");
+
+			if(val != string.Empty)
 			    jobTime = float.Parse(val);
 	    }
 
 	    Job job = null;
-        if(BuildMode == BuildMode.Tile) {
+        if(ActionMode == ActionMode.Tile) {
             job = new Job(JobType.Construct, tile, j => tile.ChangeType(type), requirements, jobTime, 1);
-        } else if(BuildMode == BuildMode.InstalledObject) {
+        } else if(ActionMode == ActionMode.InstalledObject) {
             job = new Job(JobType.Construct, tile, j => WorldController.Instance.GetWorld().PlaceInstalledObject(type, tile), requirements, jobTime, 0);
-            
-        }else if(BuildMode == BuildMode.Demolish) {
-	        job = new Job(JobType.Demolish, tile, j => WorldController.Instance.GetWorld().DemolishInstalledObject(tile), null, jobTime, 0);
         }
 
-//	    if(job != null) {
+	    if(job != null)
 //			if(tile.SetPendingJob(job))
 				JobController.Instance.AddJob(job);
-//		}
+
     }
 
-    public BuildMode GetBuildMode() {
-        return BuildMode;
+	private void SetupDemolishOrder(Tile tile) {
+		if(tile.GetInstalledObject() == null) {
+			return;
+		}
+
+		float jobTime = 0f;
+		if(!InstaBuild) {
+			string val = Defs.GetDef(tile.GetInstalledObject().GetObjectType()).Properties.GetValue("DismantleTime");
+			if(val != string.Empty)
+				jobTime = float.Parse(val);
+		}
+		
+		Job job = new Job(JobType.Demolish, tile, j => WorldController.Instance.GetWorld().DemolishInstalledObject(tile), null, jobTime, 0);
+		
+		//		if(tile.SetPendingJob(job))
+			JobController.Instance.AddJob(job);
+
+	}
+
+	public ActionMode GetBuildMode() {
+        return ActionMode;
     }
 
-    public void SetBuildMode(BuildMode buildMode) {
-        BuildMode = buildMode;
+    public void SetBuildMode(ActionMode actionMode) {
+        ActionMode = actionMode;
     }
 
     public BuildMethod GetBuildMethod() {
-		if(BuildMode == BuildMode.Demolish)
+		if(ActionMode == ActionMode.Demolish)
 			return BuildMethod.Grid;
 
-		if(BuildMode == BuildMode.Tile)
+		if(ActionMode == ActionMode.Tile)
 			return BuildMethod.Grid;
 
-	    if(BuildMode == BuildMode.InstalledObject) {
+	    if(ActionMode == ActionMode.InstalledObject) {
 		    InstalledObject io = (InstalledObject) Defs.GetDef(this.ObjectType).Properties.Prototype;
 		    if(io != null)
 			    return io.GetBuildMethod(this.ObjectType);
@@ -180,23 +203,28 @@ public class BuildController : MonoBehaviour {
     }
 
     public void PlaceTile(string type) {
-        BuildMode = BuildMode.Tile;
+        ActionMode = ActionMode.Tile;
         ObjectType = type;
     }
 
     public void PlaceInstalledObject(string type) {
-        BuildMode = BuildMode.InstalledObject;
+        ActionMode = ActionMode.InstalledObject;
         ObjectType = type;
     }
 
     public void PlaceCharacter() {
         //TODO: Note that this is temporary, in final game players wont be able to place new characters
-        BuildMode = BuildMode.Character;
+        ActionMode = ActionMode.Character;
         ObjectType = "character";
     }
 
 	public void SetDemolish() {
-		BuildMode = BuildMode.Demolish;
+		ActionMode = ActionMode.Demolish;
+		ObjectType = null;
+	}
+
+	public void SetDestroy() {
+		ActionMode = ActionMode.Destroy;
 		ObjectType = null;
 	}
 

@@ -13,16 +13,12 @@ public class Defs {
 
 	public static void LoadDefs(Mod[] mods) {
 		Definitions = new Dictionary<string, Definition>();
-//		TileDefs = new Dictionary<string, Definition>();
-//		InstalledObjectDefs = new Dictionary<string, Definition>();
-//		LooseItemDefs = new Dictionary<string, Definition>();
-
 		foreach(Mod mod in mods) {
 			foreach(string defFile in mod.DefFiles) {
 				ParseDefinitionFile(defFile, mod);
 			}
 		}
-
+		Debug.LogFormat("Defs -> Loaded {0} definitions.", Definitions.Count);
 	}
 
 	private static void ParseDefinitionFile(string defFile, Mod mod) {

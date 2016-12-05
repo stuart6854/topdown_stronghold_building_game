@@ -39,7 +39,7 @@ public class DefinitionProperties {
 		foreach(XmlNode childNode in defNode.ChildNodes) {
 			XMLTag tag = new XMLTag();
 			tag = ParseNode(childNode, tag);
-
+			
 			XMLData.Add(childNode.Name, tag);
 		}
 	}
@@ -114,8 +114,6 @@ public class DefinitionProperties {
 			throw new Exception(builder.ToString());
 		}
 
-		Debug.Log("Definition -> Assembly Loaded: " + AssemblyFile);
-
 		//Return Assembly
 		return result.CompiledAssembly;
 	}
@@ -126,7 +124,6 @@ public class DefinitionProperties {
 		if(assembly == null)
 			Debug.LogError("Definition -> Couldn't load DLL: " + dllFile);
 
-		Debug.Log("Definition -> Assembly Loaded: " + AssemblyFile);
 		return assembly;
 	}
 

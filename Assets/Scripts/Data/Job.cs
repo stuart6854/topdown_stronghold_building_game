@@ -43,9 +43,6 @@ public class Job : IComparable<Job> {
             return false;
 
         //Job is complete
-
-        //TODO: Remove the required objects from characters inventory
-
         if(OnComplete != null)
             OnComplete(this);
 

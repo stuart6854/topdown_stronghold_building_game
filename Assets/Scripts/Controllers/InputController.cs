@@ -22,16 +22,16 @@ public class InputController : MonoBehaviour {
 	
 	void Update () {
 		if(Input.GetKeyUp(KeyCode.Escape)) {
-			if(BuildController.Instance.GetBuildMode() != BuildMode.None) {
-				BuildController.Instance.SetBuildMode(BuildMode.None);
+			if(BuildController.Instance.GetBuildMode() != ActionMode.None) {
+				BuildController.Instance.SetBuildMode(ActionMode.None);
 			} else {
 				//Show Escape Menu - Resume, Save, Load, Settings, Exit, etc.
 			}
 		}
 		
 		if(ConsoleController.Instance.IsVisble) {
-			if(BuildController.Instance.GetBuildMode() != BuildMode.None) {
-				BuildController.Instance.SetBuildMode(BuildMode.None);
+			if(BuildController.Instance.GetBuildMode() != ActionMode.None) {
+				BuildController.Instance.SetBuildMode(ActionMode.None);
 			}
 			return;
 		}
@@ -44,13 +44,13 @@ public class InputController : MonoBehaviour {
 	}
 
 	private void HandleDrag() {
-	    if(BuildController.Instance.GetBuildMode() == BuildMode.None)
+	    if(BuildController.Instance.GetBuildMode() == ActionMode.None)
 	        return;
 
 		if(EventSystem.current.IsPointerOverGameObject())
 			return;
 
-	    if(BuildController.Instance.GetBuildMethod() == BuildMethod.Single || BuildController.Instance.GetBuildMode() == BuildMode.Character) {
+	    if(BuildController.Instance.GetBuildMethod() == BuildMethod.Single || BuildController.Instance.GetBuildMode() == ActionMode.Character) {
 	        if(Input.GetMouseButtonUp(0)) {
 	            Vector2 pos = cam.ScreenToWorldPoint(Input.mousePosition);
 	            BuildController.Instance.DoAction(pos, Vector2.zero);
@@ -111,7 +111,7 @@ public class InputController : MonoBehaviour {
 	}
 
 	private void HandleClicks() {
-		if(BuildController.Instance.GetBuildMode() != BuildMode.None)
+		if(BuildController.Instance.GetBuildMode() != ActionMode.None)
 			return; //We are in build mode, so no selection can happen
 
 		if(EventSystem.current.IsPointerOverGameObject())

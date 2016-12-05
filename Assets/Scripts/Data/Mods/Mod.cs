@@ -25,7 +25,7 @@ public class Mod {
 		mod.DefFiles = LoadDefinitions(mod.RootDir + "/Defs/");
 		mod.TextureFiles = LoadTextures(mod.RootDir + "/Textures/");
 		
-		Debug.LogFormat("Mod Loaded({0} Assemblies, {1} Definitions, {2} Textures): {3}", mod.AssemblyFiles.Count, mod.DefFiles.Count, mod.TextureFiles.Count, mod.RootDir);
+//		Debug.LogFormat("Mod Loaded({0} Assemblies, {1} Definitions, {2} Textures): {3}", mod.AssemblyFiles.Count, mod.DefFiles.Count, mod.TextureFiles.Count, mod.RootDir);
 		return mod;
 	}
 
@@ -33,7 +33,7 @@ public class Mod {
 		if(!File.Exists(rootDir + "/About.xml"))
 			return "";
 
-		Debug.Log("Found Mod 'About.xml' File: " + rootDir + "/About.xml");
+//		Debug.Log("Found Mod 'About.xml' File: " + rootDir + "/About.xml");
 		return rootDir + "/About.xml";
 	}
 
@@ -66,7 +66,7 @@ public class Mod {
 			}
 		}
 
-		Debug.Log("<b>Mod About</b>\nName: " + name + "\nAuthor: " + author + "\nDescription: " + desc + "\n");
+//		Debug.Log("<b>Mod About</b>\nName: " + name + "\nAuthor: " + author + "\nDescription: " + desc + "\n");
 
 		return new ModAbout(name, author, desc);
 	}
@@ -82,7 +82,7 @@ public class Mod {
 				continue;
 			 
 			assemblyFiles.Add(filePath); //Add it as Assembly
-			Debug.Log("Found Assemby File: " + file);
+//			Debug.Log("Found Assemby File: " + file);
 		}
 
 		return assemblyFiles;
@@ -102,7 +102,7 @@ public class Mod {
 				continue;
 
 			definitonFiles.Add(filePath); //Add it as Definition
-			Debug.Log("Found Valid Definition File: " + file);
+//			Debug.Log("Found Valid Definition File: " + file);
 		}
 
 		return definitonFiles;
@@ -121,7 +121,7 @@ public class Mod {
 				continue;
 
 			textureFiles.Add(filePath); //Add it as Texture
-			Debug.Log("Found Texture File: " + file);
+//			Debug.Log("Found Texture File: " + file);
 		}
 
 		return textureFiles;
