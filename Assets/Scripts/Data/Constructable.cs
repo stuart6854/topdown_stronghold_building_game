@@ -19,6 +19,9 @@ public abstract class Constructable : WorldObject {
 			return this.ConstructionRequirements;
 
 		DefinitionProperties.XMLTag constructionRequirmentsTag = Defs.GetDef(objType).Properties.GetXMLData("ConstructionRequirements");
+		if(constructionRequirmentsTag == null)
+			return null;
+
 		this.ConstructionRequirements = new Dictionary<string, int>();
 
 		foreach(KeyValuePair<string, DefinitionProperties.XMLTag> pair in constructionRequirmentsTag.ChildTags) {

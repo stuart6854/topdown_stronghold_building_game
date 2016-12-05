@@ -24,10 +24,17 @@ public class UIController : MonoBehaviour {
 	}
 	
 	void Start () {
+		CreateBuildButtons();
+	}
+
+	private void CreateBuildButtons() {
 		foreach(KeyValuePair<string, Definition> pair in Defs.Definitions) {
 			Definition def = pair.Value;
 			string type = def.Properties.DefCategory;
 			if(type != "Tile" && type != "InstalledObject")
+				continue;
+
+			if(!def.Properties.ContainsXMLTag("Constructable"))
 				continue;
 
 			GameObject btn_obj = Instantiate(BuildButtonPrefab);
@@ -43,7 +50,7 @@ public class UIController : MonoBehaviour {
 
 			Button button = btn_obj.GetComponent<Button>();
 			if(type == "Tile") {
-				button.onClick.AddListener(delegate() { BuildController.Instance.PlaceTile(def.Properties.DefName); });
+				button.onClick.AddListener(delegate () { BuildController.Instance.PlaceTile(def.Properties.DefName); });
 				btn_obj.transform.SetParent(TilesDropdown, false);
 			} else {
 				button.onClick.AddListener(delegate () { BuildController.Instance.PlaceInstalledObject(def.Properties.DefName); });

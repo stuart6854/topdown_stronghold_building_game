@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Definitions>
+
+    <Definition>
+        <DefName>wall</DefName>
+		<Category>InstalledObject</Category>
+		<Constructable/>
+		
+        <Label>Wall</Label>
+        <Width>1</Width>
+        <Height>1</Height>
+		
+		<MovementMultiplier>0</MovementMultiplier>
+		
+		<BuildMethod>Grid</BuildMethod>
+		
+		<ConstructionTime>5</ConstructionTime>
+		<ConstructionRequirements>
+			<Item type="stone" amnt="5"/>
+		</ConstructionRequirements>
+		
+		<DemolishedDrops>
+			<Item type="stone" amnt="3"/>
+		</DemolishedDrops>
+		
+		<Code assembly="CoreMod.dll" class="CoreMod.Wall"/>
+    </Definition>
+	
+	<Definition>
+        <DefName>door</DefName>
+		<Category>InstalledObject</Category>
+		<Constructable/>
+		
+        <Label>Door</Label>
+        <Width>1</Width>
+        <Height>1</Height>
+		
+		<MovementMultiplier>1</MovementMultiplier>
+		
+		<BuildMethod>Single</BuildMethod>
+		
+		<ConstructionTime>3</ConstructionTime>
+		<ConstructionRequirements>
+			<Item type="wood" amnt="5"/>
+		</ConstructionRequirements>
+		
+		<DismantledDrops>
+			<Item type="door" amnt="1"/>
+		</DismantledDrops>
+		
+		<DemolishedDrops>
+			<Item type="wood" amnt="3"/>
+		</DemolishedDrops>
+		
+		<Code assembly="CoreMod.dll" class="CoreMod.Door"/>
+    </Definition>
+	
+	<Definition>
+        <DefName>stone</DefName>
+		<Category>InstalledObject</Category>
+		<Constructable/>
+		
+        <Label>Stone</Label>
+        <Width>1</Width>
+        <Height>1</Height>
+		
+		<MovementMultiplier>0</MovementMultiplier>
+		
+		<BuildMethod>Grid</BuildMethod>
+		
+		<DemolishedDrops>
+			<Item type="stone" amnt="5"/>
+		</DemolishedDrops>
+		
+		<Code assembly="CoreMod.dll" class="CoreMod.Stone"/>
+    </Definition>
+
+</Definitions>

@@ -135,11 +135,21 @@ public class DefinitionProperties {
 		return instance;
 	}
 
+	public bool ContainsXMLTag(string key) {
+		return XMLData.ContainsKey(key);
+	}
+
 	public XMLTag GetXMLData(string key) {
+		if(!this.XMLData.ContainsKey(key))
+			return null;
+
 		return this.XMLData[key];
 	}
 
 	public string GetValue(string key) {
+		if(!this.XMLData.ContainsKey(key))
+			return string.Empty;
+
 		return this.XMLData[key].Value;
 	}
 

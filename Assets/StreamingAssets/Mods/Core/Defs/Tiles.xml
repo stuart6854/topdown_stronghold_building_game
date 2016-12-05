@@ -2,14 +2,29 @@
 <Definitions>
 
     <Definition>
+        <DefName>grass</DefName>
+		<Category>Tile</Category>
+		
+        <Label>Grass</Label>
+        <Width>1</Width>
+        <Height>1</Height>
+		
+		<MovementMultiplier>1</MovementMultiplier>
+		
+    </Definition>
+	
+	<Definition>
         <DefName>floor</DefName>
 		<Category>Tile</Category>
+		<Constructable/>
 		
         <Label>Floor</Label>
         <Width>1</Width>
         <Height>1</Height>
 		
 		<MovementMultiplier>1</MovementMultiplier>
+				
+		<ConstructionTime>2</ConstructionTime>
 		
     </Definition>
 

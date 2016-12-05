@@ -128,9 +128,16 @@ public class BuildController : MonoBehaviour {
 			    requirements = constructable.GetConstructionRequirements(type);
 	    }
 
-	    float jobTime = 1.0f;
-        if(InstaBuild == true)
-            jobTime = 0f;
+	    float jobTime;
+	    if(InstaBuild == true)
+		    jobTime = 0f;
+	    else {
+			string val = Defs.GetDef(type).Properties.GetValue("ConstructionTime");
+		    if(val == string.Empty)
+			    jobTime = 1.0f;
+		    else
+			    jobTime = float.Parse(val);
+	    }
 
 	    Job job = null;
         if(BuildMode == BuildMode.Tile) {

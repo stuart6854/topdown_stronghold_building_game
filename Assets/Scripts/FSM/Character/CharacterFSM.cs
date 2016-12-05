@@ -61,21 +61,21 @@ public class CharacterFSM : FSM {
     private IEnumerator GetJob() {
         yield return null;
 
-        Debug.Log("Trying to get a Job.");
+//        Debug.Log("Trying to get a Job.");
 
         if(Character.GetJob()) {
             State = Job();
-            Debug.Log("Got a Job. Going to work.");
+//            Debug.Log("Got a Job. Going to work.");
         } else {
             State = Idle();
-            Debug.Log("No Jobs. Going to Idle.");
+//            Debug.Log("No Jobs. Going to Idle.");
         }
     }
 
     private IEnumerator Job() {
         yield return null;
 
-        Debug.Log("Starting my Job.");
+//        Debug.Log("Starting my Job.");
 
         //TODO: Do Job. Conditional Loop may be required
 
@@ -96,7 +96,7 @@ public class CharacterFSM : FSM {
 						//So lets abandon and requeue the job
 						Character.AbandonJob();
 						State = Idle();
-						Debug.Log("Could find requirement: " + requirement.Value + " " + requirement.Key);
+//						Debug.Log("Couldn't find requirement: " + requirement.Value + " " + requirement.Key);
 						yield break;
 					}
 					Character.SetCurrentJobRequirement(requirement.Key);
@@ -112,7 +112,7 @@ public class CharacterFSM : FSM {
 						LooseItem item = currTile.GetLooseItem();
 						if(item == null) {
 //							Debug.Log("-1");
-							Debug.LogError("This requirement has been taken!");
+//							Debug.LogError("This requirement has been taken!");
 							Character.SetCurrentJobRequirement(null);
 							Character.SetPath(null); // Reset
 							continue;
@@ -150,7 +150,7 @@ public class CharacterFSM : FSM {
 //						Debug.Log("h");
 						Character.AbandonJob();
                         State = Idle();
-						Debug.Log("Could find Path to job!");
+//						Debug.Log("Could find Path to job!");
 						yield break;
                     }
 
@@ -170,7 +170,7 @@ public class CharacterFSM : FSM {
         }
 
         this.State = Idle();
-        Debug.Log("Completed my Job. Going to Idle.");
+//        Debug.Log("Completed my Job. Going to Idle.");
 
     }
 
