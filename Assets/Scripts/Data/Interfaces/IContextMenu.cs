@@ -4,6 +4,6 @@ using UnityEngine;
 
 public interface IContextMenu {
 
-	RadialMenuGenerator.RadialMenuItem[] MenuOptions_ContextMenu();
+	RadialMenuItem[] MenuOptions_ContextMenu();
 
 }

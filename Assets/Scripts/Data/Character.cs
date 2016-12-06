@@ -26,7 +26,6 @@ public class Character : WorldObject{
     private Dictionary<string, int> JobRequirements;
     private string CurrentRequirement;
 
-
     public Character(Tile tile) {
         this.ObjectType = "character";
 		this.WorldObjectType = WorldObjectType.Character;

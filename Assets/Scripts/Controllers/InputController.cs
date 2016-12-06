@@ -137,17 +137,17 @@ public class InputController : MonoBehaviour {
 			if(tile == null)
 				return; //The selection is attached to a null tile for some reason
 
-//			switch(worldObjectRef.ObjectType) {
-//				case WorldObjectType.InstalledObject:
-//					selection = tile.GetInstalledObject();
-//					break;
-//				case WorldObjectType.LooseItem:
-//					selection = tile.GetLooseItem();
-//					break;
-//				case WorldObjectType.Character:
-//					//TODO: Need a way to retrieve character
-//					break;
-//			}
+			switch(worldObjectRef.WorldObjectType) {
+				case WorldObjectType.InstalledObject:
+					selection = tile.GetInstalledObject();
+					break;
+				case WorldObjectType.LooseItem:
+					selection = tile.GetLooseItem();
+					break;
+				case WorldObjectType.Character:
+					//TODO: Need a way to retrieve character
+					break;
+			}
 		}
 
 		if(selection == null)
@@ -158,14 +158,16 @@ public class InputController : MonoBehaviour {
 			//Left
 
 
-		}else if(Input.GetMouseButtonUp(1)) {
-			//Right
+		}else if(Input.GetMouseButtonUp(1)) {//Right
+			if(!(selection is IContextMenu))
+				return;
 
 			IContextMenu contextMenuObj = (IContextMenu) selection;
 			if(contextMenuObj == null)
 				return;
 
-			UIController.Instance.GenerateRadialMenu(contextMenuObj.MenuOptions_ContextMenu());
+			RadialMenuItem[] menuItems = contextMenuObj.MenuOptions_ContextMenu();
+			UIController.Instance.GenerateRadialMenu(menuItems);
 		}
 	}
 

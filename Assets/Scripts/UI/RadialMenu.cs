@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Boo.Lang.Environments;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -39,8 +40,12 @@ public class RadialMenu : MonoBehaviour {
 
 		RelativeMousePos = MousePosition - CentreCircle;
 
-		if(RelativeMousePos.magnitude < Radius / 2f || RelativeMousePos.magnitude > Radius)
+		if(RelativeMousePos.magnitude < Radius / 2f || RelativeMousePos.magnitude > Radius) {
+			MenuButton current = MenuButtons[OldMenuItem];
+			current.Texture.color = current.NormalColor;
+			CurrMenuItem = -1;
 			return;
+		}
 
 		angle = (Mathf.Atan2(RelativeMousePos.y, RelativeMousePos.x) * Mathf.Rad2Deg) + 90;
 
@@ -53,27 +58,28 @@ public class RadialMenu : MonoBehaviour {
 			CurrMenuItem = 0;
 		else if(CurrMenuItem < 0)
 			CurrMenuItem = ButtonCount - 1;
+		
+		MenuButton old = MenuButtons[OldMenuItem];
+		old.Texture.color = old.NormalColor;
+		OldMenuItem = CurrMenuItem;
 
-		if(CurrMenuItem != OldMenuItem) {
-			MenuButton old = MenuButtons[OldMenuItem];
-			old.Texture.color = old.NormalColor;
-			OldMenuItem = CurrMenuItem;
-
-			MenuButton curr = MenuButtons[CurrMenuItem];
-			curr.Texture.color = curr.HighlightedColor;
-		}
+		MenuButton curr = MenuButtons[CurrMenuItem];
+		curr.Texture.color = curr.HighlightedColor;
 	}
 
 	public void ButtonAction() {
+		if(CurrMenuItem == -1) {//No MenuItem selected
+			Destroy(this.gameObject); //Close Menu
+			return;
+		}
+
 		MenuButton button = MenuButtons[CurrMenuItem];
 		button.Texture.color = button.PressedColor;
 
-		if(button.OnClick != null)
+		if(button.OnClick != null) {
 			button.OnClick();
-	}
-
-	public void Test() {
-		Debug.Log("Button 3 test");
+			Destroy(this.gameObject);
+		}
 	}
 
 	public void SetCentre(float x, float y) {

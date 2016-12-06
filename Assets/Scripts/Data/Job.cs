@@ -5,7 +5,7 @@ using UnityEngine;
 using Debug = UnityEngine.Debug;
 
 public enum JobType {
-	None, Construct, Demolish, Mine
+	None, Construct, Dismantle, Mine
 }
 
 public class Job : IComparable<Job> {

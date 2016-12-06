@@ -58,7 +58,7 @@ public class RadialMenuGenerator : MonoBehaviour {
 			GameObject Text_GO = new GameObject("Text");
 			RectTransform text_RT = Text_GO.AddComponent<RectTransform>();
 			text_RT.SetParent(button.transform, false);
-			//			text_RT.localPosition = new Vector3(size / 2f, size / 2f, 0);
+//			text_RT.localPosition = new Vector3(size / 2f, size / 2f, 0);
 			Text buttonText = Text_GO.AddComponent<Text>();
 			buttonText.alignment = TextAnchor.MiddleCenter;
 			buttonText.fontSize = 24;
@@ -67,7 +67,7 @@ public class RadialMenuGenerator : MonoBehaviour {
 			buttonText.font = menuItem.Font;
 
 			rectTransform.eulerAngles = new Vector3(0, 0, angleDegrees - 1);
-			//			rectTransform.eulerAngles = new Vector3(0, 0, angle + (sectorAngle / 2f) - 1);
+//			rectTransform.eulerAngles = new Vector3(0, 0, angle + (sectorAngle / 2f) - 1);
 
 			Image buttonImage = button.AddComponent<Image>();
 			buttonImage.sprite = RadialMenuItemTexture;
@@ -80,9 +80,9 @@ public class RadialMenuGenerator : MonoBehaviour {
 
 			text_RT.eulerAngles = Vector3.zero;
 			text_RT.position = new Vector3(textX, textY, 0);
-			//			Debug.Log(menuItem.Name + ": " + angleDegrees + " | " + textX + ", " + textY);
+//			Debug.Log(menuItem.Name + ": " + angleDegrees + " | " + textX + ", " + textY);
 
-			radialMenu.AddButton(new RadialMenu.MenuButton(menuItem.Name, buttonImage, NormalColor, HighlightedColor, PressedColor, null));
+			radialMenu.AddButton(new RadialMenu.MenuButton(menuItem.Name, buttonImage, NormalColor, HighlightedColor, PressedColor, menuItem.OnClick));
 
 			i++;
 		}
@@ -113,19 +113,18 @@ public class RadialMenuGenerator : MonoBehaviour {
 //
 //		Gizmos.DrawCube(new Vector3(CentreX, CentreY, 0), new Vector3(15f, 15f, 15f));
 //	}
+}
 
-	public class RadialMenuItem {
+public class RadialMenuItem {
 
-		public string Name;
-		public Font Font;
-		public Action OnClick;
+	public string Name;
+	public Font Font;
+	public Action OnClick;
 
-		public RadialMenuItem(string name, Font font, Action onClick) {
-			this.Name = name;
-			this.Font = font;
-			this.OnClick = onClick;
-		}
-
+	public RadialMenuItem(string name, Font font, Action onClick) {
+		this.Name = name;
+		this.Font = font;
+		this.OnClick = onClick;
 	}
 
 }

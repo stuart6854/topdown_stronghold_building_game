@@ -59,7 +59,7 @@ public class UIController : MonoBehaviour {
 		}
 	}
 
-	public void GenerateRadialMenu(RadialMenuGenerator.RadialMenuItem[] menuItems) {
+	public void GenerateRadialMenu(RadialMenuItem[] menuItems) {
 		RadialMenuGen.GenerateMenu(menuItems, 800, RadialMenuParent);
 	}
 

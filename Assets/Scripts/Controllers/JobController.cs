@@ -94,7 +94,7 @@ public class JobController : MonoBehaviour {
 
         GameObject job_go = new GameObject("Job_" + job.GetTile().GetX() + "_" + job.GetTile().GetY());
         job_go.transform.SetParent(this.transform);
-        job_go.transform.position = new Vector3(job.GetTile().GetX(), job.GetTile().GetY(), 0);
+        job_go.transform.position = new Vector3(job.GetTile().GetX(), job.GetTile().GetY(), -0.2f);
 
         SpriteRenderer sr = job_go.AddComponent<SpriteRenderer>();
         sr.material = SpriteMaterial;
@@ -114,6 +114,35 @@ public class JobController : MonoBehaviour {
 
         Destroy(job_go);
     }
+
+	public static void CreateBuildJob(string type, Tile tile) {
+		ActionMode mode = Defs.GetDef(type).Properties.DefCategory.ToActionMode();
+		float jobTime = BuildController.GetJobTime(type, mode);
+
+		Dictionary<string, int> requirements = null;
+		if(!string.IsNullOrEmpty(type)) {
+			Constructable constructable = (Constructable)Defs.GetDef(type).Properties.Prototype;
+			if(constructable != null)
+				requirements = constructable.GetConstructionRequirements(type);
+		}
+
+		Job job = null;
+		if(mode == ActionMode.Tile)
+			job = new Job(JobType.Construct, tile, j => tile.ChangeType(type), requirements, jobTime, 0);
+		else if(mode == ActionMode.InstalledObject)
+			job = new Job(JobType.Construct, tile, j => WorldController.Instance.GetWorld().PlaceInstalledObject(type, tile), requirements, jobTime, 0);
+
+		if(job != null)
+			Instance.AddJob(job);
+	}
+
+	public static void CreateDismantleJob(Tile tile) {
+		string type = tile.GetInstalledObject().GetObjectType();
+		float jobTime = BuildController.GetJobTime(type, ActionMode.Dismantle);
+
+		Job job = new Job(JobType.Dismantle, tile, j => WorldController.Instance.GetWorld().DemolishInstalledObject(tile), null, jobTime, 0);
+		Instance.AddJob(job);
+	}
 
 	public class QueuedJob : IComparable<QueuedJob> {
 

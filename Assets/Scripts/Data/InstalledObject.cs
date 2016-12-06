@@ -47,14 +47,6 @@ public abstract class InstalledObject : Constructable, IContextMenu{
         return -0.1f;
     }
 
-//	List<RadialMenuGenerator.RadialMenuItem> MenuItems = new List<RadialMenuGenerator.RadialMenuItem>();
-//
-//		Font font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-//
-//		MenuItems.Add(new RadialMenuGenerator.RadialMenuItem("Dismantle", font, this.OnDismantled));
-//		MenuItems.Add(new RadialMenuGenerator.RadialMenuItem("Cancel", font, null)); //TODO: Allow player to cancel current order, eg. Cancel Order
-//
-//		return MenuItems.ToArray();
-	public abstract RadialMenuGenerator.RadialMenuItem[] MenuOptions_ContextMenu();
+	public abstract RadialMenuItem[] MenuOptions_ContextMenu();
 	
 }

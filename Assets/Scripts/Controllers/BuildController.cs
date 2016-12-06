@@ -6,7 +6,7 @@ public enum BuildMethod {
 }
 
 public enum ActionMode {
-    None, Tile, InstalledObject, Character, Demolish, Destroy
+    None, Tile, InstalledObject, Character, Dismantle, Destroy
 }
 
 public class BuildController : MonoBehaviour {
@@ -14,7 +14,7 @@ public class BuildController : MonoBehaviour {
     public static BuildController Instance;
 
 	private static string InstaBuildVarName = "instabuild";
-	private static bool InstaBuild {
+	public static bool InstaBuild {
 		get { return bool.Parse(ConsoleController.Instance.GetSystemVariable(InstaBuildVarName)); }
 	}
 
@@ -57,8 +57,8 @@ public class BuildController : MonoBehaviour {
                 if(ActionMode == ActionMode.Character)
                     WorldController.Instance.GetWorld().PlaceCharacter(tile);
                 else {
-					if(ActionMode == ActionMode.Demolish)
-						SetupDemolishOrder(tile);
+					if(ActionMode == ActionMode.Dismantle)
+						SetupDismantleOrder(tile);
 					else
 						SetupBuildOrder(tile);
 				}
@@ -73,8 +73,8 @@ public class BuildController : MonoBehaviour {
                 for(int y = (int) start.y; y <= end.y; y++) {
                     Tile tile = WorldController.GetTileAt(x, y);
 	                if(tile != null) {
-						if(ActionMode == ActionMode.Demolish)
-							SetupDemolishOrder(tile);
+						if(ActionMode == ActionMode.Dismantle)
+							SetupDismantleOrder(tile);
 						else
 							SetupBuildOrder(tile);
 	                }
@@ -96,7 +96,7 @@ public class BuildController : MonoBehaviour {
                 Tile t = WorldController.GetTileAt(x, y);
                 if(t == null) continue;
 
-//	            if(ActionMode == ActionMode.Demolish)
+//	            if(ActionMode == ActionMode.Dismantle)
 //		            if(t.GetInstalledObject() == null)
 //						continue;
 
@@ -118,7 +118,7 @@ public class BuildController : MonoBehaviour {
                         sr.color = Color.red;
                     else
                         sr.color = t.GetInstalledObject() == null ? Color.green : Color.red;
-                }else if(ActionMode == ActionMode.Demolish) {
+                }else if(ActionMode == ActionMode.Dismantle) {
 	                sr.color = t.GetInstalledObject() == null ? Color.white : Color.green;
                 }
             }
@@ -130,52 +130,27 @@ public class BuildController : MonoBehaviour {
 		    return;
 
 	    string type = ObjectType;
-
-	    Dictionary<string, int> requirements = null;
-	    if(!string.IsNullOrEmpty(type)) {
-		    Constructable constructable = (Constructable) Defs.GetDef(type).Properties.Prototype;
-		    if(constructable != null)
-			    requirements = constructable.GetConstructionRequirements(type);
-	    }
-
-	    float jobTime = 0f;
-	    if(!InstaBuild) {
-		    string val = Defs.GetDef(type).Properties.GetValue("ConstructionTime");
-
-			if(val != string.Empty)
-			    jobTime = float.Parse(val);
-	    }
-
-	    Job job = null;
-        if(ActionMode == ActionMode.Tile) {
-            job = new Job(JobType.Construct, tile, j => tile.ChangeType(type), requirements, jobTime, 1);
-        } else if(ActionMode == ActionMode.InstalledObject) {
-            job = new Job(JobType.Construct, tile, j => WorldController.Instance.GetWorld().PlaceInstalledObject(type, tile), requirements, jobTime, 0);
-        }
-
-	    if(job != null)
-//			if(tile.SetPendingJob(job))
-				JobController.Instance.AddJob(job);
-
+		
+		JobController.CreateBuildJob(type, tile);
     }
 
-	private void SetupDemolishOrder(Tile tile) {
+	private void SetupDismantleOrder(Tile tile) {
 		if(tile.GetInstalledObject() == null) {
 			return;
 		}
 
-		float jobTime = 0f;
-		if(!InstaBuild) {
-			string val = Defs.GetDef(tile.GetInstalledObject().GetObjectType()).Properties.GetValue("DismantleTime");
-			if(val != string.Empty)
-				jobTime = float.Parse(val);
-		}
-		
-		Job job = new Job(JobType.Demolish, tile, j => WorldController.Instance.GetWorld().DemolishInstalledObject(tile), null, jobTime, 0);
-		
-		//		if(tile.SetPendingJob(job))
-			JobController.Instance.AddJob(job);
+		JobController.CreateDismantleJob(tile);
+	}
 
+	public static float GetJobTime(string type, ActionMode mode) {
+		float time = 0f;
+		if(!InstaBuild) {
+			string val = Defs.GetDef(type).Properties.GetValue((mode == ActionMode.Dismantle) ? "DismantleTime" : "ConstructionTime");
+			if(val != string.Empty)
+				time = float.Parse(val);
+		}
+
+		return time;
 	}
 
 	public ActionMode GetBuildMode() {
@@ -187,7 +162,7 @@ public class BuildController : MonoBehaviour {
     }
 
     public BuildMethod GetBuildMethod() {
-		if(ActionMode == ActionMode.Demolish)
+		if(ActionMode == ActionMode.Dismantle)
 			return BuildMethod.Grid;
 
 		if(ActionMode == ActionMode.Tile)
@@ -219,7 +194,7 @@ public class BuildController : MonoBehaviour {
     }
 
 	public void SetDemolish() {
-		ActionMode = ActionMode.Demolish;
+		ActionMode = ActionMode.Dismantle;
 		ObjectType = null;
 	}
 
