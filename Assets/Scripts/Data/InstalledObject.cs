@@ -47,6 +47,18 @@ public abstract class InstalledObject : Constructable, IContextMenu{
         return -0.1f;
     }
 
-	public abstract RadialMenuItem[] MenuOptions_ContextMenu();
+	public virtual RadialMenuItem[] GetContextMenuOptions() {
+		List<RadialMenuItem> MenuItems = new List<RadialMenuItem>();
+
+		Font font = Fonts.GetFont("Arial-Regular");
+		if(font == null)
+			Debug.LogError("InstalledObject::GetContextMenuOptions -> Font is null!");
+
+		MenuItems.Add(new RadialMenuItem("Dismantle", font, () => {
+			JobController.CreateDismantleJob(this.GetTile());
+		}));
+
+		return MenuItems.ToArray();
+	}
 	
 }

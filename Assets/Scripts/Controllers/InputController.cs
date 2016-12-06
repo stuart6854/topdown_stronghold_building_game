@@ -166,7 +166,7 @@ public class InputController : MonoBehaviour {
 			if(contextMenuObj == null)
 				return;
 
-			RadialMenuItem[] menuItems = contextMenuObj.MenuOptions_ContextMenu();
+			RadialMenuItem[] menuItems = contextMenuObj.GetContextMenuOptions();
 			UIController.Instance.GenerateRadialMenu(menuItems);
 		}
 	}

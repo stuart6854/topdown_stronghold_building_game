@@ -83,7 +83,7 @@ public class MainMenu : MonoBehaviour {
 		foreach(Mod mod in ModManager.Mods) {
 			GameObject listItem = Instantiate(ModListItemPrefab);
 			listItem.name = mod.AboutInfo.Name + "_ModLstItm";
-			listItem.transform.SetParent(ModListHolder);
+			listItem.transform.SetParent(ModListHolder, false);
 
 			Text text = listItem.GetComponentInChildren<Text>();
 			text.text = mod.AboutInfo.Name;

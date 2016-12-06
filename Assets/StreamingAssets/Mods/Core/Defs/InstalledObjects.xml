@@ -51,7 +51,7 @@
 		
 		<DismantleTime>5</DismantleTime>
 		<DismantleDrops>
-			<Item type="door" amnt="1"/>
+			<Item type="wood" amnt="5"/>
 		</DismantleDrops>
 		
 		<DestroyedDrops>
