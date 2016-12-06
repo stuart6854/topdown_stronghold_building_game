@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,14 +10,14 @@ public class JobController : MonoBehaviour {
     public Material SpriteMaterial;
     public Sprite JobSprite;
 
-    private List<Job> JobQueue; //TODO: Some sort of advanced, intelligent job sorting based on things like priority, creationTime, its requirements, etc.
+    private List<QueuedJob> JobQueue; //TODO: Some sort of advanced, intelligent job sorting based on things like priority, creationTime, its requirements, etc.
 
     private Dictionary<Job, GameObject> JobGameobjects;
 
     void Awake() {
         Instance = this;
 
-        JobQueue = new List<Job>();
+        JobQueue = new List<QueuedJob>();
         JobGameobjects = new Dictionary<Job, GameObject>();
     }
 
@@ -26,21 +27,24 @@ public class JobController : MonoBehaviour {
             return;
 		}
 
-		if(JobQueue.Contains(job)) {
-            Debug.Log("JobController::AddJob -> This Job is already in the JobQueue!");
-            return;
+		QueuedJob queuedJob = new QueuedJob();
+		queuedJob.Job = job;
+		queuedJob.HasFailed = false;
+		queuedJob.JobType = job.GetJobType();
+
+		if(JobQueue.Contains(queuedJob)) {
+			Debug.Log("JobController::AddJob -> This Job is already in the JobQueue!");
+			return;
 		}
 
-		job.ResetTimeCreated();
+		queuedJob.Job.RegisterOnCompleteCallback(OnJobEnd);
+		queuedJob.Job.RegisterOnAbortedCallback(OnJobEnd);
 
-        job.RegisterOnCompleteCallback(OnJobEnd);
-        job.RegisterOnAbortedCallback(OnJobEnd);
-
-		JobQueue.Add(job);
-        JobQueue.Sort(); //Sorts Jobs based on their priority - High to Low
+		JobQueue.Add(queuedJob);
+		JobQueue.Sort(); //Sorts Jobs based on their priority - High to Low
 
 		OnJobCreated(job);
-    }
+	}
 
 	public void AddFailedJob(Job job) {
 		if(job.GetCompletionTime() <= 0.0f) {
@@ -48,21 +52,21 @@ public class JobController : MonoBehaviour {
 			return;
 		}
 
-		if(JobQueue.Contains(job)) {
-			Debug.Log("JobController::AddJob -> This Job is already in the JobQueue!");
-			return;
-		}
-
-		job.RegisterOnCompleteCallback(OnJobEnd);
-		job.RegisterOnAbortedCallback(OnJobEnd);
-
 		QueuedJob queuedJob = new QueuedJob();
 		queuedJob.Job = job;
 		queuedJob.HasFailed = true;
 		queuedJob.JobType = job.GetJobType();
 
-//		JobQueue.Add(queuedJob);
-//		JobQueue.Sort(); //Sorts Jobs based on their priority - High to Low
+		if(JobQueue.Contains(queuedJob)) {
+			Debug.Log("JobController::AddJob -> This Job is already in the JobQueue!");
+			return;
+		}
+
+		queuedJob.Job.RegisterOnCompleteCallback(OnJobEnd);
+		queuedJob.Job.RegisterOnAbortedCallback(OnJobEnd);
+
+		JobQueue.Add(queuedJob);
+		JobQueue.Sort(); //Sorts Jobs based on their priority - High to Low
 
 		OnJobCreated(job);
 	}
@@ -71,10 +75,10 @@ public class JobController : MonoBehaviour {
         if(JobQueue.Count == 0)
             return null;
 
-        Job job = JobQueue[0];
+        QueuedJob queuedJob = JobQueue[0];
         JobQueue.RemoveAt(0);
 
-        return job;
+        return queuedJob.Job;
     }
 
     public bool HasJob() {
@@ -111,11 +115,15 @@ public class JobController : MonoBehaviour {
         Destroy(job_go);
     }
 
-	public class QueuedJob {
+	public class QueuedJob : IComparable<QueuedJob> {
 
 		public Job Job;
 		public bool HasFailed;
 		public JobType JobType;
+
+		public int CompareTo(QueuedJob other) {
+			return other.Job.CompareTo(this.Job);
+		}
 
 	}
 

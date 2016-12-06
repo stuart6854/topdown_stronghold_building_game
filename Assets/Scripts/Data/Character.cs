@@ -169,10 +169,15 @@ public class Character : WorldObject{
     }
 
     public void Rotate() {
-        if(CurrentTile == NextTile)
-            return;
+	    Tile targetTile = NextTile;
+		if(CurrentTile == NextTile && CurrentTile == DestinationTile)
+			return;
 
-        Vector2 vecToDest = new Vector2(NextTile.GetX() - CurrentTile.GetX(), NextTile.GetY() - CurrentTile.GetY());
+	    if(CurrentTile == NextTile && CurrentTile != DestinationTile)
+		    targetTile = DestinationTile;
+
+
+        Vector2 vecToDest = new Vector2(targetTile.GetX() - CurrentTile.GetX(), targetTile.GetY() - CurrentTile.GetY());
         float angle = Mathf.Atan2(vecToDest.y, vecToDest.x) * Mathf.Rad2Deg;
         Rotation = Mathf.LerpAngle(Rotation, angle, Time.deltaTime * LookSpeed);
     }
@@ -228,7 +233,8 @@ public class Character : WorldObject{
     }
 
     public void AbandonJob() {
-        JobController.Instance.AddJob(CurrentJob);
+//        JobController.Instance.AddJob(CurrentJob);
+		JobController.Instance.AddFailedJob(CurrentJob);
         CurrentJob = null;
         CurrentPath = null;
 		DestinationTile = NextTile = CurrentTile;

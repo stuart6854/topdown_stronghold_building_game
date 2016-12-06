@@ -120,8 +120,6 @@ public class Tile : Constructable {
 
 		this.ObjectType = type;
 
-	    PlaceLooseItem(new LooseItem("stone", 5)); //NOTE: Temporary, for testing looseitems and job requirements
-
 	    if(OnUpdateCB != null)
 			OnUpdateCB(this);
 	}

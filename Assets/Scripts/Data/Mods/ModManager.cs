@@ -13,6 +13,9 @@ public class ModManager {
 		Mods = new List<Mod>();
 
 		string path = Application.streamingAssetsPath + "/Mods/";
+		if(path.StartsWith(@"\"))
+			path = @"\" + path;
+
 		foreach(string dir in Directory.GetDirectories(path)) {
 			Mod mod = Mod.LoadMod(dir);
 			if(mod.AboutInfo == null) {

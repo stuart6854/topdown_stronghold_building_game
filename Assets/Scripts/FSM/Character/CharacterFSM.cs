@@ -66,10 +66,10 @@ public class CharacterFSM : FSM {
 
         if(Character.GetJob()) {
             State = Job();
-            Debug.Log("Got a Job. Going to work.");
+//            Debug.Log("Got a Job. Going to work.");
         } else {
             State = Idle();
-            Debug.Log("No Jobs. Going to Idle.");
+//            Debug.Log("No Jobs. Going to Idle.");
         }
     }
 
