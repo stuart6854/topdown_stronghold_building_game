@@ -17,6 +17,9 @@ public class UIController : MonoBehaviour {
 
 	private RadialMenuGenerator RadialMenuGen;
 
+	private GameObject CurrentRadialMenu;
+	private Transform RadialMenuTracker;
+
 	private void Awake() {
 		Instance = this;
 
@@ -25,6 +28,14 @@ public class UIController : MonoBehaviour {
 	
 	void Start () {
 		CreateBuildButtons();
+	}
+
+	void Update() {
+		if(CurrentRadialMenu != null && RadialMenuTracker != null) {
+			Vector3 screenPos = Camera.main.WorldToScreenPoint(RadialMenuTracker.position);
+			CurrentRadialMenu.transform.position = screenPos;
+			SetRadialMenuCentre(screenPos);
+		}
 	}
 
 	private void CreateBuildButtons() {
@@ -59,8 +70,37 @@ public class UIController : MonoBehaviour {
 		}
 	}
 
-	public void GenerateRadialMenu(RadialMenuItem[] menuItems) {
-		RadialMenuGen.GenerateMenu(menuItems, 800, RadialMenuParent);
+	public void GenerateRadialMenu(Vector2 screenPos, RadialMenuItem[] menuItems) {
+		DestroyRadialMenu();
+
+		CurrentRadialMenu = RadialMenuGen.GenerateMenu(menuItems, Screen.height / 2f, RadialMenuParent);
+		CurrentRadialMenu.transform.position = screenPos;
+	}
+
+	public void DestroyRadialMenu() {
+		if(CurrentRadialMenu != null)
+			Destroy(CurrentRadialMenu);
+		this.CurrentRadialMenu = null;
+		this.RadialMenuTracker = null;
+	}
+
+	public void SetRadialMenuTracker(Transform tracker) {
+		this.RadialMenuTracker = tracker;
+	}
+
+	public void SetRadialMenuCentre(Vector2 pos) {
+		if(CurrentRadialMenu == null)
+			return;
+
+		CurrentRadialMenu.GetComponent<RadialMenu>().SetCentre(pos.x, pos.y);
+	}
+
+	public GameObject GetCurrentRadialMenu() {
+		return CurrentRadialMenu;
+	}
+
+	public Transform GetRadialMenuTracker() {
+		return RadialMenuTracker;
 	}
 
 }

@@ -73,6 +73,9 @@ public class Mod {
 
 	private static List<string> LoadAssemblies(string assemblyDir) {
 		List<string> assemblyFiles = new List<string>();
+		
+		if(!Directory.Exists(assemblyDir))
+			return assemblyFiles;
 
 		foreach(string filePath in Directory.GetFiles(assemblyDir)) {
 			// Foreach file in assemblyDir
@@ -90,6 +93,9 @@ public class Mod {
 
 	private static List<string> LoadDefinitions(string definitionDir) {
 		List<string> definitonFiles = new List<string>();
+
+		if(!Directory.Exists(definitionDir))
+			return definitonFiles;
 
 		foreach(string filePath in Directory.GetFiles(definitionDir)) {
 			// Foreach file in definitionDir
@@ -110,6 +116,9 @@ public class Mod {
 
 	private static List<string> LoadTextures(string textureDir) {
 		List<string> textureFiles = new List<string>();
+
+		if(!Directory.Exists(textureDir))
+			return textureFiles;
 
 		foreach(string filePath in Directory.GetFiles(textureDir)) {
 			// Foreach file in textureDir

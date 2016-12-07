@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -36,9 +37,11 @@ public class InputController : MonoBehaviour {
 			return;
 		}
 
-		HandleDrag();
-		HandleCameraZoom();
-		HandleCameraMovement();
+		if(UIController.Instance.GetCurrentRadialMenu() == null) {
+			HandleDrag();
+			HandleCameraZoom();
+			HandleCameraMovement();
+		}
 
 		HandleClicks();
 	}
@@ -121,11 +124,11 @@ public class InputController : MonoBehaviour {
 			return; //Neither Left or Right Mouse Buttons were clicked
 
 		//Get World Coords from click position
-		Vector2 worldPos = cam.ScreenToWorldPoint(Input.mousePosition);
+		Vector2 worldClickPos = cam.ScreenToWorldPoint(Input.mousePosition);
 
 		//Get the clicked WorldObject
 		WorldObject selection = null;
-		RaycastHit2D hit = Physics2D.Raycast(worldPos, Vector2.zero, 10000, SelectionLayerMask);
+		RaycastHit2D hit = Physics2D.Raycast(worldClickPos, Vector2.zero, 10000, SelectionLayerMask);
 		if(hit.collider != null) {
 			//We hit something
 			ObjectDataReference worldObjectRef = hit.transform.GetComponent<ObjectDataReference>();
@@ -167,7 +170,15 @@ public class InputController : MonoBehaviour {
 				return;
 
 			RadialMenuItem[] menuItems = contextMenuObj.GetContextMenuOptions();
-			UIController.Instance.GenerateRadialMenu(menuItems);
+			if(menuItems == null || menuItems.Length == 0)
+				return;
+
+			Vector2 worldPos = new Vector2(selection.GetX(), selection.GetY());
+			Vector2 screenPos = cam.WorldToScreenPoint(worldPos);
+
+			UIController.Instance.GenerateRadialMenu(screenPos, menuItems);
+			Transform objectToTrack = SpriteController.Instance.GetGameObject(selection).transform;
+			UIController.Instance.SetRadialMenuTracker(objectToTrack);
 		}
 	}
 

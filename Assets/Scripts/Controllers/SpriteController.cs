@@ -223,4 +223,13 @@ public class SpriteController : MonoBehaviour {
 		return null;
 	}
 
+	public GameObject GetGameObject(WorldObject worldObject) {
+		if(!WorldObjectGameObjects.ContainsKey(worldObject)) {
+			Debug.LogError("SpriteController::GetGameObject -> No Gameobject attached to this WorldObject");
+			return null;
+		}
+
+		return WorldObjectGameObjects[worldObject];
+	}
+
 }

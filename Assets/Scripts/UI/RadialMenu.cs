@@ -10,7 +10,7 @@ public class RadialMenu : MonoBehaviour {
 
 	private Vector2 MousePosition;
 	public Vector2 RelativeMousePos;
-	public Vector2 CentreCircle;
+	public Vector2 Centre;
 	private float Radius;
 
 	public int ButtonCount;
@@ -23,7 +23,7 @@ public class RadialMenu : MonoBehaviour {
 		CurrMenuItem = 0;
 		OldMenuItem = 0;
 
-		CentreCircle = transform.position;
+		Centre = transform.position;
 	}
 
 	void Update() {
@@ -38,7 +38,7 @@ public class RadialMenu : MonoBehaviour {
 
 		MousePosition = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
 
-		RelativeMousePos = MousePosition - CentreCircle;
+		RelativeMousePos = MousePosition - Centre;
 
 		if(RelativeMousePos.magnitude < Radius / 2f || RelativeMousePos.magnitude > Radius) {
 			MenuButton current = MenuButtons[OldMenuItem];
@@ -83,7 +83,7 @@ public class RadialMenu : MonoBehaviour {
 	}
 
 	public void SetCentre(float x, float y) {
-		this.CentreCircle = new Vector2(x, y);
+		this.Centre = new Vector2(x, y);
 	}
 
 	public void SetCircleRadius(float radius) {
