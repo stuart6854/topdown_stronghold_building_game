@@ -23,14 +23,17 @@ public class Tile : Constructable {
 			InstalledObject.OnUpdate();
 	}
 
-	public InstalledObject PlaceInstalledObject(string type, InstalledObject instance) {
+	public InstalledObject PlaceInstalledObject(string type, InstalledObject instance, bool baseInstance = true) {
 		if(this.InstalledObject != null)
 			return null;
 
-		instance.RegOnCreatedCB(this.OnCreatedCB);
-		instance.RegOnUpdateCB(this.OnUpdateCB);
-		instance.RegOnDestroyedCB(this.OnDestroyedCB);
-		this.InstalledObject = instance.PlaceInstance(type, this);
+		if(baseInstance) {
+			instance.RegOnCreatedCB(this.OnCreatedCB);
+			instance.RegOnUpdateCB(this.OnUpdateCB);
+			instance.RegOnDestroyedCB(this.OnDestroyedCB);
+		}
+
+		this.InstalledObject = instance.PlaceInstance(type, this, baseInstance);
 
 		if(this.InstalledObject.GetConnectsToNeighbours()) {
 			foreach(Tile tile in GetNeighbourTiles()) {
