@@ -240,4 +240,13 @@ public class SpriteController : MonoBehaviour {
 		return WorldObjectGameObjects[worldObject];
 	}
 
+	public void RegisterSprite(string key, Sprite sprite) {
+		if(ObjectSprites.ContainsKey(name)) {
+			Debug.LogError("SpriteManager::RegisterSprite -> Sprite has already been registered with key:" + key);
+			return;
+		}
+
+		ObjectSprites.Add(key, sprite);
+	}
+
 }

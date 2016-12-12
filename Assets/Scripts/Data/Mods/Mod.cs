@@ -13,17 +13,21 @@ public class Mod {
 
 	public List<string> AssemblyFiles; // The .dll or .cs files containing object definitions
 	public List<string> DefFiles; // The XML files containing defintions for objects
+	public string TextureSpriteFile; // The XML files which defines a mods sprites
 	public List<string> TextureFiles; // Texture files required by the mod. Must be an accepted textured format (PSD, TIFF, JPG, TGA, PNG, GIF, BMP, IFF, PICT)
 
 	public static Mod LoadMod(string rootDir) {
 		Mod mod = new Mod();
 		mod.RootDir = rootDir;
 		mod.AboutFile = FindAboutFile(mod.RootDir);
+		mod.TextureSpriteFile = FindTexturesXMLFile(mod.RootDir);
 		mod.AboutInfo = ParseAboutFile(mod.AboutFile);
 
 		mod.AssemblyFiles = LoadAssemblies(mod.RootDir + "/Assemblies/");
 		mod.DefFiles = LoadDefinitions(mod.RootDir + "/Defs/");
 		mod.TextureFiles = LoadTextures(mod.RootDir + "/Textures/");
+		
+		ParseTextureSpriteFile(mod.TextureSpriteFile, mod);
 		
 //		Debug.LogFormat("Mod Loaded({0} Assemblies, {1} Definitions, {2} Textures): {3}", mod.AssemblyFiles.Count, mod.DefFiles.Count, mod.TextureFiles.Count, mod.RootDir);
 		return mod;
@@ -37,9 +41,16 @@ public class Mod {
 		return rootDir + "/About.xml";
 	}
 
+	private static string FindTexturesXMLFile(string rootDir) {
+		if(!File.Exists(rootDir + "/Textures/Textures.xml"))
+			return "";
+		
+		return rootDir + "/Textures/Textures.xml";
+	}
+
 	private static ModAbout ParseAboutFile(string aboutFilePath) {
 		if(string.IsNullOrEmpty(aboutFilePath))
-			return null; // Mod doesnt contain an 'About.xml' file in its root
+			return null; // Mod doesnt contain a 'About.xml' file in its root
 
 		string name = "";
 		string author = "";
@@ -150,6 +161,63 @@ public class Mod {
 		}
 
 		return false;
+	}
+
+	private static void ParseTextureSpriteFile(string filePath, Mod mod) {
+		if(string.IsNullOrEmpty(filePath))
+			return; // Mod doesnt contain a 'Textures.xml' file in its textures folder
+
+		XmlDocument document = new XmlDocument();
+		document.Load(filePath);
+		XmlNode defNode = document.SelectSingleNode("Textures");
+		if(defNode == null) {
+			Debug.LogError("Mod::ParseTextureSpriteFile -> Texture Sprite XML file is missing base 'Textures' tag: " + filePath);
+			return;
+		}
+
+		foreach(XmlNode childNode in defNode) {
+			if(childNode.Name != "Texture")
+				continue;
+
+			if(childNode.Attributes == null)
+				continue;
+
+			if(childNode.Attributes["file"] == null)
+				continue;
+
+			//Load Texture
+			byte[] textureData = File.ReadAllBytes(mod.RootDir + "/Textures/" + childNode.Attributes["file"].Value);
+			Texture2D texture = new Texture2D(1, 1);
+			texture.LoadImage(textureData);
+			texture.filterMode = FilterMode.Point;
+			texture.wrapMode = TextureWrapMode.Clamp;
+			//Load Sprites
+			foreach(XmlNode spriteNode in childNode) {
+				if(spriteNode.Name != "Sprite")
+					continue;
+
+				XmlAttributeCollection attribs = spriteNode.Attributes;
+				if(attribs == null)
+					continue;
+
+				string name = attribs["name"].Value;
+				int x = int.Parse(attribs["x"].Value);
+				int y = int.Parse(attribs["y"].Value);
+				int width = int.Parse(attribs["width"].Value);
+				int height = int.Parse(attribs["height"].Value);
+				float pivotX = float.Parse(attribs["pivotX"].Value);
+				float pivotY = float.Parse(attribs["pivotY"].Value);
+				int pixelsPerUnit = int.Parse(attribs["pixelsPerUnit"].Value);
+
+				Sprite sprite = Sprite.Create(texture, new Rect(x, y, width, height), new Vector2(pivotX, pivotY), pixelsPerUnit);
+				sprite.name = name;
+
+				SpriteController.Instance.RegisterSprite(name, sprite);
+			}
+
+		}
+
+		Debug.Log("Textures Loaded.");
 	}
 
 	public class ModAbout {

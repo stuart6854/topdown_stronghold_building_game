@@ -13,6 +13,7 @@ public class WorldController : MonoBehaviour {
 	void Awake() {
 		if(!ModManager.ModsLoaded)
 			ModManager.LoadMods();
+
 		Defs.LoadDefs(ModManager.Mods.ToArray());
 
 		Instance = this;
