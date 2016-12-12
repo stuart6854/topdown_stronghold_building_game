@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class InstalledObject : Constructable, IContextMenu{
+public abstract class InstalledObject : Constructable, IContextMenu, ITooltip{
 
 	private Tile Tile;
 
@@ -108,5 +108,9 @@ public abstract class InstalledObject : Constructable, IContextMenu{
 
 		return MenuItems.ToArray();
 	}
-	
+
+	public abstract string Tooltip_GetTitle();
+
+	public abstract string Tooltip_GetBodyText();
+
 }

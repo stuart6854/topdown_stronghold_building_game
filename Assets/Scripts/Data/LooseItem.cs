@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LooseItem : WorldObject {
+public class LooseItem : WorldObject, ITooltip {
 
 	private Tile Tile;
 
@@ -63,6 +63,14 @@ public class LooseItem : WorldObject {
 
 	public override string GetSpriteName() {
 		return "looseitem_" + ObjectType;
+	}
+
+	public string Tooltip_GetTitle() {
+		return this.ObjectType;
+	}
+
+	public string Tooltip_GetBodyText() {
+		return "LooseItem Body Text.";
 	}
 
 }

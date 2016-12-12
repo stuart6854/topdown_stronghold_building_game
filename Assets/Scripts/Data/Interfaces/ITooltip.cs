@@ -4,8 +4,7 @@ using UnityEngine;
 
 public interface ITooltip {
 
-	string Name_Tooltip();
-
-	string Description_Tooltop();
+	string Tooltip_GetTitle();
+	string Tooltip_GetBodyText();
 
 }

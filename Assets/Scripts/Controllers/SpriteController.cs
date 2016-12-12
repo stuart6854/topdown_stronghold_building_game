@@ -71,7 +71,15 @@ public class SpriteController : MonoBehaviour {
 		GameObject obj = new GameObject(worldObject.GetObjectType() + "_" + x + "_" + y);
 		obj.transform.position = new Vector3(x, y, z);
 
-		obj.AddComponent<BoxCollider2D>();
+		BoxCollider2D collider = obj.AddComponent<BoxCollider2D>();
+
+		InstalledObject io = worldObject as InstalledObject;
+		if(io != null) {
+			int width = io.GetWidth(io.GetObjectType());
+			int height = io.GetHeight(io.GetObjectType());
+			collider.size = new Vector2(width, height);
+			collider.offset = new Vector2((width - 1) * 0.5f, (height - 1) * 0.5f);
+		}
 
 		ObjectDataReference objDataRef = obj.AddComponent<ObjectDataReference>();
 		objDataRef.X = (int)x;

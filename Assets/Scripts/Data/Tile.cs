@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tile : Constructable {
+public class Tile : Constructable, ITooltip {
 
 	//References
 	private World World;
@@ -179,6 +179,14 @@ public class Tile : Constructable {
 
 	public Dictionary<string, int> GetDismantledDrops() {
 		return null;
+	}
+
+	public string Tooltip_GetTitle() {
+		return this.ObjectType;
+	}
+
+	public string Tooltip_GetBodyText() {
+		return "Tile Body Text.";
 	}
 
 }
