@@ -31,6 +31,7 @@ public class Tile : Constructable, ITooltip {
 			instance.RegOnCreatedCB(this.OnCreatedCB);
 			instance.RegOnUpdateCB(this.OnUpdateCB);
 			instance.RegOnDestroyedCB(this.OnDestroyedCB);
+			instance.OnCreated();
 		}
 
 		this.InstalledObject = instance.PlaceInstance(type, this, baseInstance);
@@ -60,6 +61,8 @@ public class Tile : Constructable, ITooltip {
 
 		InstalledObject io = this.InstalledObject;
 		this.InstalledObject = null;
+
+		io.OnDestroyed();
 
 		if(io.GetOnDestroyedCB() != null)
 			io.GetOnDestroyedCB()(io);

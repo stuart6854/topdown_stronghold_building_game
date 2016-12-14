@@ -42,4 +42,16 @@
 		<Sprite name="installedobject_scorpio" x="0" y="0" width="256" height="256" pivotX="0.25" pivotY="0.25" pixelsPerUnit="128" />
 	</Texture>
 	
+	<Texture file="character_idle.png">
+		<Animation name="character_idle_anim" />
+		<Sprite name="character_0" x="0" y="0" width="64" height="64" pivotX="0.5" pivotY="0.5" pixelsPerUnit="64" frameDuration="0.15" />
+		<Sprite name="character_1" x="64" y="0" width="64" height="64" pivotX="0.5" pivotY="0.5" pixelsPerUnit="64" frameDuration="0.15" />
+		<Sprite name="character_2" x="128" y="0" width="64" height="64" pivotX="0.5" pivotY="0.5" pixelsPerUnit="64" frameDuration="0.15" />
+		<Sprite name="character_3" x="192" y="0" width="64" height="64" pivotX="0.5" pivotY="0.5" pixelsPerUnit="64" frameDuration="0.15" />
+		<Sprite name="character_4" x="256" y="0" width="64" height="64" pivotX="0.5" pivotY="0.5" pixelsPerUnit="64" frameDuration="0.15" />
+		<Sprite name="character_5" x="320" y="0" width="64" height="64" pivotX="0.5" pivotY="0.5" pixelsPerUnit="64" frameDuration="0.15" />
+		<Sprite name="character_6" x="384" y="0" width="64" height="64" pivotX="0.5" pivotY="0.5" pixelsPerUnit="64" frameDuration="0.15" />
+		<Sprite name="character_7" x="448" y="0" width="64" height="64" pivotX="0.5" pivotY="0.5" pixelsPerUnit="64" frameDuration="0.5" />
+	</Texture>
+	
 </Textures>

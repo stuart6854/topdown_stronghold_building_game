@@ -191,15 +191,29 @@ public class Mod {
 			texture.LoadImage(textureData);
 			texture.filterMode = FilterMode.Point;
 			texture.wrapMode = TextureWrapMode.Clamp;
+
+			//Animation Data
+			bool isAnim = false;
+			string animName = "";
+			List<string> spriteNames = new List<string>();
+			List<float> frameDurations = new List<float>();
+
 			//Load Sprites
 			foreach(XmlNode spriteNode in childNode) {
-				if(spriteNode.Name != "Sprite")
+				if(spriteNode.Name != "Sprite" && spriteNode.Name != "Animation")
 					continue;
 
 				XmlAttributeCollection attribs = spriteNode.Attributes;
 				if(attribs == null)
 					continue;
 
+				if(spriteNode.Name == "Animation") {
+					isAnim = true;
+					animName = attribs["name"].Value;
+					continue;
+				}
+
+				//Sprite Data
 				string name = attribs["name"].Value;
 				int x = int.Parse(attribs["x"].Value);
 				int y = int.Parse(attribs["y"].Value);
@@ -213,6 +227,21 @@ public class Mod {
 				sprite.name = name;
 
 				SpriteController.Instance.RegisterSprite(name, sprite);
+
+				if(!isAnim)
+					continue;
+				//Anim Frame Data
+				float duration = float.Parse(attribs["frameDuration"].Value);
+				if(duration > 0f) { //No point in adding a frame if it last 0 seconds
+					spriteNames.Add(name);
+					frameDurations.Add(duration);
+				}
+
+			}
+
+			if(isAnim) {
+				//This texture is an Animation Sprite Sheet
+				AnimHandler.AddAnim(animName, new Anim(spriteNames.ToArray(), frameDurations.ToArray()));
 			}
 
 		}

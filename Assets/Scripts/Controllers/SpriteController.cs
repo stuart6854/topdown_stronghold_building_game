@@ -128,6 +128,9 @@ public class SpriteController : MonoBehaviour {
 	    wo_go.transform.position = new Vector3(x, y, z);
 	    wo_go.transform.eulerAngles = new Vector3(0, 0, rot);
 
+		if(worldObject.IsAnimated)
+			return; //Dont change sprite as it is controlled by an animation
+
 	    SpriteRenderer sr = wo_go.GetComponent<SpriteRenderer>();
 		sr.sprite = GetSprite(worldObject);
 	}

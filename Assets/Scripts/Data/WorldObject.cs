@@ -15,6 +15,8 @@ public abstract class WorldObject {
 	protected float X, Y;
 	protected float Rotation; // In Degrees
 
+	public bool IsAnimated = false;
+
 	protected Action<WorldObject> OnCreatedCB;
 	protected Action<WorldObject> OnUpdateCB;
 	protected Action<WorldObject> OnDestroyedCB;

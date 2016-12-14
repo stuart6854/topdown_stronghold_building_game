@@ -26,11 +26,15 @@ public class Character : WorldObject{
     private Dictionary<string, int> JobRequirements;
     private string CurrentRequirement;
 
+	private AnimHandler Animation;
+
     public Character(Tile tile) {
         this.ObjectType = "character";
 		this.WorldObjectType = WorldObjectType.Character;
         this.CurrentTile = this.NextTile = this.DestinationTile = tile;
         this.Inventory = new Inventory(4);
+
+		this.Animation = new AnimHandler("character_idle_anim", this);
 
         this.OnUpdateCB += SpriteController.Instance.OnWorldObjectChanged;
 
@@ -41,6 +45,8 @@ public class Character : WorldObject{
 	public void OnUpdate() {
         Move();
         Rotate();
+
+		Animation.TickAnim(Time.deltaTime);
 
         if(OnUpdateCB != null)
 			OnUpdateCB(this);
