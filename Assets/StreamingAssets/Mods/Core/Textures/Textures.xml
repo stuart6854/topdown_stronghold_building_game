@@ -1,45 +1,45 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Textures>
 
-	<Texture file="/wall.png">
-		<Sprite name="wall_0" x="0" y="192" width="64" height="64" pivotX="0.5" pivotY="0.5" pixelsPerUnit="64" />
-		<Sprite name="wall_1" x="64" y="192" width="64" height="64" pivotX="0.5" pivotY="0.5" pixelsPerUnit="64" />
-		<Sprite name="wall_2" x="128" y="192" width="64" height="64" pivotX="0.5" pivotY="0.5" pixelsPerUnit="64" />
-		<Sprite name="wall_3" x="192" y="192" width="64" height="64" pivotX="0.5" pivotY="0.5" pixelsPerUnit="64" />
+	<Texture file="wall.png">
+		<Sprite name="wall_0" x="0" y="384" width="128" height="128" pivotX="0.5" pivotY="0.5" pixelsPerUnit="128" />
+		<Sprite name="wall_1" x="128" y="384" width="128" height="128" pivotX="0.5" pivotY="0.5" pixelsPerUnit="128" />
+		<Sprite name="wall_2" x="256" y="384" width="128" height="128" pivotX="0.5" pivotY="0.5" pixelsPerUnit="128" />
+		<Sprite name="wall_3" x="384" y="384" width="128" height="128" pivotX="0.5" pivotY="0.5" pixelsPerUnit="128" />
 		
-		<Sprite name="wall_4" x="0" y="128" width="64" height="64" pivotX="0.5" pivotY="0.5" pixelsPerUnit="64" />
-		<Sprite name="wall_5" x="64" y="128" width="64" height="64" pivotX="0.5" pivotY="0.5" pixelsPerUnit="64" />
-		<Sprite name="wall_6" x="128" y="128" width="64" height="64" pivotX="0.5" pivotY="0.5" pixelsPerUnit="64" />
-		<Sprite name="wall_7" x="0192" y="128" width="64" height="64" pivotX="0.5" pivotY="0.5" pixelsPerUnit="64" />
+		<Sprite name="wall_4" x="0" y="256" width="128" height="128" pivotX="0.5" pivotY="0.5" pixelsPerUnit="128" />
+		<Sprite name="wall_5" x="128" y="256" width="128" height="128" pivotX="0.5" pivotY="0.5" pixelsPerUnit="128" />
+		<Sprite name="wall_6" x="256" y="256" width="128" height="128" pivotX="0.5" pivotY="0.5" pixelsPerUnit="128" />
+		<Sprite name="wall_7" x="384" y="256" width="128" height="128" pivotX="0.5" pivotY="0.5" pixelsPerUnit="128" />
 		
-		<Sprite name="wall_8" x="0" y="64" width="64" height="64" pivotX="0.5" pivotY="0.5" pixelsPerUnit="64" />
-		<Sprite name="wall_9" x="64" y="64" width="64" height="64" pivotX="0.5" pivotY="0.5" pixelsPerUnit="64" />
-		<Sprite name="wall_10" x="128" y="64" width="64" height="64" pivotX="0.5" pivotY="0.5" pixelsPerUnit="64" />
-		<Sprite name="wall_11" x="192" y="64" width="64" height="64" pivotX="0.5" pivotY="0.5" pixelsPerUnit="64" />
+		<Sprite name="wall_8" x="0" y="128" width="128" height="128" pivotX="0.5" pivotY="0.5" pixelsPerUnit="128" />
+		<Sprite name="wall_9" x="128" y="128" width="128" height="128" pivotX="0.5" pivotY="0.5" pixelsPerUnit="128" />
+		<Sprite name="wall_10" x="256" y="128" width="128" height="128" pivotX="0.5" pivotY="0.5" pixelsPerUnit="128" />
+		<Sprite name="wall_11" x="384" y="128" width="128" height="128" pivotX="0.5" pivotY="0.5" pixelsPerUnit="128" />
 		
-		<Sprite name="wall_12" x="0" y="0" width="64" height="64" pivotX="0.5" pivotY="0.5" pixelsPerUnit="64" />
-		<Sprite name="wall_13" x="64" y="0" width="64" height="64" pivotX="0.5" pivotY="0.5" pixelsPerUnit="64" />
-		<Sprite name="wall_14" x="128" y="0" width="64" height="64" pivotX="0.5" pivotY="0.5" pixelsPerUnit="64" />
-		<Sprite name="wall_15" x="192" y="0" width="64" height="64" pivotX="0.5" pivotY="0.5" pixelsPerUnit="64" />
+		<Sprite name="wall_12" x="0" y="0" width="128" height="128" pivotX="0.5" pivotY="0.5" pixelsPerUnit="128" />
+		<Sprite name="wall_13" x="128" y="0" width="128" height="128" pivotX="0.5" pivotY="0.5" pixelsPerUnit="128" />
+		<Sprite name="wall_14" x="256" y="0" width="128" height="128" pivotX="0.5" pivotY="0.5" pixelsPerUnit="128" />
+		<Sprite name="wall_15" x="384" y="0" width="128" height="128" pivotX="0.5" pivotY="0.5" pixelsPerUnit="128" />
 	</Texture>
 	
 	<Texture file="door.png">
-		<Sprite name="door_0" x="0" y="192" width="64" height="64" pivotX="0.5" pivotY="0.5" pixelsPerUnit="64" />
-		<Sprite name="door_1" x="0" y="128" width="64" height="64" pivotX="0.5" pivotY="0.5" pixelsPerUnit="64" />
-		<Sprite name="door_2" x="0" y="64" width="64" height="64" pivotX="0.5" pivotY="0.5" pixelsPerUnit="64" />
-		<Sprite name="door_3" x="0" y="0" width="64" height="64" pivotX="0.5" pivotY="0.5" pixelsPerUnit="64" />
+		<Sprite name="door_0" x="0" y="384" width="128" height="128" pivotX="0.5" pivotY="0.5" pixelsPerUnit="128" />
+		<Sprite name="door_1" x="0" y="256" width="128" height="128" pivotX="0.5" pivotY="0.5" pixelsPerUnit="128" />
+		<Sprite name="door_2" x="0" y="128" width="128" height="128" pivotX="0.5" pivotY="0.5" pixelsPerUnit="128" />
+		<Sprite name="door_3" x="0" y="0" width="128" height="128" pivotX="0.5" pivotY="0.5" pixelsPerUnit="128" />
 	</Texture>
 
 	<Texture file="stone.png">
-		<Sprite name="installedobject_stone" x="0" y="0" width="64" height="64" pivotX="0.5" pivotY="0.5" pixelsPerUnit="64" />
+		<Sprite name="installedobject_stone" x="0" y="0" width="128" height="128" pivotX="0.5" pivotY="0.5" pixelsPerUnit="128" />
 	</Texture>
 	
 	<Texture file="workbench.png">
-		<Sprite name="installedobject_workbench_tmp" x="0" y="0" width="128" height="64" pivotX="0.25" pivotY="0.5" pixelsPerUnit="64" />
+		<Sprite name="installedobject_workbench_tmp" x="0" y="0" width="256" height="128" pivotX="0.25" pivotY="0.5" pixelsPerUnit="128" />
 	</Texture>
 	
 	<Texture file="scorpio.png">
-		<Sprite name="installedobject_scorpio" x="0" y="0" width="128" height="128" pivotX="0.25" pivotY="0.25" pixelsPerUnit="64" />
+		<Sprite name="installedobject_scorpio" x="0" y="0" width="256" height="256" pivotX="0.25" pivotY="0.25" pixelsPerUnit="128" />
 	</Texture>
 	
 </Textures>

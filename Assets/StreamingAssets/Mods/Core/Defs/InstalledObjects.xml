@@ -14,7 +14,7 @@
 		
 		<BuildMethod>Grid</BuildMethod>
 		
-		<ConstructionTime>5</ConstructionTime>
+		<ConstructionTime>0</ConstructionTime>
 		<ConstructionRequirements>
 			<Item type="stone" amnt="5"/>
 		</ConstructionRequirements>
