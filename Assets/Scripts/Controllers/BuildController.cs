@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -159,6 +160,7 @@ public class BuildController : MonoBehaviour {
 
     public void SetBuildMode(ActionMode actionMode) {
         ActionMode = actionMode;
+		ObjectType = string.Empty;
     }
 
     public BuildMethod GetBuildMethod() {
@@ -195,12 +197,12 @@ public class BuildController : MonoBehaviour {
 
 	public void SetDemolish() {
 		ActionMode = ActionMode.Dismantle;
-		ObjectType = null;
+		ObjectType = string.Empty;
 	}
 
 	public void SetDestroy() {
 		ActionMode = ActionMode.Destroy;
-		ObjectType = null;
+		ObjectType = string.Empty;
 	}
 
     private void ClearDragPreviews() {

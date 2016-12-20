@@ -23,11 +23,7 @@ public class InputController : MonoBehaviour {
 	
 	void Update () {
 		if(Input.GetKeyUp(KeyCode.Escape)) {
-			if(BuildController.Instance.GetBuildMode() != ActionMode.None) {
-				BuildController.Instance.SetBuildMode(ActionMode.None);
-			} else {
-				//Show Escape Menu - Resume, Save, Load, Settings, Exit, etc.
-			}
+			//Show Escape Menu - Resume, Save, Load, Settings, Exit, etc.
 		}
 		
 		if(ConsoleController.Instance.IsVisble) {
@@ -114,15 +110,26 @@ public class InputController : MonoBehaviour {
 	}
 
 	private void HandleClicks() {
-		if(BuildController.Instance.GetBuildMode() != ActionMode.None)
-			return; //We are in build mode, so no selection can happen
-
 		if(EventSystem.current.IsPointerOverGameObject())
 			return; //Mouse is over a UI Element
 
 		if(!Input.GetMouseButtonUp(0) && !Input.GetMouseButtonUp(1))
 			return; //Neither Left or Right Mouse Buttons were clicked
 
+		//Logic based of whether it was a left or right click
+		if(Input.GetMouseButtonUp(0)) {
+			//Left
+
+
+		}else if(Input.GetMouseButtonUp(1)) {//Right
+			if(BuildController.Instance.GetBuildMode() != ActionMode.None)
+				BuildController.Instance.SetBuildMode(ActionMode.None);
+			else
+				HandleContextMenu();
+		}
+	}
+
+	private void HandleContextMenu() {
 		//Get World Coords from click position
 		Vector2 worldClickPos = cam.ScreenToWorldPoint(Input.mousePosition);
 
@@ -135,51 +142,29 @@ public class InputController : MonoBehaviour {
 			if(worldObjectRef == null)
 				return; //This object cant be linked to its data for some reason
 
-			//Get selection tile
-			Tile tile = WorldController.GetTileAt(worldObjectRef.X, worldObjectRef.Y);
-			if(tile == null)
-				return; //The selection is attached to a null tile for some reason
-
-			switch(worldObjectRef.WorldObjectType) {
-				case WorldObjectType.InstalledObject:
-					selection = tile.GetInstalledObject();
-					break;
-				case WorldObjectType.LooseItem:
-					selection = tile.GetLooseItem();
-					break;
-				case WorldObjectType.Character:
-					//TODO: Need a way to retrieve character
-					break;
-			}
+			selection = worldObjectRef.WorldObject;
 		}
 
 		if(selection == null)
 			return; //Nothing was selected
 
-		//Logic based of whether it was a left or right click
-		if(Input.GetMouseButtonUp(0)) {
-			//Left
+		if(!(selection is IContextMenu))
+			return;
 
+		IContextMenu contextMenuObj = (IContextMenu)selection;
+		if(contextMenuObj == null)
+			return;
 
-		}else if(Input.GetMouseButtonUp(1)) {//Right
-			if(!(selection is IContextMenu))
-				return;
+		RadialMenuItem[] menuItems = contextMenuObj.GetContextMenuOptions();
+		if(menuItems == null || menuItems.Length == 0)
+			return;
 
-			IContextMenu contextMenuObj = (IContextMenu) selection;
-			if(contextMenuObj == null)
-				return;
+		Vector2 worldPos = new Vector2(selection.GetX(), selection.GetY());
+		Vector2 screenPos = cam.WorldToScreenPoint(worldPos);
 
-			RadialMenuItem[] menuItems = contextMenuObj.GetContextMenuOptions();
-			if(menuItems == null || menuItems.Length == 0)
-				return;
-
-			Vector2 worldPos = new Vector2(selection.GetX(), selection.GetY());
-			Vector2 screenPos = cam.WorldToScreenPoint(worldPos);
-
-			UIController.Instance.GenerateRadialMenu(screenPos, menuItems);
-			Transform objectToTrack = SpriteController.Instance.GetGameObject(selection).transform;
-			UIController.Instance.SetRadialMenuTracker(objectToTrack);
-		}
+		UIController.Instance.GenerateRadialMenu(screenPos, menuItems);
+		Transform objectToTrack = SpriteController.Instance.GetGameObject(selection).transform;
+		UIController.Instance.SetRadialMenuTracker(objectToTrack);
 	}
 
 }

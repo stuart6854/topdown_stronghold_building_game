@@ -186,7 +186,8 @@ public class Mod {
 				continue;
 
 			//Load Texture
-			byte[] textureData = File.ReadAllBytes(mod.RootDir + "/Textures/" + childNode.Attributes["file"].Value);
+			string texturePath = mod.RootDir + "/Textures/" + childNode.Attributes["file"].Value;
+			byte[] textureData = File.ReadAllBytes(texturePath);
 			Texture2D texture = new Texture2D(1, 1);
 			texture.LoadImage(textureData);
 			texture.filterMode = FilterMode.Point;
@@ -226,7 +227,7 @@ public class Mod {
 				Sprite sprite = Sprite.Create(texture, new Rect(x, y, width, height), new Vector2(pivotX, pivotY), pixelsPerUnit);
 				sprite.name = name;
 
-				SpriteController.Instance.RegisterSprite(name, sprite);
+				SpriteController.RegisterSprite(name, sprite);
 
 				if(!isAnim)
 					continue;

@@ -5,6 +5,6 @@ using UnityEngine;
 public class ObjectDataReference : MonoBehaviour {
 
 	public WorldObjectType WorldObjectType;
-	public int X, Y;
+	public WorldObject WorldObject;
 
 }

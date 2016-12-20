@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class Tooltip : MonoBehaviour {
@@ -44,7 +45,17 @@ public class Tooltip : MonoBehaviour {
 	}
 
 	private void UpdateTooltip() {
+		if(EventSystem.current.IsPointerOverGameObject()) {
+			SetVisible(false); //Mouse is over UI
+			return;
+		}
+
 		Vector2 mousePos = Input.mousePosition;
+		if((mousePos.x < 0 || mousePos.x > Screen.width) || (mousePos.y < 0 || mousePos.y > Screen.height)) {
+			SetVisible(false);
+			return;
+		}
+
 		Vector2 worldPos = Camera.main.ScreenToWorldPoint(mousePos);
 
 		RaycastHit2D hit = Physics2D.Raycast(worldPos, Vector2.zero, 1000);
@@ -58,33 +69,16 @@ public class Tooltip : MonoBehaviour {
 			SetVisible(false);
 			return;//This object cant be linked to its data for some reason
 		}
-
-		//Get hovered tile
-		Tile tile = WorldController.GetTileAt(worldObjectRef.X, worldObjectRef.Y);
-		if(tile == null) {
+		
+		if(worldObjectRef.WorldObject == null) {
 			SetVisible(false);
-			return; //The selection is attached to a null tile for some reason
+			return; //The selection is attached to a null worldobject for some reason
 		}
 
-		ITooltip tooltipObj = null;
-		switch(worldObjectRef.WorldObjectType) {
-			case WorldObjectType.InstalledObject:
-				tooltipObj = tile.GetInstalledObject() as ITooltip;
-				break;
-			case WorldObjectType.LooseItem:
-				tooltipObj = tile.GetLooseItem() as ITooltip;
-				break;
-			case WorldObjectType.Tile:
-				tooltipObj = tile as ITooltip;
-				break;
-			case WorldObjectType.Character:
-				//TODO: Need a way to retrieve character
-				break;
-		}
-
+		ITooltip tooltipObj = worldObjectRef.WorldObject as ITooltip;
 		if(tooltipObj == null) {
 			SetVisible(false);
-			return;
+			return; //Worldobject doesnt inherit from ITooltip
 		}
 
 		SetTitle(tooltipObj.Tooltip_GetTitle());

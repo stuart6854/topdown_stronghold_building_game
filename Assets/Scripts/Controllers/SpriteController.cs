@@ -13,7 +13,7 @@ public class SpriteController : MonoBehaviour {
 	public Transform LooseItemParent;
 	public Transform CharacterParent;
 
-	private Dictionary<string, Sprite> ObjectSprites;
+	private static Dictionary<string, Sprite> Sprites = new Dictionary<string, Sprite>();
 
 	private Dictionary<WorldObject, GameObject> WorldObjectGameObjects;
 
@@ -28,11 +28,9 @@ public class SpriteController : MonoBehaviour {
 	}
 
 	private void LoadSprites() {
-		ObjectSprites = new Dictionary<string, Sprite>();
-
 		Sprite[] sprites = Resources.LoadAll<Sprite>("Sprites");
 		foreach(Sprite sprite in sprites) {
-			ObjectSprites.Add(sprite.name, sprite);
+			Sprites.Add(sprite.name, sprite);
 		}
 	}
 
@@ -49,13 +47,13 @@ public class SpriteController : MonoBehaviour {
             return;
         }
 
-        if(!ObjectSprites.ContainsKey(spriteName)) {
+        if(!Sprites.ContainsKey(spriteName)) {
             Debug.Log("SpriteController::SetSprite -> The sprite " + spriteName + " does NOT Exist!");
             return;
         }
 
         SpriteRenderer sr = wo_go.GetComponent<SpriteRenderer>();
-        sr.sprite = ObjectSprites[spriteName];
+        sr.sprite = Sprites[spriteName];
     }
 
 	public void OnWorldObjectCreated(WorldObject worldObject) {
@@ -82,8 +80,7 @@ public class SpriteController : MonoBehaviour {
 		}
 
 		ObjectDataReference objDataRef = obj.AddComponent<ObjectDataReference>();
-		objDataRef.X = (int)x;
-		objDataRef.Y = (int)y;
+		objDataRef.WorldObject = worldObject;
 		objDataRef.WorldObjectType = worldObject.GetWorldObjectType();
 
 		SpriteRenderer sr = obj.AddComponent<SpriteRenderer>();
@@ -155,26 +152,26 @@ public class SpriteController : MonoBehaviour {
 //		Debug.Log("Destoyed WorldObjects GameObject");
 	}
 
-	private Sprite GetSprite(WorldObject worldObject) {
+	private static Sprite GetSprite(WorldObject worldObject) {
 //		InstalledObject installedObject = worldObject as InstalledObject;
 //		if(installedObject != null) {
 //			if(installedObject.GetConnectsToNeighbours()) {
 //				int Bitmask = GetInstalledObjectBitmask(installedObject);
 //
-//				if(ObjectSprites.ContainsKey(installedObject.GetObjectType() + "_" + Bitmask))
-//					return ObjectSprites[installedObject.GetObjectType() + "_" + Bitmask];
+//				if(Sprites.ContainsKey(installedObject.GetObjectType() + "_" + Bitmask))
+//					return Sprites[installedObject.GetObjectType() + "_" + Bitmask];
 //			}
 //		}
 
 		string spriteName = worldObject.GetSpriteName();
-		if(ObjectSprites.ContainsKey(spriteName))
-			return ObjectSprites[spriteName];
+		if(Sprites.ContainsKey(spriteName))
+			return Sprites[spriteName];
 
 		Debug.LogError("SpriteController::GetSprite(key) -> Sprite no found: " + spriteName);
 
 		//If sprite NOT found
-		if(ObjectSprites.ContainsKey("null_sprite"))
-			return ObjectSprites["null_sprite"]; // Assign "Null" sprite if found
+		if(Sprites.ContainsKey("null_sprite"))
+			return Sprites["null_sprite"]; // Assign "Null" sprite if found
 
 		Debug.LogError("SpriteController::GetSprite(key) -> Sprite no found: null_sprite");
 
@@ -218,15 +215,15 @@ public class SpriteController : MonoBehaviour {
 		return bitmask;
 	}
 
-	public Sprite GetSprite(string key) {
-		if(ObjectSprites.ContainsKey(key))
-			return ObjectSprites[key];
+	public static Sprite GetSprite(string key) {
+		if(Sprites.ContainsKey(key))
+			return Sprites[key];
 
 		Debug.LogError("SpriteController::GetSprite(key) -> Sprite no found: " + key);
 
 		//If sprite NOT found
-		if(ObjectSprites.ContainsKey("null_sprite"))
-			return ObjectSprites["null_sprite"]; // Assign "Null" sprite if found
+		if(Sprites.ContainsKey("null_sprite"))
+			return Sprites["null_sprite"]; // Assign "Null" sprite if found
 
 		Debug.LogError("SpriteController::GetSprite(key) -> Sprite no found: null_sprite");
 
@@ -243,13 +240,13 @@ public class SpriteController : MonoBehaviour {
 		return WorldObjectGameObjects[worldObject];
 	}
 
-	public void RegisterSprite(string key, Sprite sprite) {
-		if(ObjectSprites.ContainsKey(name)) {
+	public static void RegisterSprite(string key, Sprite sprite) {
+		if(Sprites.ContainsKey(key)) {
 			Debug.LogError("SpriteManager::RegisterSprite -> Sprite has already been registered with key:" + key);
 			return;
 		}
 
-		ObjectSprites.Add(key, sprite);
+		Sprites.Add(key, sprite);
 	}
 
 }
