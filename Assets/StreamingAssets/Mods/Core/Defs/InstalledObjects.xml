@@ -143,5 +143,25 @@
 		
 		<Code assembly="CoreMod.dll" class="CoreMod.Scorpio"/>
     </Definition>
+
+	<Definition>
+        <DefName>stockpile</DefName>
+		<Category>InstalledObject</Category>
+		<Constructable/>
+		
+        <Label>Stockpile</Label>
+        <Width>1</Width>
+        <Height>1</Height>
+		
+		<MovementMultiplier>1</MovementMultiplier>
+		
+		<BuildMethod>Grid</BuildMethod>
+		
+		<ConstructionTime>0</ConstructionTime>
+		
+		<DismantleTime>0</DismantleTime>
+		
+		<Code assembly="CoreMod.dll" class="CoreMod.Stockpile"/>
+    </Definition>
 	
 </Definitions>

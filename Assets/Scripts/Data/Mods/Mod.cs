@@ -192,6 +192,8 @@ public class Mod {
 			texture.LoadImage(textureData);
 			texture.filterMode = FilterMode.Point;
 			texture.wrapMode = TextureWrapMode.Clamp;
+			texture.alphaIsTransparency = true;
+			texture.Apply();
 
 			//Animation Data
 			bool isAnim = false;

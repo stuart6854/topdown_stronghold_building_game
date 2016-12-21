@@ -54,4 +54,26 @@
 		<Sprite name="character_7" x="448" y="0" width="64" height="64" pivotX="0.5" pivotY="0.5" pixelsPerUnit="64" frameDuration="0.5" />
 	</Texture>
 	
+	<Texture file="stockpile.png">
+		<Sprite name="stockpile_0" x="0" y="384" width="128" height="128" pivotX="0.5" pivotY="0.5" pixelsPerUnit="128" />
+		<Sprite name="stockpile_1" x="128" y="384" width="128" height="128" pivotX="0.5" pivotY="0.5" pixelsPerUnit="128" />
+		<Sprite name="stockpile_2" x="256" y="384" width="128" height="128" pivotX="0.5" pivotY="0.5" pixelsPerUnit="128" />
+		<Sprite name="stockpile_3" x="384" y="384" width="128" height="128" pivotX="0.5" pivotY="0.5" pixelsPerUnit="128" />
+		
+		<Sprite name="stockpile_4" x="0" y="256" width="128" height="128" pivotX="0.5" pivotY="0.5" pixelsPerUnit="128" />
+		<Sprite name="stockpile_5" x="128" y="256" width="128" height="128" pivotX="0.5" pivotY="0.5" pixelsPerUnit="128" />
+		<Sprite name="stockpile_6" x="256" y="256" width="128" height="128" pivotX="0.5" pivotY="0.5" pixelsPerUnit="128" />
+		<Sprite name="stockpile_7" x="384" y="256" width="128" height="128" pivotX="0.5" pivotY="0.5" pixelsPerUnit="128" />
+		
+		<Sprite name="stockpile_8" x="0" y="128" width="128" height="128" pivotX="0.5" pivotY="0.5" pixelsPerUnit="128" />
+		<Sprite name="stockpile_9" x="128" y="128" width="128" height="128" pivotX="0.5" pivotY="0.5" pixelsPerUnit="128" />
+		<Sprite name="stockpile_10" x="256" y="128" width="128" height="128" pivotX="0.5" pivotY="0.5" pixelsPerUnit="128" />
+		<Sprite name="stockpile_11" x="384" y="128" width="128" height="128" pivotX="0.5" pivotY="0.5" pixelsPerUnit="128" />
+		
+		<Sprite name="stockpile_12" x="0" y="0" width="128" height="128" pivotX="0.5" pivotY="0.5" pixelsPerUnit="128" />
+		<Sprite name="stockpile_13" x="128" y="0" width="128" height="128" pivotX="0.5" pivotY="0.5" pixelsPerUnit="128" />
+		<Sprite name="stockpile_14" x="256" y="0" width="128" height="128" pivotX="0.5" pivotY="0.5" pixelsPerUnit="128" />
+		<Sprite name="stockpile_15" x="384" y="0" width="128" height="128" pivotX="0.5" pivotY="0.5" pixelsPerUnit="128" />
+	</Texture>
+	
 </Textures>
