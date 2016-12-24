@@ -12,16 +12,16 @@ public class JobController : MonoBehaviour {
 
     private List<QueuedJob> JobQueue; //TODO: Some sort of advanced, intelligent job sorting based on things like priority, creationTime, its requirements, etc.
 
-    private Dictionary<Job, GameObject> JobGameobjects;
+    private Dictionary<Job_Old, GameObject> JobGameobjects;
 
     void Awake() {
         Instance = this;
 
         JobQueue = new List<QueuedJob>();
-        JobGameobjects = new Dictionary<Job, GameObject>();
+        JobGameobjects = new Dictionary<Job_Old, GameObject>();
     }
 
-    public void AddJob(Job job) {
+    public void AddJob(Job_Old job) {
 		if(job.GetCompletionTime() <= 0.0f) {
             job.DoJob(0); //Lets autocomplete jobs with 0 or minus completion times. Why should AI waste time if it is gonna complete instantly!
             return;
@@ -46,7 +46,7 @@ public class JobController : MonoBehaviour {
 		OnJobCreated(job);
 	}
 
-	public void AddFailedJob(Job job) {
+	public void AddFailedJob(Job_Old job) {
 		if(job.GetCompletionTime() <= 0.0f) {
 			job.DoJob(0); //Lets autocomplete jobs with 0 or minus completion times. Why should AI waste time if it is gonna complete instantly!
 			return;
@@ -71,7 +71,7 @@ public class JobController : MonoBehaviour {
 		OnJobCreated(job);
 	}
 
-	public Job GetJob() {
+	public Job_Old GetJob() {
         if(JobQueue.Count == 0)
             return null;
 
@@ -88,7 +88,7 @@ public class JobController : MonoBehaviour {
         return true;
     }
 
-    private void OnJobCreated(Job job) {
+    private void OnJobCreated(Job_Old job) {
         if(JobGameobjects.ContainsKey(job))
             return;
 
@@ -103,7 +103,7 @@ public class JobController : MonoBehaviour {
 		JobGameobjects.Add(job, job_go);
     }
 
-    private void OnJobEnd(Job job) {
+    private void OnJobEnd(Job_Old job) {
         if(!JobGameobjects.ContainsKey(job)) {
             Debug.Log("JobController::OnJobEnd -> This Job doesn't have an associated GameObject!");
             return;
@@ -126,11 +126,11 @@ public class JobController : MonoBehaviour {
 				requirements = constructable.GetConstructionRequirements(type);
 		}
 
-		Job job = null;
+		Job_Old job = null;
 		if(mode == ActionMode.Tile)
-			job = new Job(JobType.Construct, tile, j => tile.ChangeType(type), requirements, jobTime, 0);
+			job = new Job_Old(JobType.Construct, tile, j => tile.ChangeType(type), requirements, jobTime, 0);
 		else if(mode == ActionMode.InstalledObject)
-			job = new Job(JobType.Construct, tile, j => WorldController.Instance.GetWorld().PlaceInstalledObject(type, tile), requirements, jobTime, 0);
+			job = new Job_Old(JobType.Construct, tile, j => WorldController.Instance.GetWorld().PlaceInstalledObject(type, tile), requirements, jobTime, 0);
 
 		if(job != null)
 			Instance.AddJob(job);
@@ -140,13 +140,13 @@ public class JobController : MonoBehaviour {
 		string type = tile.GetInstalledObject().GetObjectType();
 		float jobTime = BuildController.GetJobTime(type, ActionMode.Dismantle);
 
-		Job job = new Job(JobType.Dismantle, tile, j => WorldController.Instance.GetWorld().DemolishInstalledObject(tile), null, jobTime, 0);
+		Job_Old job = new Job_Old(JobType.Dismantle, tile, j => WorldController.Instance.GetWorld().DemolishInstalledObject(tile), null, jobTime, 0);
 		Instance.AddJob(job);
 	}
 
 	public class QueuedJob : IComparable<QueuedJob> {
 
-		public Job Job;
+		public Job_Old Job;
 		public bool HasFailed;
 		public JobType JobType;
 

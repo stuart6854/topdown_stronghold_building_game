@@ -37,6 +37,11 @@ public class AnimHandler {
 	}
 
 	public static void AddAnim(string name, Anim anim) {
+		if(Animations.ContainsKey(name)) {
+			Debug.LogError("AnimHandler::AddAnim -> Already have animation with name: " + name);
+			return;
+		}
+
 		Animations.Add(name, anim);
 	}
 

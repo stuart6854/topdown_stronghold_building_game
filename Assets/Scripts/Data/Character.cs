@@ -11,7 +11,7 @@ public class Character : WorldObject{
 
     private CharacterFSM fsm;
 
-    private Job CurrentJob;
+    private Job_Old CurrentJob;
     private List<Tile> CurrentPath;
     private int PathIndex;
 
@@ -28,13 +28,13 @@ public class Character : WorldObject{
 
 	private AnimHandler Animation;
 
-    public Character(Tile tile) {
+    public Character(Tile tile) : base() {
         this.ObjectType = "character";
 		this.WorldObjectType = WorldObjectType.Character;
         this.CurrentTile = this.NextTile = this.DestinationTile = tile;
         this.Inventory = new Inventory(4);
 
-		this.Animation = new AnimHandler("character_idle_anim", this);
+		this.Animation = new AnimHandler("character_idle_front_anim", this);
 
         this.OnUpdateCB += SpriteController.Instance.OnWorldObjectChanged;
 
@@ -247,7 +247,7 @@ public class Character : WorldObject{
 //		BehaviourTree.ResetNode();
     }
 
-    public void OnJobComplete(Job job) {
+    public void OnJobComplete(Job_Old job) {
         foreach(KeyValuePair<string,int> pair in job.GetRequirements()) {
             Inventory.Remove(pair.Key, pair.Value); //Remove the jobs required items. NOTE:They shouldn't have disapeared since we started the job
             //In the future we may want required items to be used up during the job instead of afterwards
@@ -296,7 +296,7 @@ public class Character : WorldObject{
         return CurrentPath;
     }
 
-    public Job GetCurrentJob() {
+    public Job_Old GetCurrentJob() {
         return CurrentJob;
     }
 

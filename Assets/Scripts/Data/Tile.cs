@@ -10,7 +10,7 @@ public class Tile : Constructable, ITooltip {
 	private InstalledObject InstalledObject;
 	private LooseItem LooseItem;
 
-	public Tile(int x, int y, string type, World world) {
+	public Tile(int x, int y, string type, World world) : base() {
 		this.X = x;
 		this.Y = y;
 		this.ObjectType = type;

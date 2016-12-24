@@ -9,6 +9,10 @@ public enum WorldObjectType {
 
 public abstract class WorldObject {
 
+	protected static long Next_ID = 0;
+
+	public long ID { get; protected set; }
+
 	protected string ObjectType;
 	protected WorldObjectType WorldObjectType;
 
@@ -20,6 +24,10 @@ public abstract class WorldObject {
 	protected Action<WorldObject> OnCreatedCB;
 	protected Action<WorldObject> OnUpdateCB;
 	protected Action<WorldObject> OnDestroyedCB;
+
+	protected WorldObject() {
+		AssignID(this);
+	}
 
 	public abstract string GetSpriteName();
 
@@ -84,6 +92,11 @@ public abstract class WorldObject {
 
 	public void DeregOnDestroyedCB(Action<WorldObject> callback) {
 		OnDestroyedCB -= callback;
+	}
+
+	protected static void AssignID(WorldObject worldObject) {
+		worldObject.ID = Next_ID;
+		Next_ID++;
 	}
 
 }

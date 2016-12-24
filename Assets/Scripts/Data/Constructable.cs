@@ -8,6 +8,8 @@ public abstract class Constructable : WorldObject {
 	private Dictionary<string, int> DismantledDrops;
 	private Dictionary<string, int> DestroyedDrops;
 
+	protected Constructable() : base() {  }
+
 	public BuildMethod GetBuildMethod(string objType) {
 		//NOTE: This intances ObjectType variable wont have been set yet, hence the objType param
 		return Defs.GetDef(objType).Properties.GetValue("BuildMethod").ToBuildMethod();

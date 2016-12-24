@@ -80,7 +80,7 @@ public class CharacterFSM : FSM {
 
         //TODO: Do Job. Conditional Loop may be required
 
-        Job currentJob = Character.GetCurrentJob();
+        Job_Old currentJob = Character.GetCurrentJob();
 		
         float lastTime = 0;
         while(Character.GetCurrentJob() != null) {

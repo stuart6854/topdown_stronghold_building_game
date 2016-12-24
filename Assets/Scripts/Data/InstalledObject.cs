@@ -9,7 +9,9 @@ public abstract class InstalledObject : Constructable, IContextMenu, ITooltip{
 	private int Width = -1;
 	private int Height = -1;
 
-	public InstalledObject PlaceInstance(string objectType, Tile tile, bool baseInstance = true) {
+	protected InstalledObject() : base() {  }
+
+	public InstalledObject PlaceInstance(string objectType, Tile tile, bool baseInstance = true){
 		if(baseInstance) { 
 			this.ObjectType = objectType;
 			this.WorldObjectType = WorldObjectType.InstalledObject;

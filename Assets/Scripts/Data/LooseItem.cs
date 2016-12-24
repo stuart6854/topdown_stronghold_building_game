@@ -14,7 +14,7 @@ public class LooseItem : WorldObject, ITooltip {
 		
 	}
 
-	public LooseItem(string type, int amount) {
+	public LooseItem(string type, int amount) : base() {
 		this.ObjectType = type;
 	    this.StackSize = amount;
 		this.WorldObjectType = WorldObjectType.LooseItem;
