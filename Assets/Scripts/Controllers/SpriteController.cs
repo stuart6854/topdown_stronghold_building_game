@@ -16,6 +16,7 @@ public class SpriteController : MonoBehaviour {
 	private static Dictionary<string, Sprite> Sprites = new Dictionary<string, Sprite>();
 
 	private Dictionary<WorldObject, GameObject> WorldObjectGameObjects;
+	private Dictionary<Job, GameObject> JobGameObjects;
 
 	void Awake() {
 		Instance = this;
@@ -25,6 +26,7 @@ public class SpriteController : MonoBehaviour {
 
 	void Start() {
 		WorldObjectGameObjects = new Dictionary<WorldObject, GameObject>();
+		JobGameObjects = new Dictionary<Job, GameObject>();
 	}
 
 	private void LoadSprites() {

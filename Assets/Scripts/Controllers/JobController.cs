@@ -10,7 +10,8 @@ public class JobController : MonoBehaviour {
     public Material SpriteMaterial;
     public Sprite JobSprite;
 
-    private List<QueuedJob> JobQueue; //TODO: Some sort of advanced, intelligent job sorting based on things like priority, creationTime, its requirements, etc.
+	//TODO: Some sort of advanced, intelligent job sorting based on things like priority, creationTime, its requirements, etc.
+	private List<QueuedJob> JobQueue; 
 
     private Dictionary<Job_Old, GameObject> JobGameobjects;
 

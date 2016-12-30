@@ -10,9 +10,12 @@ public class Task_DoAction : Task {
 	
 	//Properties
 	private bool doneAction;
+	private float waitTime;
 	private Action action;
 
-	public Task_DoAction(Action _action) : base() {
+	private float timePassed;
+
+	public Task_DoAction(Action _action, float _waitTime = 0f) : base() {
 		action = _action;
 	}
 
@@ -21,10 +24,12 @@ public class Task_DoAction : Task {
 	}
 
 	public override void OnUpdate() {
-		if(!doneAction) {
+		if(!doneAction && timePassed >= waitTime) {
 			action();
 			doneAction = true;
 		}
+
+		timePassed += Time.deltaTime;
 	}
 
 	public override void OnEnd() {

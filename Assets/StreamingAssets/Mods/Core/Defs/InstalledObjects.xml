@@ -14,11 +14,11 @@
 		
 		<BuildMethod>Grid</BuildMethod>
 		
-		<ConstructionTime>0</ConstructionTime>
+		<ConstructionTime>5</ConstructionTime>
 		<ConstructionRequirements>
+		</ConstructionRequirements>		
 			<Item type="stone" amnt="5"/>
-		</ConstructionRequirements>
-		
+			
 		<DismantleTime>5</DismantleTime>
 		<DismantleDrops>
 			<Item type="stone" amnt="3"/>

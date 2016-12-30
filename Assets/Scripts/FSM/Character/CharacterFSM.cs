@@ -64,7 +64,7 @@ public class CharacterFSM : FSM {
 
 //        Debug.Log("Trying to get a Job.");
 
-        if(Character.GetJob()) {
+        if(Character.TryGetJob()) {
             State = Job();
 //            Debug.Log("Got a Job. Going to work.");
         } else {
@@ -80,7 +80,7 @@ public class CharacterFSM : FSM {
 
         //TODO: Do Job. Conditional Loop may be required
 
-        Job_Old currentJob = Character.GetCurrentJob();
+	    Job_Old currentJob = null;//Character.GetCurrentJob();
 		
         float lastTime = 0;
         while(Character.GetCurrentJob() != null) {

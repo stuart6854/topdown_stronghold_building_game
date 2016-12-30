@@ -10,8 +10,6 @@ public enum JobType {
 
 public class Job_Old : IComparable<Job_Old> {
 
-	private long CreatorID; // Should contain the ID of a WorldObject
-
     private readonly int Priority;
 	private readonly JobType JobType;
 	private float TimeCreated;

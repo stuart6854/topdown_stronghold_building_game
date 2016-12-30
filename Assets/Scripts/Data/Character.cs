@@ -11,7 +11,7 @@ public class Character : WorldObject{
 
     private CharacterFSM fsm;
 
-    private Job_Old CurrentJob;
+	private Job currentJob;
     private List<Tile> CurrentPath;
     private int PathIndex;
 
@@ -38,15 +38,25 @@ public class Character : WorldObject{
 
         this.OnUpdateCB += SpriteController.Instance.OnWorldObjectChanged;
 
-        fsm = new CharacterFSM(this);
-        WorldController.Instance.StartCoroutine(fsm.run());
+//        fsm = new CharacterFSM(this);
+//        WorldController.Instance.StartCoroutine(fsm.run());
     }
 
 	public void OnUpdate() {
-        Move();
-        Rotate();
+		if(currentJob == null) 
+			TryGetJob();
 
-		Animation.TickAnim(Time.deltaTime);
+		if(currentJob != null) {
+			currentJob.OnUpdate();
+			if(currentJob.IsComplete()) {
+				currentJob.OnEnd();
+				currentJob = null;
+			}
+		}
+
+		Move();
+
+//		Animation.TickAnim(Time.deltaTime);
 
         if(OnUpdateCB != null)
 			OnUpdateCB(this);
@@ -58,7 +68,7 @@ public class Character : WorldObject{
 //            if(JobSearchCooldown > 0)
 //                return;
 //
-//            GetJob();
+//            TryGetJob();
 //
 //            if(CurrentJob == null) {
 //                JobSearchCooldown = UnityEngine.Random.Range(0.1f, 0.5f);
@@ -173,50 +183,52 @@ public class Character : WorldObject{
         }
     }
 
-    public void Rotate() {
-	    Tile targetTile = NextTile;
-		if(CurrentTile == NextTile && CurrentTile == DestinationTile)
-			return;
+//    public void Rotate() {
+//	    Tile targetTile = NextTile;
+//		if(CurrentTile == NextTile && CurrentTile == DestinationTile)
+//			return;
+//
+//	    if(CurrentTile == NextTile && CurrentTile != DestinationTile)
+//		    targetTile = DestinationTile;
+//
+//
+//        Vector2 vecToDest = new Vector2(targetTile.GetX() - CurrentTile.GetX(), targetTile.GetY() - CurrentTile.GetY());
+//        float angle = Mathf.Atan2(vecToDest.y, vecToDest.x) * Mathf.Rad2Deg;
+//        Rotation = Mathf.LerpAngle(Rotation, angle, Time.deltaTime * LookSpeed);
+//    }
 
-	    if(CurrentTile == NextTile && CurrentTile != DestinationTile)
-		    targetTile = DestinationTile;
+	private bool TryGetPath() {
+		List<Tile> path = PathfindingController.Instance.RequestPath(this.CurrentTile, this.DestinationTile);
+		if(path == null || path.Count == 0) {
+			return false;
+		}
 
+		SetPath(path);
+		return true;
+	}
 
-        Vector2 vecToDest = new Vector2(targetTile.GetX() - CurrentTile.GetX(), targetTile.GetY() - CurrentTile.GetY());
-        float angle = Mathf.Atan2(vecToDest.y, vecToDest.x) * Mathf.Rad2Deg;
-        Rotation = Mathf.LerpAngle(Rotation, angle, Time.deltaTime * LookSpeed);
-    }
+	public void SetPath(List<Tile> path) {
+		CurrentPath = path;
+		PathIndex = 0;
+		NextTile = (CurrentPath != null ? CurrentPath[PathIndex] : CurrentTile);
+		DestinationTile = (CurrentPath != null ? CurrentPath[CurrentPath.Count - 1] : CurrentTile);
+	}
 
-    public void SetPath(List<Tile> path) {
-        CurrentPath = path;
-        PathIndex = 0;
-        NextTile = (CurrentPath != null ? CurrentPath[PathIndex] : CurrentTile);
-        DestinationTile = (CurrentPath != null ? CurrentPath[CurrentPath.Count - 1] : CurrentTile);
-    }
-
-    public bool GetJob() {
-        CurrentJob = JobController.Instance.GetJob();
-        if(CurrentJob == null)
+	public bool TryGetJob() {
+	    currentJob = JobHandler.GetBestJob(this);
+        if(currentJob == null)
             return false;
 
-        CurrentJob.RegisterOnCompleteCallback(OnJobComplete);
-        CurrentJob.RegisterOnAbortedCallback(OnJobComplete);
-        DestinationTile = CurrentJob.GetTile();
-
-        //Check if job is accessible
-        List<Tile> path = PathfindingController.Instance.RequestPath(CurrentTile, DestinationTile);
-	    if(path == null || path.Count == 0 || path[path.Count - 1] != DestinationTile) {
-		    AbandonJob();
-		    return false;
-	    }
-
-	    if(CurrentJob.GetRequirements() != null)
-            JobRequirements = new Dictionary<string, int>(CurrentJob.GetRequirements());
+//		currentJob.RegisterOnCompleteCallback(OnJobComplete);
+//		currentJob.RegisterOnAbortedCallback(OnJobComplete);
+		
+		currentJob.AssignCharacter(this);
+		currentJob.OnStart();
 
 	    return true;
     }
 
-    public bool HasJobRequirements() {
+	public bool HasJobRequirements() {
         if(JobRequirements == null)
             return true;
 
@@ -238,13 +250,10 @@ public class Character : WorldObject{
     }
 
     public void AbandonJob() {
-//        JobController.Instance.AddJob(CurrentJob);
-		JobController.Instance.AddFailedJob(CurrentJob);
-        CurrentJob = null;
+		//		JobController.Instance.AddFailedJob(CurrentJob);
+		currentJob = null;
         CurrentPath = null;
 		DestinationTile = NextTile = CurrentTile;
-//		JobSearchCooldown = UnityEngine.Random.Range(0.1f, 0.5f);
-//		BehaviourTree.ResetNode();
     }
 
     public void OnJobComplete(Job_Old job) {
@@ -253,7 +262,7 @@ public class Character : WorldObject{
             //In the future we may want required items to be used up during the job instead of afterwards
         }
 
-        CurrentJob = null;
+		currentJob = null;
 	    CurrentPath = null;
         DestinationTile = NextTile = CurrentTile;
         JobSearchCooldown = Random.Range(0.1f, 0.5f);
@@ -290,14 +299,20 @@ public class Character : WorldObject{
 
 	public void SetDestination(Tile tile) {
 		this.DestinationTile = tile;
+		if(this.DestinationTile != null) {
+			if(!TryGetPath()) {
+				this.DestinationTile = null;
+				//Couldnt find path!
+			}
+		}
 	}
 
     public List<Tile> GetCurrentPath() {
         return CurrentPath;
     }
 
-    public Job_Old GetCurrentJob() {
-        return CurrentJob;
+    public Job GetCurrentJob() {
+        return currentJob;
     }
 
     public Dictionary<string, int> GetJobRequirements() {

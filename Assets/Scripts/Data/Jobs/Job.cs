@@ -2,21 +2,40 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum JobTypes {
+	//NOTE: Keep in order of importance (Left = More Important)
+	None, MoveItem, Construct, Dismantle, Attack, 
+}
+
 public class Job {
 
 	//References
+	private Tile tile;
 	private Character assignedCharacter;
-	public List<Task> tasks;
+	private List<Task> tasks;
 
-	//Properties
+	//Identifying Properties
+	private long creatorID; // WorldObject ID
+	private bool hasFailedBefore; // Has a character failed to do this job before
+	private short priority; // Higher = More Important
+	private JobTypes jobType;
+	
+	//Practical Properties
 	private bool hasStarted;
 
-	public Job() {
+	public Job(JobTypes _jobType, Tile _tile, short _priority = 0) {
+		this.jobType = _jobType;
+		this.tile = _tile;
+		this.priority = _priority;
+
 		this.tasks = new List<Task>();
 	}
 
 	public void AssignCharacter(Character _character) {
 		this.assignedCharacter = _character;
+		foreach(Task task in tasks) {
+			task.AssignCharacter(_character);
+		}
 	}
 
 	public void OnStart() {
@@ -61,5 +80,29 @@ public class Job {
 
 		return true;
 	}
+
+	#region Getters
+
+	public Tile GetTile() {
+		return this.tile;
+	}
+
+	public long GetCreatorID() {
+		return this.creatorID;
+	}
+
+	public bool GetHasFailedBefore() {
+		return hasFailedBefore;
+	}
+
+	public short GetPriority() {
+		return this.priority;
+	}
+
+	public JobTypes GetJobType() {
+		return this.jobType;
+	}
+
+	#endregion
 
 }

@@ -131,9 +131,18 @@ public class BuildController : MonoBehaviour {
 		    return;
 
 	    string type = ObjectType;
-		
-		JobController.CreateBuildJob(type, tile);
-    }
+		ActionMode mode = Defs.GetDef(type).Properties.DefCategory.ToActionMode();
+
+		Job job = new Job(JobTypes.Construct, tile, 0);
+		job.AddTask(new Task_MoveTo(tile));
+		if(ActionMode == ActionMode.Tile)
+			job.AddTask(new Task_DoAction(() => tile.ChangeType(type), 5f));
+		else if(ActionMode == ActionMode.InstalledObject)
+			job.AddTask(new Task_DoAction(() => WorldController.Instance.GetWorld().PlaceInstalledObject(type, tile), 5f));
+
+		JobHandler.AddJob(job);
+//		JobController.CreateBuildJob(type, tile);
+	}
 
 	private void SetupDismantleOrder(Tile tile) {
 		if(tile.GetInstalledObject() == null) {
