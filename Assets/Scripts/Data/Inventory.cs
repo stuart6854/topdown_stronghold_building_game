@@ -14,14 +14,17 @@ public class Inventory {
     }
 
     public LooseItem Add(LooseItem stack) {
-        if(stack != null && stack.GetStackSize() > 0)
+	    if(stack == null)
+		    return null;
+
+        if(stack.GetStackSize() > 0)
             stack = TryAddToExistingStack(stack);
 
-        if(stack != null && stack.GetStackSize() > 0)
+        if(stack.GetStackSize() > 0)
             stack = TryAddNewStack(stack);
 
         //If their is still some items in passed stack then return them,
-        //else run null to signify the we managed to insert the whole stack into our inventory
+        //else return null to signify the we managed to insert the whole stack into our inventory
         return stack;
     }
 

@@ -28,12 +28,26 @@ public class LooseItem : WorldObject, ITooltip {
         StackSize += amnt;
     }
 
-	public void RemoveFromStack(int amnt) {
-        StackSize -= amnt;
+	/// <summary>
+	/// Tries to remove the requested amount from the stack.
+	/// </summary>
+	/// <param name="amnt"></param>
+	/// <returns>The amount that it managed to remove. This could be less than requested!</returns>
+	public int RemoveFromStack(int amnt) {
+		int removedAmnt = 0;
+		if(StackSize - amnt >= 0) {//Their is enough for whole request
+			StackSize -= amnt;
+			removedAmnt = amnt;
+		} else { //Not enough, remove what we can
+			removedAmnt = amnt - StackSize;
+			StackSize -= removedAmnt;
+		}
 
         if(StackSize <= 0 && Tile != null)
             Tile.PlaceLooseItem(null);
-    }
+
+		return removedAmnt;
+	}
 
 	public void SetStackSize(int size) {
         this.StackSize = size;

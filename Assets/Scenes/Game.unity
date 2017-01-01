@@ -255,6 +255,7 @@ Transform:
   - {fileID: 2124467713}
   - {fileID: 1240592145}
   - {fileID: 1156835337}
+  - {fileID: 1824281940}
   m_Father: {fileID: 148619182}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -269,11 +270,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 973e5b3e9ade97d4287f882cb2740a84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SpriteMaterial: {fileID: 2100000, guid: 55de3a4d2abcbee4fad9ec0ed8eda555, type: 2}
-  TileParent: {fileID: 818422903}
-  InstalledObjectParent: {fileID: 2124467713}
-  LooseItemParent: {fileID: 1240592145}
-  CharacterParent: {fileID: 1156835337}
+  spriteMaterial: {fileID: 2100000, guid: 55de3a4d2abcbee4fad9ec0ed8eda555, type: 2}
+  tileParent: {fileID: 818422903}
+  installedObjectParent: {fileID: 2124467713}
+  looseItemParent: {fileID: 1240592145}
+  characterParent: {fileID: 1156835337}
+  jobParent: {fileID: 1824281940}
 --- !u!1 &401589311
 GameObject:
   m_ObjectHideFlags: 0
@@ -2391,6 +2393,34 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 44712314a5b6f7e4eb091e4564ece28e, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &1824281939
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1824281940}
+  m_Layer: 0
+  m_Name: Jobs
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 4294967295
+  m_IsActive: 1
+--- !u!4 &1824281940
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1824281939}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 341963557}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1831449893 stripped
 MonoBehaviour:
   m_PrefabParentObject: {fileID: 114676489031234686, guid: 44712314a5b6f7e4eb091e4564ece28e,

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class JobHandler {
 
-	private static List<Job> Jobs = new List<Job>();
+	private static List<Job> jobs = new List<Job>();
 
 	/// <summary>
 	/// Finds and returns the job which is best suited for the requesting character.
@@ -13,15 +13,15 @@ public class JobHandler {
 	/// <param name="_character"></param>
 	/// <returns></returns>
 	public static Job GetBestJob(Character _character) {
-		if(Jobs.Count == 0)
-			return null; //Currently no Jobs
+		if(jobs.Count == 0)
+			return null; //Currently no jobs
 
 		Job bestJob = null;
 
 		List<SortedJob> sortedJobs = CreateSortedList(_character);
 		bestJob = sortedJobs[0].Job;
 
-		Jobs.Remove(bestJob);
+		jobs.Remove(bestJob);
 
 		return bestJob;
 	}
@@ -31,7 +31,7 @@ public class JobHandler {
 
 		//TODO: Filter out jobs that the character CANT do
 
-		foreach(Job job in Jobs) {
+		foreach(Job job in jobs) {
 			SortedJob sortedJob = new SortedJob();
 			sortedJob.Job = job;
 			sortedJob.Priority = job.GetPriority();
@@ -47,7 +47,14 @@ public class JobHandler {
 	}
 
 	public static void AddJob(Job _job) {
-		Jobs.Add(_job);
+		if(jobs.Contains(_job))
+			return;
+
+		if(!_job.GetTile().AssignPendingJob(_job))
+			return;
+
+		jobs.Add(_job);
+		SpriteController.Instance.OnJobCreated(_job);
 	}
 
 	private class SortedJob : IComparable {
@@ -74,14 +81,14 @@ public class JobHandler {
 
 			SortedJob other = obj as SortedJob;
 			if(other == null)
-				return 1;//This is better because Other is null
+				return 0;
 
 			// This could be wrong??
 			int res = this.HasFailed.CompareTo(other.HasFailed);
 			if(res == 0)
-				res = this.Priority.CompareTo(other.Priority);
+				res = -this.Priority.CompareTo(other.Priority); // We want Higher Numbers to be first
 			if(res == 0)
-				res = this.JobType.CompareTo(other.JobType);
+				res = - this.JobType.CompareTo(other.JobType); // We want Higher Numbers to be first
 			if(res == 0)
 				res = this.EuclideanDistance.CompareTo(other.EuclideanDistance);
 			return res;

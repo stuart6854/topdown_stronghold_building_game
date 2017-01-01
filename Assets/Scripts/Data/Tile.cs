@@ -6,9 +6,9 @@ public class Tile : Constructable, ITooltip {
 
 	//References
 	private World World;
-
 	private InstalledObject InstalledObject;
 	private LooseItem LooseItem;
+	private Job pendingJob; // A job who's primary location is this tile
 
 	public Tile(int x, int y, string type, World world) : base() {
 		this.X = x;
@@ -21,6 +21,16 @@ public class Tile : Constructable, ITooltip {
 	public void OnUpdate() {
 		if(InstalledObject != null)
 			InstalledObject.OnUpdate();
+	}
+
+	public void ChangeType(string type) {
+		if(type == ObjectType)
+			return; //We are already this type
+
+		this.ObjectType = type;
+
+		if(OnUpdateCB != null)
+			OnUpdateCB(this);
 	}
 
 	public InstalledObject PlaceInstalledObject(string type, InstalledObject instance, bool baseInstance = true) {
@@ -84,7 +94,7 @@ public class Tile : Constructable, ITooltip {
 			OnUpdateCB(this);
 	}
 
-    public LooseItem PlaceLooseItem(LooseItem looseItem) {
+	public LooseItem PlaceLooseItem(LooseItem looseItem) {
         if(looseItem == null) {
 	        if(this.LooseItem != null)
 				if(this.LooseItem.GetOnDestroyedCB() != null)
@@ -120,14 +130,12 @@ public class Tile : Constructable, ITooltip {
         return this.LooseItem;
     }
 
-	public void ChangeType(string type) {
-		if(type == ObjectType)
-			return; //We are already this type
+	public bool AssignPendingJob(Job _job) {
+		if(pendingJob != null)
+			return false;
 
-		this.ObjectType = type;
-
-	    if(OnUpdateCB != null)
-			OnUpdateCB(this);
+		pendingJob = _job;
+		return true;
 	}
 
 	public override string GetSpriteName() {
@@ -140,6 +148,10 @@ public class Tile : Constructable, ITooltip {
 
 	public LooseItem GetLooseItem() {
 		return LooseItem;
+	}
+
+	public Job GetPendingJob() {
+		return pendingJob;
 	}
 
 	public Tile[] GetNeighbourTiles() {

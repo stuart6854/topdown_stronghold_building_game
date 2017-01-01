@@ -9,7 +9,7 @@ public enum WorldObjectType {
 
 public abstract class WorldObject {
 
-	protected static long Next_ID = 0;
+	protected static long Next_ID = 0; //The next ID to be assigned to a new worldobject
 
 	public long ID { get; protected set; }
 
@@ -94,7 +94,7 @@ public abstract class WorldObject {
 		OnDestroyedCB -= callback;
 	}
 
-	protected static void AssignID(WorldObject worldObject) {
+	private static void AssignID(WorldObject worldObject) {
 		worldObject.ID = Next_ID;
 		Next_ID++;
 	}

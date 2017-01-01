@@ -6,17 +6,18 @@ public class SpriteController : MonoBehaviour {
 
 	public static SpriteController Instance;
 
-	public Material SpriteMaterial;
+	public Material spriteMaterial;
 
-	public Transform TileParent;
-	public Transform InstalledObjectParent;
-	public Transform LooseItemParent;
-	public Transform CharacterParent;
+	public Transform tileParent;
+	public Transform installedObjectParent;
+	public Transform looseItemParent;
+	public Transform characterParent;
+	public Transform jobParent;
 
-	private static Dictionary<string, Sprite> Sprites = new Dictionary<string, Sprite>();
+	private static Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>();
 
-	private Dictionary<WorldObject, GameObject> WorldObjectGameObjects;
-	private Dictionary<Job, GameObject> JobGameObjects;
+	private Dictionary<WorldObject, GameObject> worldObjectGameObjects;
+	private Dictionary<Job, GameObject> jobGameObjects;
 
 	void Awake() {
 		Instance = this;
@@ -25,41 +26,41 @@ public class SpriteController : MonoBehaviour {
 	}
 
 	void Start() {
-		WorldObjectGameObjects = new Dictionary<WorldObject, GameObject>();
-		JobGameObjects = new Dictionary<Job, GameObject>();
+		worldObjectGameObjects = new Dictionary<WorldObject, GameObject>();
+		jobGameObjects = new Dictionary<Job, GameObject>();
 	}
 
 	private void LoadSprites() {
-		Sprite[] sprites = Resources.LoadAll<Sprite>("Sprites");
+		Sprite[] sprites = Resources.LoadAll<Sprite>("sprites");
 		foreach(Sprite sprite in sprites) {
-			Sprites.Add(sprite.name, sprite);
+			SpriteController.sprites.Add(sprite.name, sprite);
 		}
 	}
 
     public void SetSprite(string spriteName, WorldObject worldObject) {
-        if(!WorldObjectGameObjects.ContainsKey(worldObject)) {
+        if(!worldObjectGameObjects.ContainsKey(worldObject)) {
             Debug.Log("SpriteController::SetSprite -> This worldobject doesn't have an associated gameobject!");
             return;
         }
 
-        GameObject wo_go = WorldObjectGameObjects[worldObject];
+        GameObject wo_go = worldObjectGameObjects[worldObject];
 
         if(wo_go == null) {
             Debug.Log("SpriteController::SetSprite -> This worldobjects associated gameobject is NULL!");
             return;
         }
 
-        if(!Sprites.ContainsKey(spriteName)) {
+        if(!sprites.ContainsKey(spriteName)) {
             Debug.Log("SpriteController::SetSprite -> The sprite " + spriteName + " does NOT Exist!");
             return;
         }
 
         SpriteRenderer sr = wo_go.GetComponent<SpriteRenderer>();
-        sr.sprite = Sprites[spriteName];
+        sr.sprite = sprites[spriteName];
     }
 
 	public void OnWorldObjectCreated(WorldObject worldObject) {
-		if(WorldObjectGameObjects.ContainsKey(worldObject)) {
+		if(worldObjectGameObjects.ContainsKey(worldObject)) {
 			Debug.LogError("SpriteController::OnWorldObjectCreated -> A Sprite has already been created for this worldObject!");
 			return;
 		}
@@ -86,33 +87,33 @@ public class SpriteController : MonoBehaviour {
 		objDataRef.WorldObjectType = worldObject.GetWorldObjectType();
 
 		SpriteRenderer sr = obj.AddComponent<SpriteRenderer>();
-		sr.material = SpriteMaterial;
+		sr.material = spriteMaterial;
 		sr.sprite = GetSprite(worldObject);
 
 		if(worldObject is Tile) {
-			obj.transform.SetParent(TileParent);
+			obj.transform.SetParent(tileParent);
 			obj.layer = LayerMask.NameToLayer("Tile");
 		} else if(worldObject is InstalledObject) {
-			obj.transform.SetParent(InstalledObjectParent);
+			obj.transform.SetParent(installedObjectParent);
 			obj.layer = LayerMask.NameToLayer("InstalledObject");
 		} else if(worldObject is LooseItem) {
-			obj.transform.SetParent(LooseItemParent);
+			obj.transform.SetParent(looseItemParent);
 			obj.layer = LayerMask.NameToLayer("LooseItem");
 		} else if(worldObject is Character) {
-			obj.transform.SetParent(CharacterParent);
+			obj.transform.SetParent(characterParent);
 			obj.layer = LayerMask.NameToLayer("Character");
 		}
 
-		WorldObjectGameObjects.Add(worldObject, obj);
+		worldObjectGameObjects.Add(worldObject, obj);
 	}
 
 	public void OnWorldObjectChanged(WorldObject worldObject) {
-		if(!WorldObjectGameObjects.ContainsKey(worldObject)) {
+		if(!worldObjectGameObjects.ContainsKey(worldObject)) {
 			Debug.Log("SpriteController::OnWorldObjectChanged -> This worldobject doesn't have an associated gameobject!");
 			return;
 		}
 
-		GameObject wo_go = WorldObjectGameObjects[worldObject];
+		GameObject wo_go = worldObjectGameObjects[worldObject];
 
 		if(wo_go == null) {
 			Debug.Log("SpriteController::OnWorldObjectChanged -> This worldobjects associated gameobject is NULL!");
@@ -135,14 +136,14 @@ public class SpriteController : MonoBehaviour {
 	}
 
 	public void OnWorldObjectDestroyed(WorldObject worldObject) {
-		if(!WorldObjectGameObjects.ContainsKey(worldObject)) {
+		if(!worldObjectGameObjects.ContainsKey(worldObject)) {
 			Debug.Log("SpriteController::OnWorldObjectDestroyed -> This worldobject doesn't have an associated gameobject!");
 			return;
 		}
 
-		GameObject wo_go = WorldObjectGameObjects[worldObject];
+		GameObject wo_go = worldObjectGameObjects[worldObject];
 
-		WorldObjectGameObjects.Remove(worldObject);
+		worldObjectGameObjects.Remove(worldObject);
 
 		if(wo_go == null) {
 			Debug.Log("SpriteController::OnWorldObjectDestroyed -> This worldobjects associated gameobject is NULL!");
@@ -160,20 +161,20 @@ public class SpriteController : MonoBehaviour {
 //			if(installedObject.GetConnectsToNeighbours()) {
 //				int Bitmask = GetInstalledObjectBitmask(installedObject);
 //
-//				if(Sprites.ContainsKey(installedObject.GetObjectType() + "_" + Bitmask))
-//					return Sprites[installedObject.GetObjectType() + "_" + Bitmask];
+//				if(sprites.ContainsKey(installedObject.GetObjectType() + "_" + Bitmask))
+//					return sprites[installedObject.GetObjectType() + "_" + Bitmask];
 //			}
 //		}
 
 		string spriteName = worldObject.GetSpriteName();
-		if(Sprites.ContainsKey(spriteName))
-			return Sprites[spriteName];
+		if(sprites.ContainsKey(spriteName))
+			return sprites[spriteName];
 
 		Debug.LogError("SpriteController::GetSprite(key) -> Sprite no found: " + spriteName);
 
 		//If sprite NOT found
-		if(Sprites.ContainsKey("null_sprite"))
-			return Sprites["null_sprite"]; // Assign "Null" sprite if found
+		if(sprites.ContainsKey("null_sprite"))
+			return sprites["null_sprite"]; // Assign "Null" sprite if found
 
 		Debug.LogError("SpriteController::GetSprite(key) -> Sprite no found: null_sprite");
 
@@ -217,15 +218,42 @@ public class SpriteController : MonoBehaviour {
 		return bitmask;
 	}
 
+	public void OnJobCreated(Job _job) {
+		if(jobGameObjects.ContainsKey(_job)) {
+			Debug.LogError("SpriteController::OnJobCreated -> A Sprite has already been created for this Job!");
+			return;
+		}
+
+		float x = _job.GetTile().GetX();
+		float y = _job.GetTile().GetY();
+
+		GameObject obj = new GameObject("job_" + x + "_" + y);
+		obj.transform.position = new Vector3(x, y, -0.3f);
+		obj.AddComponent<BoxCollider2D>();
+
+		SpriteRenderer sr = obj.AddComponent<SpriteRenderer>();
+		sr.material = spriteMaterial;
+		sr.sprite = GetSprite("sprite_job");
+
+		obj.transform.SetParent(jobParent);
+		obj.layer = LayerMask.NameToLayer("Job");
+
+		jobGameObjects.Add(_job, obj);
+	}
+
+	public void OnJobRemoved(Job _job) {
+		
+	}
+
 	public static Sprite GetSprite(string key) {
-		if(Sprites.ContainsKey(key))
-			return Sprites[key];
+		if(sprites.ContainsKey(key))
+			return sprites[key];
 
 		Debug.LogError("SpriteController::GetSprite(key) -> Sprite no found: " + key);
 
 		//If sprite NOT found
-		if(Sprites.ContainsKey("null_sprite"))
-			return Sprites["null_sprite"]; // Assign "Null" sprite if found
+		if(sprites.ContainsKey("null_sprite"))
+			return sprites["null_sprite"]; // Assign "Null" sprite if found
 
 		Debug.LogError("SpriteController::GetSprite(key) -> Sprite no found: null_sprite");
 
@@ -234,21 +262,21 @@ public class SpriteController : MonoBehaviour {
 	}
 
 	public GameObject GetGameObject(WorldObject worldObject) {
-		if(!WorldObjectGameObjects.ContainsKey(worldObject)) {
+		if(!worldObjectGameObjects.ContainsKey(worldObject)) {
 			Debug.LogError("SpriteController::GetGameObject -> No Gameobject attached to this WorldObject");
 			return null;
 		}
 
-		return WorldObjectGameObjects[worldObject];
+		return worldObjectGameObjects[worldObject];
 	}
 
 	public static void RegisterSprite(string key, Sprite sprite) {
-		if(Sprites.ContainsKey(key)) {
+		if(sprites.ContainsKey(key)) {
 			Debug.LogError("SpriteManager::RegisterSprite -> Sprite has already been registered with key:" + key);
 			return;
 		}
 
-		Sprites.Add(key, sprite);
+		sprites.Add(key, sprite);
 	}
 
 }

@@ -15,9 +15,8 @@ public class Task_MoveTo : Task {
 	}
 
 	public override void OnUpdate() {
-		if(assignedCharacter.GetDestinationTile() != Destination) {
+		if(assignedCharacter.GetDestinationTile() != Destination)
 			assignedCharacter.SetDestination(Destination);
-		}
 	}
 
 	public override void OnEnd() {

@@ -9,6 +9,8 @@ public enum JobTypes {
 
 public class Job {
 
+	//TODO: Add a way for tasks to tell job that they have failed
+
 	//References
 	private Tile tile;
 	private Character assignedCharacter;
@@ -22,13 +24,15 @@ public class Job {
 	
 	//Practical Properties
 	private bool hasStarted;
+	private Dictionary<string, int> requirements;
 
-	public Job(JobTypes _jobType, Tile _tile, short _priority = 0) {
-		this.jobType = _jobType;
-		this.tile = _tile;
-		this.priority = _priority;
+	public Job(JobTypes _jobType, Dictionary<string, int> _requirements, Tile _tile, long _creatorID, short _priority = 0) {
+		jobType = _jobType;
+		tile = _tile;
+		creatorID = _creatorID;
+		priority = _priority;
 
-		this.tasks = new List<Task>();
+		tasks = new List<Task>();
 	}
 
 	public void AssignCharacter(Character _character) {
@@ -65,6 +69,7 @@ public class Job {
 
 	public void AddTask(Task _task) {
 		_task.AssignCharacter(assignedCharacter);
+		_task.job = this;
 		tasks.Add(_task);
 	}
 
@@ -79,6 +84,10 @@ public class Job {
 		}
 
 		return true;
+	}
+
+	protected void SetRequirements(Dictionary<string, int> _requirements) {
+		this.requirements = _requirements;
 	}
 
 	#region Getters
@@ -103,6 +112,35 @@ public class Job {
 		return this.jobType;
 	}
 
+	public Dictionary<string, int> GetRequirements() {
+		return requirements;
+	}
+
 	#endregion
+
+	//TODO: Stop duplicate jobs being put into job list
+
+	public override bool Equals(object obj) {
+		Job other = obj as Job;
+		if(other == null)
+			return false;
+
+		if(this.tile != other.tile)
+			return false;
+		if(this.assignedCharacter != other.assignedCharacter)
+			return false;
+		if(this.tasks != other.tasks)
+			return false;
+		if(this.creatorID != other.creatorID)
+			return false;
+		if(this.hasFailedBefore != other.hasFailedBefore)
+			return false;
+		if(this.priority != other.priority)
+			return false;
+		if(this.jobType != other.jobType)
+			return false;
+
+		return true;
+	}
 
 }

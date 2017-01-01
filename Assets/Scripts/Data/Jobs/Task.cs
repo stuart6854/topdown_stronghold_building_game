@@ -5,6 +5,7 @@ using UnityEngine;
 public abstract class Task {
 
 	//References
+	public Job job;
 	protected Character assignedCharacter;
 
 	//Properties

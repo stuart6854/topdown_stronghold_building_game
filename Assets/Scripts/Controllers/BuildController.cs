@@ -97,9 +97,9 @@ public class BuildController : MonoBehaviour {
                 Tile t = WorldController.GetTileAt(x, y);
                 if(t == null) continue;
 
-//	            if(ActionMode == ActionMode.Dismantle)
-//		            if(t.GetInstalledObject() == null)
-//						continue;
+	            if(ActionMode == ActionMode.Dismantle)
+		            if(t.GetInstalledObject() == null)
+						continue;
 
                 //Display the building hint on top of this tile
                 GameObject go = SimplePool.Spawn(BuildDragPrefab, new Vector3(x, y, -2f), Quaternion.identity);
@@ -109,47 +109,57 @@ public class BuildController : MonoBehaviour {
                 DragPreviewObjects.Add(go);
 
                 SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
-				//                if(t.GetPendingJob() != null) {
-				//                    sr.color = Color.red;
-				//                } else 
-				if(ActionMode == ActionMode.Tile) {
-                    sr.color = t.GetObjectType() != ObjectType ? Color.green : Color.red;
+				if(t.GetPendingJob() != null) {
+				    sr.color = Color.red;
+				} else if(ActionMode == ActionMode.Tile) {
+                    sr.color = (t.GetObjectType() != ObjectType ? Color.green : Color.red);
                 } else if(ActionMode == ActionMode.InstalledObject) {
                     if(t.GetObjectType() == "null")
                         sr.color = Color.red;
                     else
-                        sr.color = t.GetInstalledObject() == null ? Color.green : Color.red;
+                        sr.color = (t.GetInstalledObject() == null ? Color.green : Color.red);
                 }else if(ActionMode == ActionMode.Dismantle) {
-	                sr.color = t.GetInstalledObject() == null ? Color.white : Color.green;
+	                sr.color = (t.GetInstalledObject() == null ? Color.white : Color.green);
                 }
             }
         }
     }
 
     private void SetupBuildOrder(Tile tile) {
-	    if(tile.GetInstalledObject() != null)
-		    return;
+		if(ActionMode == ActionMode.Tile && tile.GetObjectType() == ObjectType)
+			return;
+		else if(ActionMode == ActionMode.InstalledObject && tile.GetInstalledObject() != null)
+			return;
 
-	    string type = ObjectType;
+		string type = ObjectType;
 		ActionMode mode = Defs.GetDef(type).Properties.DefCategory.ToActionMode();
 
-		Job job = new Job(JobTypes.Construct, tile, 0);
-		job.AddTask(new Task_MoveTo(tile));
-		if(ActionMode == ActionMode.Tile)
-			job.AddTask(new Task_DoAction(() => tile.ChangeType(type), 5f));
-		else if(ActionMode == ActionMode.InstalledObject)
-			job.AddTask(new Task_DoAction(() => WorldController.Instance.GetWorld().PlaceInstalledObject(type, tile), 5f));
+	    float buildTime = GetJobTime(type, mode);
 
-		JobHandler.AddJob(job);
-//		JobController.CreateBuildJob(type, tile);
+		Job_Construct job = new Job_Construct(type, tile, buildTime);
+
+//		Job job = new Job(JobTypes.Construct, tile, -1, 0);
+//		job.AddTask(new Task_MoveTo(tile));
+//		if(ActionMode == ActionMode.Tile)
+//			job.AddTask(new Task_DoAction(() => tile.ChangeType(type), buildTime));
+//		else if(ActionMode == ActionMode.InstalledObject)
+//			job.AddTask(new Task_DoAction(() => WorldController.Instance.GetWorld().PlaceInstalledObject(type, tile), buildTime));
+//
+//		JobHandler.AddJob(job);
 	}
 
 	private void SetupDismantleOrder(Tile tile) {
-		if(tile.GetInstalledObject() == null) {
+		if(tile.GetInstalledObject() == null)
 			return;
-		}
 
-		JobController.CreateDismantleJob(tile);
+		string type = tile.GetInstalledObject().GetObjectType();
+		float dismantleTime = GetJobTime(type, ActionMode.Dismantle);
+
+		Job job = new Job(JobTypes.Dismantle, null, tile, -1, 1);
+		job.AddTask(new Task_MoveTo(tile));
+		job.AddTask(new Task_DoAction(() => WorldController.Instance.GetWorld().DemolishInstalledObject(tile), dismantleTime));
+
+		JobHandler.AddJob(job);
 	}
 
 	public static float GetJobTime(string type, ActionMode mode) {

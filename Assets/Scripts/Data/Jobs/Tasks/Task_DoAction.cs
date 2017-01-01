@@ -17,6 +17,7 @@ public class Task_DoAction : Task {
 
 	public Task_DoAction(Action _action, float _waitTime = 0f) : base() {
 		action = _action;
+		waitTime = _waitTime;
 	}
 
 	public override void OnStart() {
