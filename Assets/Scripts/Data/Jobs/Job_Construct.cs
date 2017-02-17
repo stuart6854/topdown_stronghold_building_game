@@ -23,11 +23,12 @@ public class Job_Construct : Job {
 				requirements = constructable.GetConstructionRequirements(_objectType);
 		}
 		SetRequirements(requirements);
-
+		
 		// Setup GetRequirement Tasks
-		foreach(KeyValuePair<string, int> pair in requirements) {
-			AddTask(new Task_GetRequirement(pair.Key, pair.Value));
-		}
+		if(requirements != null)
+			foreach(KeyValuePair<string, int> pair in requirements) {
+				AddTask(new Task_GetRequirement(pair.Key, pair.Value));
+			}
 
 		AddTask(new Task_MoveTo(_tile));
 		if(mode == ActionMode.Tile)

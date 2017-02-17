@@ -145,7 +145,7 @@ public class BuildController : MonoBehaviour {
 //		else if(ActionMode == ActionMode.InstalledObject)
 //			job.AddTask(new Task_DoAction(() => WorldController.Instance.GetWorld().PlaceInstalledObject(type, tile), buildTime));
 //
-//		JobHandler.AddJob(job);
+		JobHandler.AddJob(job);
 	}
 
 	private void SetupDismantleOrder(Tile tile) {
