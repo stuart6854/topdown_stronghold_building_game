@@ -155,6 +155,7 @@ public class Character : WorldObject{
 
     public void AbandonJob() {
 		//		JobController.Instance.AddFailedJob(CurrentJob);
+		currentJob.OnEnd ();
 		currentJob = null;
         currentPath = null;
 		DestinationTile = NextTile = CurrentTile;
@@ -166,6 +167,7 @@ public class Character : WorldObject{
             //In the future we may want required items to be used up during the job instead of afterwards
         }
 
+        currentJob.OnEnd();
 		currentJob = null;
 	    currentPath = null;
         DestinationTile = NextTile = CurrentTile;

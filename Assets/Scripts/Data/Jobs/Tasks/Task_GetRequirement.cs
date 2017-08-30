@@ -18,8 +18,10 @@ public class Task_GetRequirement : Task {
 		if(req_Tile == null)
 			req_Tile = FindRequirement();
 
-		if(req_Tile == null)
+		if(req_Tile == null){
+			this.assignedCharacter.AbandonJob ();
 			return; //TODO: Tell job we have failed!
+		}
 
 		if(assignedCharacter.GetCurrentTile() == req_Tile) {
 			//Pickup requirement

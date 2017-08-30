@@ -22,6 +22,13 @@ public class PathfindingController : MonoBehaviour {
 
     public Tile FindAccessibleObject(Tile start, string objectType) {
 		List<Tile> path = Pathfinding.FindPathInstant(start, null, objectType);
+
+        if(path == null || path.Count == 0)
+            return null;
+
+        if(path.Count == 1)
+            return path[0];
+
 	    return path[path.Count - 1];
     }
 

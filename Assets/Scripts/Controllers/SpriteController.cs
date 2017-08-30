@@ -242,8 +242,14 @@ public class SpriteController : MonoBehaviour {
 	}
 
 	public void OnJobRemoved(Job _job) {
-		
-	}
+        if(!jobGameObjects.ContainsKey(_job)) {
+            Debug.LogError("SpriteController::OnJobRemoved -> There is no sprite for this job!");
+            return;
+        }
+
+        GameObject obj = jobGameObjects[_job];
+        Destroy(obj);
+    }
 
 	public static Sprite GetSprite(string key) {
 		if(sprites.ContainsKey(key))

@@ -48,7 +48,7 @@ public class Job {
 
 	public void OnUpdate() {
 		foreach(Task task in tasks) {
-			if(task.IsCompleted()) //Don't run this task if we (still) meet completion conditions
+			if(task.IsCompleted()) //Don't run this task if we meet completion conditions
 				continue;
 
 			if(!task.HasStarted()) //If this is the first time
@@ -64,7 +64,7 @@ public class Job {
 	}
 
 	public void OnEnd() {
-		
+        SpriteController.Instance.OnJobRemoved(this);
 	}
 
 	public void AddTask(Task _task) {
